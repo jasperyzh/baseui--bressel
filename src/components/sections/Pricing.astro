@@ -5,6 +5,7 @@
  * Client direction: Show rough pricing on landing page, offer PDF for details
  */
 import Icon from '../Icon.astro';
+import { whatsappUrl } from '../../lib/config';
 ---
 
 <section id="pricing" class="py-24 bg-bressel-white text-bressel-black">
@@ -59,7 +60,7 @@ import Icon from '../Icon.astro';
           Download Full Pricing (PDF)
         </a>
         <a
-          href="https://wa.me/60123456789?text=Hi%20BRESSEL!%20I'd%20like%20to%20know%20more%20about%20your%20pricing%20and%20programs."
+          href={whatsappUrl("Hi BRESSEL! I'd like to know more about your pricing and programs.")}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-bressel-black text-bressel-black font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-black hover:text-bressel-white"

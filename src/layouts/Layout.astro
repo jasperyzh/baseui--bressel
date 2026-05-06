@@ -18,6 +18,7 @@ import Footer from "@/components/Footer.astro";
 import VisualDev from "@/components/visual-dev/VisualDev.astro";
 
 const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname;
 const pageTitle = title ? `${title} — BRESSEL™` : "BRESSEL™";
 const pageDescription = description || "World-class padel, within reach.";
 ---
@@ -64,8 +65,15 @@ const pageDescription = description || "World-class padel, within reach.";
   </head>
 
   <body>
-    <Header />
-    <slot />
+    <!-- Skip to content — accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-bressel-red focus:text-bressel-white focus:font-bold focus:uppercase focus:text-xs focus:tracking-wider focus:no-underline">
+      Skip to content
+    </a>
+
+    <Header currentPath={currentPath} />
+    <main id="main-content">
+      <slot />
+    </main>
     <Footer />
     {import.meta.env.DEV && <VisualDev />}
 

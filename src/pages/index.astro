@@ -24,19 +24,54 @@ const products = await getMerch();
   description="World-class padel coaching built around community. From your first swing to tournament day — we're in it together."
 >
   <Hero />
-  <BrandEssence />
-  <AcademyCards />
-  <Ticker />
-  <ProgramPillars />
 
-  <!-- Diagonal section divider: black → white -->
-  <div class="relative h-20 md:h-28 overflow-hidden bg-bressel-black">
-    <div class="absolute inset-0 bg-bressel-white" style="clip-path: polygon(0 100%, 100% 0, 100% 100%)"></div>
+  <!-- ✦ Section: Brand Essence (dark) -->
+  <section class="bg-bressel-black">
+    <BrandEssence />
+  </section>
+
+  <!-- ✦ Section: Academy Cards (soft black — visual lift) -->
+  <section class="bg-bressel-black-soft">
+    <AcademyCards />
+  </section>
+
+  <Ticker />
+
+  <!-- ✦ Section: Program Pillars (dark) -->
+  <section class="bg-bressel-black">
+    <ProgramPillars />
+  </section>
+
+  <!-- ✦ Swoosh divider: black → dark scarlet -->
+  <div class="relative h-16 md:h-24 overflow-hidden bg-bressel-black">
+    <div class="absolute inset-0 bg-bressel-red" style="clip-path: polygon(0 100%, 100% 0, 100% 100%)"></div>
   </div>
 
-  <Pricing />
-  <Voices />
-  <Centers />
-  <Shop products={products} />
+  <!-- ✦ Section: Pricing (dark scarlet → black gradient) -->
+  <section class="bg-gradient-to-b from-bressel-red/10 to-bressel-black">
+    <Pricing />
+  </section>
+
+  <!-- ✦ Thin red accent divider -->
+  <div class="h-px bg-bressel-red/30 mx-auto max-w-5xl"></div>
+
+  <!-- ✦ Section: Testimonials (soft black) -->
+  <section class="bg-bressel-black-soft">
+    <Voices />
+  </section>
+
+  <!-- ✦ Section: Centers (dark) -->
+  <section class="bg-bressel-black">
+    <Centers />
+  </section>
+
+  <!-- ✦ Thin red accent divider -->
+  <div class="h-px bg-bressel-red/30 mx-auto max-w-5xl"></div>
+
+  <!-- ✦ Section: Shop (soft black) -->
+  <section class="bg-bressel-black-soft">
+    <Shop products={products} />
+  </section>
+
   <NewsletterCTA />
 </MainLayout>

@@ -1,25 +1,21 @@
 ---
 /**
  * Find Us — Split layout (locations list + image grid)
- * Renamed from "Centers" → "Find Us" per client direction
  * Locations: Malaysia / Philippines / Singapore (WhatsApp links)
  */
-
+import { whatsappUrl } from '../../lib/config';
 const locations = [
   {
     name: "MALAYSIA",
     waMessage: "Hi BRESSEL! I'd like to know more about the Malaysia facility.",
-    phone: "60123456789"
   },
   {
     name: "PHILIPPINES",
     waMessage: "Hi BRESSEL! I'd like to know more about the Philippines facility.",
-    phone: "60123456789"
   },
   {
     name: "SINGAPORE",
     waMessage: "Hi BRESSEL! I'd like to know more about the Singapore facility.",
-    phone: "60123456789"
   },
 ];
 
@@ -54,7 +50,7 @@ const encode = (s: string) => encodeURIComponent(s);
         <div class="space-y-4">
           {locations.map((loc) => (
             <a
-              href={`https://wa.me/${loc.phone}?text=${encode(loc.waMessage)}`}
+              href={whatsappUrl(loc.waMessage)}
               target="_blank"
               rel="noopener noreferrer"
               class="flex items-center justify-between py-3 border-b border-bressel-zinc-800 group no-underline"

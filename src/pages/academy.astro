@@ -6,6 +6,7 @@
 import MainLayout from '@/layouts/Layout.astro';
 import Button from '@/components/starwind/button/Button.astro';
 import { getCoaches } from '@/lib/wordpress';
+import { whatsappUrl } from '@/lib/config';
 import type { Coach } from '@/lib/wordpress';
 
 const coaches: Coach[] = await getCoaches();
@@ -99,7 +100,7 @@ const hero = {
         <h2 class="heading-lg mb-6">READY TO <span style="color: var(--color-bressel-red);">BEGIN?</span></h2>
         <p class="body-lg max-w-xl mx-auto mb-8">Book your first session.</p>
         <a
-          href="https://wa.me/60123456789?text=Hi%20BRESSEL!%20I'd%20like%20to%20start%20my%20padel%20journey.%20Could%20you%20share%20more%20about%20getting%20started?"
+          href={whatsappUrl("Hi BRESSEL! I'd like to start my padel journey. Could you share more about getting started?")}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-red-hover"

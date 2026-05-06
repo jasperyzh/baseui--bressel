@@ -4,6 +4,7 @@
  * Props: products array from WordPress GraphQL (merch CPT)
  */
 import type { Merch } from '../../lib/wordpress';
+import { whatsappUrl } from '../../lib/config';
 import Card from '../starwind/card/Card.astro';
 import Button from '../starwind/button/Button.astro';
 import CardHeader from '../starwind/card/CardHeader.astro';
@@ -40,7 +41,7 @@ function stripHtml(html: string): string {
         <h2 class="heading-lg">SHOP</h2>
       </div>
       <a
-          href="https://wa.me/60123456789?text=Hi%20BRESSEL!%20I'm%20interested%20in%20your%20equipment.%20Is%20it%20available?"
+          href={whatsappUrl("Hi BRESSEL! I'm interested in your equipment. Is it available?")}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-red-hover"
@@ -51,7 +52,7 @@ function stripHtml(html: string): string {
     </div>
 
     <!-- Product Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative z-10">
 
       {products.map((product, i) => (
         <Card class="overflow-hidden transition-colors duration-300 group" data-aos="fade-up" data-aos-delay={String(i * 100)}>
@@ -90,7 +91,7 @@ function stripHtml(html: string): string {
               RM{product.merchPrice}
             </span>
             <a
-              href={`https://wa.me/60123456789?text=${encodeURIComponent("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}`}
+              href={whatsappUrl("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 text-bressel-zinc-400 font-header font-bold text-[0.625rem] uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"

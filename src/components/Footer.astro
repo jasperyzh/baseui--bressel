@@ -9,6 +9,7 @@
  * Bottom: Copyright
  */
 import Icon from './Icon.astro';
+import { whatsappUrl, BRAND_EMAIL } from '../lib/config';
 import Input from './starwind/input/Input.astro';
 ---
 
@@ -33,7 +34,7 @@ import Input from './starwind/input/Input.astro';
           <a href="#" aria-label="YouTube" class="text-bressel-zinc-600 hover:text-bressel-red transition-colors">
             <Icon name="youtube" size={18} />
           </a>
-          <a href="https://wa.me/60123456789" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="text-bressel-zinc-600 hover:text-bressel-red transition-colors">
+          <a href={whatsappUrl("Hi BRESSEL! I'd like to get in touch.")} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="text-bressel-zinc-600 hover:text-bressel-red transition-colors">
             <Icon name="whatsapp" size={18} />
           </a>
         </div>
@@ -55,12 +56,12 @@ import Input from './starwind/input/Input.astro';
         <h4 class="font-header font-bold text-[0.6875rem] uppercase tracking-wide text-bressel-white mb-4">CONNECT</h4>
         <ul class="flex flex-col gap-2">
           <li>
-            <a href="https://wa.me/60123456789" target="_blank" rel="noopener noreferrer" class="nav-link flex items-center gap-2">
+            <a href={whatsappUrl("Hi BRESSEL! I'd like to get in touch.")} target="_blank" rel="noopener noreferrer" class="nav-link flex items-center gap-2">
               <Icon name="whatsapp" size={14} class="text-bressel-red" />
               WhatsApp
             </a>
           </li>
-          <li><a href="mailto:hola@bresselsports.com" class="nav-link">hola@bresselsports.com</a></li>
+          <li><a href={`mailto:${BRAND_EMAIL}`} class="nav-link">{BRAND_EMAIL}</a></li>
           <li><a href="/contact" class="nav-link">Contact Page</a></li>
         </ul>
       </div>

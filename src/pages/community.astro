@@ -6,6 +6,7 @@
 import MainLayout from '@/layouts/Layout.astro';
 import Button from '@/components/starwind/button/Button.astro';
 import { getEvents } from '@/lib/wordpress';
+import { whatsappUrl } from '@/lib/config';
 
 const events = await getEvents();
 
@@ -90,7 +91,7 @@ const hero = {
         <h2 class="heading-lg mb-6">JOIN THE <span style="color: var(--color-bressel-red);">MOVEMENT.</span></h2>
         <p class="body-lg max-w-xl mx-auto mb-8">Be part of the fastest growing padel community in Asia. Tournament invites, gear drops, and stories from the court.</p>
         <a
-          href="https://wa.me/60123456789?text=Hi%20BRESSEL!%20I'd%20like%20to%20join%20a%20court%20or%20community%20program.%20How%20do%20I%20get%20started?"
+          href={whatsappUrl("Hi BRESSEL! I'd like to join a court or community program. How do I get started?")}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-red-hover"

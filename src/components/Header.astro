@@ -1,11 +1,20 @@
 ---
 /**
  * Header — Sticky nav with BRESSEL logo, 5-page navigation
- * Nav: HOME | ACADEMY | COMMUNITY | ABOUT | CONTACT
+ * Active state: red underline on current page
  * Mobile: Full-screen overlay menu
- * No standalone "BOOK SESSION" nav item — CTAs are WhatsApp-based on each page
  */
 import Icon from './Icon.astro';
+
+const { currentPath = '/' } = Astro.props;
+
+const navLinks = [
+  { href: '/', label: 'HOME' },
+  { href: '/academy', label: 'ACADEMY' },
+  { href: '/community', label: 'COMMUNITY' },
+  { href: '/about', label: 'ABOUT' },
+  { href: '/contact', label: 'CONTACT' },
+];
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-bressel-black/90 backdrop-blur-md border-b border-bressel-zinc-800/60 px-6 md:px-8 transition-all duration-300" id="site-header">
@@ -21,12 +30,21 @@ import Icon from './Icon.astro';
     </a>
 
     <!-- Desktop Navigation -->
-    <nav class="hidden md:flex items-center gap-10">
-      <a href="/" class="nav-link">HOME</a>
-      <a href="/academy" class="nav-link">ACADEMY</a>
-      <a href="/community" class="nav-link">COMMUNITY</a>
-      <a href="/about" class="nav-link">ABOUT</a>
-      <a href="/contact" class="nav-link">CONTACT</a>
+    <nav class="hidden md:flex items-center gap-0">
+      {navLinks.map(link => {
+        const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+        return (
+          <a
+            href={link.href}
+            class={`nav-link relative px-4 py-6 transition-colors duration-200 ${isActive ? 'text-bressel-white' : ''}`}
+          >
+            {link.label}
+            {isActive && (
+              <span class="absolute bottom-3 left-4 right-4 h-0.5 bg-bressel-red"></span>
+            )}
+          </a>
+        );
+      })}
     </nav>
 
     <!-- Right: Mobile hamburger only (no BOOK SESSION button in nav) -->

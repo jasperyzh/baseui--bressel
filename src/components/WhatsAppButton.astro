@@ -8,6 +8,7 @@
  *   <WhatsAppButton message="..." variant="outline" size="sm" />
  */
 import type { Props as ButtonProps } from '../starwind/button/Button.astro';
+import { WHATSAPP_NUMBER } from '../lib/config';
 
 import Icon from './Icon.astro';
 
@@ -20,7 +21,7 @@ interface Props {
   children?: any;
 }
 
-const { message, phone = "60123456789", variant = "primary", size = "lg", class: className, children } = Astro.props;
+const { message, phone = WHATSAPP_NUMBER, variant = "primary", size = "lg", class: className, children } = Astro.props;
 const encoded = encodeURIComponent(message);
 const waUrl = `https://wa.me/${phone}?text=${encoded}`;
 ---

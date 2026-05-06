@@ -1,7 +1,7 @@
 ---
 /**
  * Newsletter CTA — "Stay in the Game."
- * Brand voice: Option A — warm, human, direct
+ * Red band CTA at page bottom
  */
 import Icon from '../Icon.astro';
 import Button from '../starwind/button/Button.astro';
@@ -10,23 +10,16 @@ import Input from '../starwind/input/Input.astro';
 
 <section id="newsletter" class="relative py-24 md:py-32 overflow-hidden">
 
-  <!-- Dark Scarlet background (from brand tokens) -->
-  <div class="absolute inset-0 bg-dark-scarlet"></div>
-  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60"></div>
-
-  <!-- Optional BG image -->
-  <img
-    src="/assets/cta-bg-overlay.jpg"
-    alt=""
-    class="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
-    data-swap="cta-bg"
-  />
+  <!-- Dark Scarlet background with subtle noise texture -->
+  <div class="absolute inset-0 bg-bressel-red"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-bressel-black/40 via-transparent to-bressel-black/40"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-bressel-red-hover/30 via-transparent to-bressel-red-hover/30"></div>
 
   <!-- Content -->
   <div class="relative z-10 container-custom text-center" data-aos="fade-up">
 
     <h2 class="heading-xl mb-6">
-      Stay in the <span class="text-bressel-black">Game.</span>
+      Stay in the <span class="text-bressel-yellow">Game.</span>
     </h2>
 
     <p class="body-lg max-w-2xl mx-auto mb-10 text-bressel-white/80">
@@ -43,9 +36,9 @@ import Input from '../starwind/input/Input.astro';
         name="email"
         required
         placeholder="ENTER EMAIL"
-        class="flex-1 bg-black/20 border-2 border-white/20 text-bressel-white text-xs font-bold uppercase tracking-wide outline-none placeholder:text-bressel-white/40 focus:border-bressel-white transition-colors"
+        class="flex-1 bg-bressel-black/20 border-2 border-bressel-white/20 text-bressel-white text-xs font-bold uppercase tracking-wide outline-none placeholder:text-bressel-white/40 focus:border-bressel-white transition-colors"
       />
-      <Button type="submit" variant="primary-solid" class="!bg-bressel-black !text-bressel-white hover:!bg-bressel-black/80" size="lg">
+      <Button type="submit" variant="primary-solid" class="!bg-bressel-black !text-bressel-white hover:!bg-bressel-black/80 transition-transform hover:scale-[1.02]" size="lg">
         SUBSCRIBE
         <Icon name="mail" size={14} class="opacity-90" />
       </Button>
@@ -54,9 +47,3 @@ import Input from '../starwind/input/Input.astro';
   </div>
 
 </section>
-
-<style>
-  .bg-dark-scarlet {
-    background-color: #E02D1B;
-  }
-</style>

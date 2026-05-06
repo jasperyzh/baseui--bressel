@@ -11,6 +11,7 @@ import CardTitle from '@/components/starwind/card/CardTitle.astro';
 import CardDescription from '@/components/starwind/card/CardDescription.astro';
 import CardFooter from '@/components/starwind/card/CardFooter.astro';
 import { getMerch } from '@/lib/wordpress';
+import { whatsappUrl } from '@/lib/config';
 import type { Merch } from '@/lib/wordpress';
 
 const products: Merch[] = await getMerch();
@@ -48,7 +49,7 @@ const hero = {
           <h2 class="heading-lg">FEATURED <span style="color: var(--color-bressel-red);">DROPS.</span></h2>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {products.map((product) => (
             <Card class="overflow-hidden group">
               <div class="relative aspect-square overflow-hidden" style="background: var(--color-background);">
@@ -71,7 +72,7 @@ const hero = {
               <CardFooter class="flex items-center justify-between bg-transparent border-t-0 p-6">
                 <span class="font-header font-bold text-sm" style="color: var(--color-foreground);">RM{product.merchPrice}</span>
                 <a
-                  href={`https://wa.me/60123456789?text=${encodeURIComponent("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}`}
+                  href={whatsappUrl("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-1.5 uppercase no-underline transition-colors"

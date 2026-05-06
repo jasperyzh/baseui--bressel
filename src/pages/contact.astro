@@ -10,8 +10,9 @@
  *   const locations = page.acfLocations;
  */
 import MainLayout from '@/layouts/Layout.astro';
+import { WHATSAPP_NUMBER } from '@/lib/config';
 
-const waPhone = "60123456789";
+const waPhone = WHATSAPP_NUMBER;
 const encode = (s: string) => encodeURIComponent(s);
 
 const quickInquiries = [
