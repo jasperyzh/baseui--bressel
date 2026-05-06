@@ -1,18 +1,13 @@
 ---
 /**
  * Community Page — Events, clubs, community info
- *
- * ── WP-GraphQL Ready ──
- * Replace events import with GraphQL query to custom post type:
- *   const { events } = data.data;
- *
- * const events = [
- *   { title, date, location, type, description }
- * ];
+ * Data: WordPress GraphQL (posts with event CMB2 fields)
  */
 import MainLayout from '@/layouts/Layout.astro';
 import Button from '@/components/starwind/button/Button.astro';
-import events from '@/content/events.json';
+import { getEvents } from '@/lib/wordpress';
+
+const events = await getEvents();
 
 // ── Default Content ──
 const hero = {
@@ -43,35 +38,48 @@ const hero = {
           <h2 class="heading-lg">UPCOMING <span style="color: var(--color-bressel-red);">EVENTS.</span></h2>
         </div>
         <div class="space-y-4">
-          {events.map((event) => (
-            <article class="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 group transition-colors" style="background: var(--color-card); border: 1px solid var(--color-border);">
-              <div class="flex md:flex-col items-center md:items-start gap-3 md:gap-1 md:min-w-[100px]">
-                <span class="font-header font-black text-3xl" style="color: var(--color-bressel-red);">
-                  {new Date(event.date).toLocaleString('default', { month: 'short' }).toUpperCase()}
-                </span>
-                <span class="font-header font-black text-3xl" style="color: var(--color-foreground);">
-                  {new Date(event.date).getDate()}
-                </span>
-              </div>
-              <div class="hidden md:block w-px h-12" style="background: var(--color-border);"></div>
-              <div class="flex-1">
-                <span class="text-[0.625rem] font-bold uppercase tracking-wider" style="color: var(--color-bressel-red);">{event.type}</span>
-                <h3 class="font-header font-black italic text-xl uppercase mb-2" style="color: var(--color-foreground);">{event.title}</h3>
-                <p class="body text-sm mb-2">{event.description}</p>
-                <p class="text-[0.6875rem] font-bold uppercase tracking-wider" style="color: var(--color-bressel-zinc-600);">📍 {event.location}</p>
-              </div>
-              <a
-                href={`/contact?intent=event&source=${encodeURIComponent(event.title)}`}
-                class="md:self-center inline-flex items-center gap-1.5 uppercase no-underline whitespace-nowrap transition-colors"
-                style="font-family: var(--font-header); font-weight: 700; font-size: 0.625rem; letter-spacing: 0.1em; color: var(--color-muted-foreground);"
-              >
-                REGISTER
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </article>
-          ))}
+          {events.map((event) => {
+            const eventDate = event.eventDate ? new Date(event.eventDate) : null;
+            return (
+              <article class="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 group transition-colors" style="background: var(--color-card); border: 1px solid var(--color-border);">
+                {eventDate && (
+                  <>
+                    <div class="flex md:flex-col items-center md:items-start gap-3 md:gap-1 md:min-w-[100px]">
+                      <span class="font-header font-black text-3xl" style="color: var(--color-bressel-red);">
+                        {eventDate.toLocaleString('default', { month: 'short' }).toUpperCase()}
+                      </span>
+                      <span class="font-header font-black text-3xl" style="color: var(--color-foreground);">
+                        {eventDate.getDate()}
+                      </span>
+                    </div>
+                    <div class="hidden md:block w-px h-12" style="background: var(--color-border);"></div>
+                  </>
+                )}
+                <div class="flex-1">
+                  {event.eventLocation && (
+                    <span class="text-[0.625rem] font-bold uppercase tracking-wider" style="color: var(--color-bressel-red);">{event.eventLocation}</span>
+                  )}
+                  <h3 class="font-header font-black italic text-xl uppercase mb-2" style="color: var(--color-foreground);">{event.title}</h3>
+                  {event.excerpt && <p class="body text-sm mb-2">{event.excerpt}</p>}
+                  {event.eventLocation && (
+                    <p class="text-[0.6875rem] font-bold uppercase tracking-wider" style="color: var(--color-bressel-zinc-600);">📍 {event.eventLocation}</p>
+                  )}
+                </div>
+                {event.eventRegistrationUrl && (
+                  <a
+                    href={event.eventRegistrationUrl}
+                    class="md:self-center inline-flex items-center gap-1.5 uppercase no-underline whitespace-nowrap transition-colors"
+                    style="font-family: var(--font-header); font-weight: 700; font-size: 0.625rem; letter-spacing: 0.1em; color: var(--color-muted-foreground);"
+                  >
+                    REGISTER
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
+                )}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

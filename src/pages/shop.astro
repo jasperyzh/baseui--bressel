@@ -1,14 +1,7 @@
 ---
 /**
  * Shop Page — Full product catalog
- *
- * ── WP-GraphQL Ready ──
- * Replace products import with GraphQL WooCommerce products query:
- *   const { products } = data.data;
- *
- * const products = [
- *   { name, series, description, price, image }
- * ];
+ * Data: WordPress GraphQL (merch CPT)
  */
 import MainLayout from '@/layouts/Layout.astro';
 import Button from '@/components/starwind/button/Button.astro';
@@ -17,9 +10,16 @@ import CardHeader from '@/components/starwind/card/CardHeader.astro';
 import CardTitle from '@/components/starwind/card/CardTitle.astro';
 import CardDescription from '@/components/starwind/card/CardDescription.astro';
 import CardFooter from '@/components/starwind/card/CardFooter.astro';
-import products from '@/content/merch.json';
+import { getMerch } from '@/lib/wordpress';
+import type { Merch } from '@/lib/wordpress';
 
-// ── Default Content ──
+const products: Merch[] = await getMerch();
+
+/** Strip HTML from WP content */
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
 const hero = {
   label: 'BRESSEL PRO EQUIPMENT',
   title: 'THE',
@@ -52,20 +52,26 @@ const hero = {
           {products.map((product) => (
             <Card class="overflow-hidden group">
               <div class="relative aspect-square overflow-hidden" style="background: var(--color-background);">
-                <img src={product.image} alt={product.name} class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105" />
+                {product.featuredImage?.node?.sourceUrl ? (
+                  <img src={product.featuredImage.node.sourceUrl} alt={product.title} class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105" />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center text-bressel-zinc-600 font-header text-2xl font-black">{product.title.charAt(0)}</div>
+                )}
               </div>
               <CardHeader>
-                <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider mb-3" style="color: var(--color-bressel-red);">
-                  <span class="w-1.5 h-1.5 inline-block" style="background: var(--color-bressel-red);"></span>
-                  {product.series}
-                </span>
-                <CardTitle class="font-header font-black italic text-lg uppercase" style="color: var(--color-foreground);">{product.name}</CardTitle>
-                <CardDescription class="body text-sm line-clamp-2">{product.description}</CardDescription>
+                {product.merchSeries && (
+                  <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider mb-3" style="color: var(--color-bressel-red);">
+                    <span class="w-1.5 h-1.5 inline-block" style="background: var(--color-bressel-red);"></span>
+                    {product.merchSeries}
+                  </span>
+                )}
+                <CardTitle class="font-header font-black italic text-lg uppercase" style="color: var(--color-foreground);">{product.title}</CardTitle>
+                <CardDescription class="body text-sm line-clamp-2">{stripHtml(product.content)}</CardDescription>
               </CardHeader>
               <CardFooter class="flex items-center justify-between bg-transparent border-t-0 p-6">
-                <span class="font-header font-bold text-sm" style="color: var(--color-foreground);">RM{product.price}</span>
+                <span class="font-header font-bold text-sm" style="color: var(--color-foreground);">RM{product.merchPrice}</span>
                 <a
-                  href={`https://wa.me/60123456789?text=${encodeURIComponent("Hi BRESSEL! I'm interested in " + product.name + ". Is it available?")}`}
+                  href={`https://wa.me/60123456789?text=${encodeURIComponent("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-flex items-center gap-1.5 uppercase no-underline transition-colors"

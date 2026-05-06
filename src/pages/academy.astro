@@ -1,20 +1,20 @@
 ---
 /**
  * Academy Page — Coaches grid, programs info, booking CTA
- *
- * ── WP-GraphQL Ready ──
- * Replace coaches import with GraphQL query to custom post type:
- *   const { coaches } = data.data;
- *
- * const coaches = [
- *   { name, role, specialty, bio, image }
- * ];
+ * Data: WordPress GraphQL (coach CPT)
  */
 import MainLayout from '@/layouts/Layout.astro';
 import Button from '@/components/starwind/button/Button.astro';
-import coaches from '@/content/coaches.json';
+import { getCoaches } from '@/lib/wordpress';
+import type { Coach } from '@/lib/wordpress';
 
-// ── Default Content ──
+const coaches: Coach[] = await getCoaches();
+
+/** Strip HTML from WP content for plain-text display */
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
 const hero = {
   label: 'ACADEMY',
   title: 'THE',
@@ -46,12 +46,17 @@ const hero = {
           {coaches.map((coach) => (
             <article class="overflow-hidden group transition-colors" style="background: var(--color-card); border: 1px solid var(--color-border);">
               <div class="aspect-[3/4] overflow-hidden">
-                <img src={coach.image} alt={coach.name} class="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" />
+                {coach.featuredImage?.node?.sourceUrl ? (
+                  <img src={coach.featuredImage.node.sourceUrl} alt={coach.title} class="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" />
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center bg-bressel-muted text-bressel-zinc-600 font-header text-4xl font-black">{coach.title.charAt(0)}</div>
+                )}
               </div>
               <div class="p-5">
-                <h3 class="font-header font-black italic text-lg uppercase mb-1" style="color: var(--color-foreground);">{coach.name}</h3>
-                <p class="text-[0.625rem] font-bold uppercase tracking-wider mb-3" style="color: var(--color-bressel-red);">{coach.role}</p>
-                <p class="body text-sm">{coach.bio}</p>
+                <h3 class="font-header font-black italic text-lg uppercase mb-1" style="color: var(--color-foreground);">{coach.title}</h3>
+                {coach.coachRole && <p class="text-[0.625rem] font-bold uppercase tracking-wider mb-1" style="color: var(--color-bressel-red);">{coach.coachRole}</p>}
+                {coach.coachSpecialty && <p class="text-[0.625rem] font-bold uppercase tracking-wider mb-3" style="color: var(--color-bressel-zinc-600);">{coach.coachSpecialty}</p>}
+                <p class="body text-sm">{stripHtml(coach.content)}</p>
               </div>
             </article>
           ))}

@@ -1,21 +1,7 @@
 ---
 /**
  * Index / Homepage — Full page assembly
- * Section flow (per strategic report):
- * 1. Hero — "Play Beyond" headline + emotional hook
- * 2. Brand Essence — "Beyond the Game" (Dani's vision, mission)
- * 3. Academy Cards — Train Beyond / Connect Beyond
- * 4. Ticker — Dynamic event news bar
- * 5. Program Pillars — PLAY BEYOND / GO BEYOND / GROW BEYOND
- * 6. Pricing — Rough overview + PDF download button
- * 7. Community Voices — 3 testimonials (authentic player voice)
- * 8. Find Us — Malaysia / Philippines / Singapore (WhatsApp per location)
- * 9. Shop Preview — BRESSEL PRO equipment (WhatsApp inquiries)
- * 10. Newsletter CTA — "Stay in the Game"
- *
- * ── WP-GraphQL Ready ──
- * Replace sections with WP response:
- *   const page = data.data.page;
+ * Data: WordPress GraphQL for dynamic sections
  */
 import MainLayout from '@/layouts/Layout.astro';
 import Hero from '@/components/sections/Hero.astro';
@@ -28,6 +14,9 @@ import Voices from '@/components/sections/Quotes.astro';
 import Centers from '@/components/sections/Centers.astro';
 import Shop from '@/components/sections/Shop.astro';
 import NewsletterCTA from '@/components/sections/NewsletterCTA.astro';
+import { getMerch } from '@/lib/wordpress';
+
+const products = await getMerch();
 ---
 
 <MainLayout
@@ -48,6 +37,6 @@ import NewsletterCTA from '@/components/sections/NewsletterCTA.astro';
   <Pricing />
   <Voices />
   <Centers />
-  <Shop />
+  <Shop products={products} />
   <NewsletterCTA />
 </MainLayout>

@@ -14,4 +14,14 @@ export default defineConfig({
       },
     },
   },
+
+  // Remote image optimization — fetches from WP, converts to WebP, caches on CDN
+  image: {
+    domains: ['cms.bresselsports.com', '104.248.157.67', 'localhost'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'cms.bresselsports.com' },
+      { protocol: 'http', hostname: '104.248.157.67' },
+      { protocol: 'http', hostname: 'localhost' },
+    ],
+  },
 });

@@ -1,9 +1,9 @@
 ---
 /**
  * Shop — Product grid with "BRESSEL PRO" watermark
- * Mockup: 2 visible products (BRESSEL PADEL-X, KINETIC GRIP-V1), VISIT CATALOG CTA
+ * Props: products array from WordPress GraphQL (merch CPT)
  */
-import products from '../../content/merch.json';
+import type { Merch } from '../../lib/wordpress';
 import Card from '../starwind/card/Card.astro';
 import Button from '../starwind/button/Button.astro';
 import CardHeader from '../starwind/card/CardHeader.astro';
@@ -13,6 +13,18 @@ import CardContent from '../starwind/card/CardContent.astro';
 import CardFooter from '../starwind/card/CardFooter.astro';
 import Icon from '../Icon.astro';
 import ArrowRight from '../icons/ArrowRight.astro';
+
+interface Props {
+  products: Merch[];
+}
+
+const { products } = Astro.props;
+
+/** Strip HTML from WP content */
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
 ---
 
 <section id="shop" class="py-20 noise-overlay relative overflow-hidden">
@@ -45,35 +57,40 @@ import ArrowRight from '../icons/ArrowRight.astro';
         <Card class="overflow-hidden transition-colors duration-300 group" data-aos="fade-up" data-aos-delay={String(i * 100)}>
           <!-- Product Image -->
           <div class="relative aspect-square overflow-hidden bg-bressel-black">
-            <img
-              src={product.image}
-              alt={product.name}
-              class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
-              data-swap={product.swapId}
-            />
+            {product.featuredImage?.node?.sourceUrl ? (
+              <img
+                src={product.featuredImage.node.sourceUrl}
+                alt={product.title}
+                class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center text-bressel-zinc-700 font-header text-2xl font-black">{product.title.charAt(0)}</div>
+            )}
           </div>
 
           <!-- Product Body -->
           <CardHeader>
-            <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-bressel-red mb-3">
-              <span class="w-1.5 h-1.5 bg-bressel-red inline-block"></span>
-              {product.series}
-            </span>
+            {product.merchSeries && (
+              <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-bressel-red mb-3">
+                <span class="w-1.5 h-1.5 bg-bressel-red inline-block"></span>
+                {product.merchSeries}
+              </span>
+            )}
             <CardTitle class="font-header font-black italic text-lg uppercase text-bressel-white">
-              {product.name}
+              {product.title}
             </CardTitle>
             <CardDescription class="body text-sm line-clamp-2">
-              {product.description}
+              {stripHtml(product.content)}
             </CardDescription>
           </CardHeader>
 
           <!-- Price + CTA -->
           <CardFooter class="flex items-center justify-between bg-transparent border-t-0 p-6">
             <span class="font-header font-bold text-sm text-bressel-white">
-              RM{product.price}
+              RM{product.merchPrice}
             </span>
             <a
-              href={`https://wa.me/60123456789?text=${encodeURIComponent("Hi BRESSEL! I'm interested in " + product.name + ". Is it available?")}`}
+              href={`https://wa.me/60123456789?text=${encodeURIComponent("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}`}
               target="_blank"
               rel="noopener noreferrer"
               class="inline-flex items-center gap-1.5 text-bressel-zinc-400 font-header font-bold text-[0.625rem] uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"
