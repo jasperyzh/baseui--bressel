@@ -1,0 +1,74 @@
+---
+import WhatsAppButton from '../WhatsAppButton.astro';
+
+/**
+ * Hero — Full-screen video/image background
+ * Brand voice: Option A — Community-First (Play Beyond)
+ * Tagline: EST. 2026 / PLAY BEYOND
+ * Headline: Every Player Has a Place Here.
+ * Dual CTAs: Start Your Journey (WhatsApp) + See How It Works (scroll)
+ */
+---
+
+<section id="hero" class="relative min-h-screen flex flex-col justify-end items-center text-center overflow-hidden">
+
+  <!-- Background Video — let the image breathe at 65% opacity -->
+  <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-65" poster="/assets/hero-bg.jpg" data-swap="hero-bg">
+    <source src="/assets/background-video.mp4" data-swap="hero-video" type="video/mp4" />
+  </video>
+
+  <!-- Gradient overlay — only black at bottom 40% where text lives -->
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90"></div>
+  <!-- Subtle vignette for image framing -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(0,0,0,0.3)_100%)]"></div>
+
+  <!-- Content — centered -->
+  <div class="relative z-10 px-6 pt-48 pb-12 max-w-4xl" data-aos="fade-up" data-aos-delay="200">
+
+    <!-- EST / tagline -->
+    <div class="flex items-center justify-center gap-4 mb-6">
+      <div class="w-8 h-0.5 bg-bressel-red"></div>
+      <span class="caption">EST. 2026 / PLAY BEYOND</span>
+      <div class="w-8 h-0.5 bg-bressel-red"></div>
+    </div>
+
+    <!-- Headline -->
+    <h1 class="heading-xl mb-6">
+      Every Player Has<br />
+      <span class="text-bressel-red">a Place Here.</span>
+    </h1>
+
+    <!-- Body copy -->
+    <p class="body-lg max-w-2xl mx-auto mb-8">
+      World-class padel coaching built around community. From your first swing to tournament day — we're in it together.
+    </p>
+
+    <!-- Dual CTAs -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <WhatsAppButton
+        message="Hi BRESSEL! I'd like to start my padel journey. Could you share more about getting started?"
+        variant="primary"
+        size="lg"
+      >
+        Start Your Journey
+      </WhatsAppButton>
+      <a
+        href="#essence"
+        class="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-bressel-zinc-600 text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-all duration-200 hover:border-bressel-red hover:text-bressel-red"
+      >
+        See How It Works
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-bounce" data-aos="fade-up" data-aos-delay="800">
+    <span class="caption text-bressel-zinc-600">SCROLL TO BEGIN</span>
+    <svg width="16" height="24" viewBox="0 0 16 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-bressel-zinc-600">
+      <rect x="1" y="1" width="14" height="22" rx="7" />
+      <circle cx="8" cy="8" r="2" fill="currentColor" />
+    </svg>
+  </div>
+
+</section>

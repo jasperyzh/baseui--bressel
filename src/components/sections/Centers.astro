@@ -1,0 +1,88 @@
+---
+/**
+ * Find Us — Split layout (locations list + image grid)
+ * Renamed from "Centers" → "Find Us" per client direction
+ * Locations: Malaysia / Philippines / Singapore (WhatsApp links)
+ */
+
+const locations = [
+  {
+    name: "MALAYSIA",
+    waMessage: "Hi BRESSEL! I'd like to know more about the Malaysia facility.",
+    phone: "60123456789"
+  },
+  {
+    name: "PHILIPPINES",
+    waMessage: "Hi BRESSEL! I'd like to know more about the Philippines facility.",
+    phone: "60123456789"
+  },
+  {
+    name: "SINGAPORE",
+    waMessage: "Hi BRESSEL! I'd like to know more about the Singapore facility.",
+    phone: "60123456789"
+  },
+];
+
+const images = [
+  { id: "court-1", src: "/assets/20260227_195629.webp", alt: "BRESSEL Court Malaysia", span: "col-span-1 row-span-2" },
+  { id: "court-2", src: "/assets/20260402_115248.webp", alt: "BRESSEL Court", span: "col-span-1" },
+  { id: "court-3", src: "/assets/20260402_120037.webp", alt: "BRESSEL Court", span: "col-span-1" },
+];
+
+const encode = (s: string) => encodeURIComponent(s);
+---
+
+<section id="locations" class="py-20 noise-overlay">
+  <div class="container-custom">
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <!-- Left: Info + Locations -->
+      <div data-aos="fade-right">
+        <!-- Accent line -->
+        <div class="w-10 h-0.5 bg-bressel-red mb-6"></div>
+
+        <h2 class="heading-lg mb-4">
+          FIND <span class="text-bressel-red">US.</span>
+        </h2>
+
+        <p class="body-lg mb-10">
+          Malaysia, Philippines, Singapore. Wherever you play, we're nearby.
+        </p>
+
+        <!-- Locations list -->
+        <div class="space-y-4">
+          {locations.map((loc) => (
+            <a
+              href={`https://wa.me/${loc.phone}?text=${encode(loc.waMessage)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-between py-3 border-b border-bressel-zinc-800 group no-underline"
+            >
+              <span class="font-header font-bold text-[0.75rem] uppercase tracking-wide group-hover:text-bressel-red transition-colors">{loc.name}</span>
+              <span class="text-bressel-red font-header font-bold text-[0.625rem] uppercase tracking-wide">
+                Inquire via WhatsApp →
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right: Image Grid -->
+      <div class="grid grid-cols-2 gap-3" data-aos="fade-left" data-aos-delay="150">
+        {images.map((img) => (
+          <div class={`${img.span} overflow-hidden bg-bressel-black-soft border border-bressel-zinc-800`}>
+            <img
+              src={img.src}
+              alt={img.alt}
+              class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              data-swap={img.id}
+            />
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+</section>

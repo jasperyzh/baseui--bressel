@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Jeremy Yeo",
+    "role": "Head of Pro Training",
+    "specialty": "Elite Performance",
+    "bio": "Former national team player with 15+ years coaching experience. Specializes in technical mastery and match strategy.",
+    "image": "/assets/teamphotos/teams_photos--Sequence 0103.webp"
+  },
+  {
+    "name": "Coach Rafael",
+    "role": "Senior Performance Director",
+    "specialty": "Competition Readiness",
+    "bio": "Certified international padel coach. Expert in tournament preparation and mental conditioning.",
+    "image": "/assets/teamphotos/teams_photos--Sequence 0105.webp"
+  },
+  {
+    "name": "Darren Lee",
+    "role": "Elite Coaching Lead",
+    "specialty": "Junior Development",
+    "bio": "Specialized in youth padel development. Built the BRESSEL Junior Padel Circuit from the ground up.",
+    "image": "/assets/teamphotos/teams_photos--Sequence 0107.webp"
+  },
+  {
+    "name": "Coach Amira",
+    "role": "Technical Director",
+    "specialty": "Footwork & Agility",
+    "bio": "Former Olympic athlete turned padel coach. Brings elite athletic training methodology to the court.",
+    "image": "/assets/teamphotos/teams_photos--Sequence 0109.webp"
+  }
+]

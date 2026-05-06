@@ -1,0 +1,53 @@
+---
+/**
+ * Index / Homepage — Full page assembly
+ * Section flow (per strategic report):
+ * 1. Hero — "Play Beyond" headline + emotional hook
+ * 2. Brand Essence — "Beyond the Game" (Dani's vision, mission)
+ * 3. Academy Cards — Train Beyond / Connect Beyond
+ * 4. Ticker — Dynamic event news bar
+ * 5. Program Pillars — PLAY BEYOND / GO BEYOND / GROW BEYOND
+ * 6. Pricing — Rough overview + PDF download button
+ * 7. Community Voices — 3 testimonials (authentic player voice)
+ * 8. Find Us — Malaysia / Philippines / Singapore (WhatsApp per location)
+ * 9. Shop Preview — BRESSEL PRO equipment (WhatsApp inquiries)
+ * 10. Newsletter CTA — "Stay in the Game"
+ *
+ * ── WP-GraphQL Ready ──
+ * Replace sections with WP response:
+ *   const page = data.data.page;
+ */
+import MainLayout from '@/layouts/Layout.astro';
+import Hero from '@/components/sections/Hero.astro';
+import BrandEssence from '@/components/sections/BrandEssence.astro';
+import AcademyCards from '@/components/sections/AcademyCards.astro';
+import Ticker from '@/components/sections/Ticker.astro';
+import ProgramPillars from '@/components/sections/ProgramPillars.astro';
+import Pricing from '@/components/sections/Pricing.astro';
+import Voices from '@/components/sections/Quotes.astro';
+import Centers from '@/components/sections/Centers.astro';
+import Shop from '@/components/sections/Shop.astro';
+import NewsletterCTA from '@/components/sections/NewsletterCTA.astro';
+---
+
+<MainLayout
+  title="BRESSEL™ — World-Class Padel, Built Around People"
+  description="World-class padel coaching built around community. From your first swing to tournament day — we're in it together."
+>
+  <Hero />
+  <BrandEssence />
+  <AcademyCards />
+  <Ticker />
+  <ProgramPillars />
+
+  <!-- Diagonal section divider: black → white -->
+  <div class="relative h-20 md:h-28 overflow-hidden bg-bressel-black">
+    <div class="absolute inset-0 bg-bressel-white" style="clip-path: polygon(0 100%, 100% 0, 100% 100%)"></div>
+  </div>
+
+  <Pricing />
+  <Voices />
+  <Centers />
+  <Shop />
+  <NewsletterCTA />
+</MainLayout>

@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Malaysia Open Qualifiers",
+    "date": "2026-05-15",
+    "location": "BRESSEL Academy, Kuala Lumpur",
+    "type": "tournament",
+    "description": "Qualifying rounds for the Malaysia Open. Top 32 players advance to the main draw."
+  },
+  {
+    "title": "BRESSEL Junior Padel Circuit",
+    "date": "2026-06-01",
+    "location": "BRESSEL Academy, Kuala Lumpur",
+    "type": "youth",
+    "description": "Monthly junior tournament for U12, U15, and U18 divisions. Registration required."
+  },
+  {
+    "title": "Community Open Day",
+    "date": "2026-05-20",
+    "location": "BRESSEL Academy, Singapore",
+    "type": "community",
+    "description": "Free trial sessions for new players. All skill levels welcome. Bring a friend!"
+  },
+  {
+    "title": "Coach Certification Workshop",
+    "date": "2026-07-10",
+    "location": "BRESSEL Academy, Manila",
+    "type": "certification",
+    "description": "3-day intensive workshop on the BRESSEL™ coaching methodology. Limited to 20 spots."
+  }
+]

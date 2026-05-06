@@ -1,0 +1,34 @@
+[
+  {
+    "name": "BRESSEL PADEL-X",
+    "series": "FLAGSHIP SERIES",
+    "description": "Engineered for maximum power output and vibration dampening. The choice of tournament champions.",
+    "price": "169.00",
+    "image": "/assets/brandvisual--/20260402_115248.webp",
+    "swapId": "product-0"
+  },
+  {
+    "name": "KINETIC GRIP-V1",
+    "series": "FOOTWEAR",
+    "description": "Lateral stability on synthetic turf. Engineered for precision movements.",
+    "price": "159.00",
+    "image": "/assets/brandvisual--/20260402_120136.webp",
+    "swapId": "product-1"
+  },
+  {
+    "name": "ELITE TOUR BAG",
+    "series": "ACCESSORIES",
+    "description": "Thermal lining for 3 rackets + apparel storage. Competition-ready design.",
+    "price": "320.00",
+    "image": "/assets/brandvisual--/20260402_115921.webp",
+    "swapId": "product-2"
+  },
+  {
+    "name": "COMPRESSION PRO TEE",
+    "series": "APPAREL",
+    "description": "Breathable micro-mesh technology. Tournament-grade compression fit.",
+    "price": "185.00",
+    "image": "/assets/brandvisual--/20260402_115809.webp",
+    "swapId": "product-3"
+  }
+]

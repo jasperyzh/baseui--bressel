@@ -1,0 +1,110 @@
+---
+/**
+ * About Page — Brand story, mission, methodology
+ *
+ * ── WP-GraphQL Ready ──
+ * Update `hero`, `stats` from WP response:
+ *   const page = data.data.page;
+ *   const hero = page.acfHero;
+ *   const stats = page.acfStats;
+ */
+
+// ── Default Content ──
+const hero = {
+  tagline: 'EST. 2026 / PLAY BEYOND',
+  title: 'THE BRESSEL',
+  highlight: 'STANDARD.',
+  description: 'World-class padel, within reach. Built around people who love the game.',
+};
+
+const stats = [
+  { value: '3', label: 'COUNTRIES' },
+  { value: '50+', label: 'CERTIFIED COACHES' },
+  { value: '2K+', label: 'ACTIVE PLAYERS' },
+  { value: '100+', label: 'TOURNAMENTS' },
+  { value: '92%', label: 'RETENTION' },
+];
+
+const mission = {
+  label: 'OUR MISSION',
+  title: 'EVERY PLAYER',
+  highlight: 'COUNTS.',
+  p1: 'BRESSEL was born from a single belief: world-class coaching shouldn\'t be locked behind elite circles.',
+  p2: 'From your first swing to tournament day, every element is designed to build your game — and a community that lasts.',
+  image: '/assets/brandvisual--/20260402_115035.webp',
+};
+
+const methodologies = [
+  { title: 'TECHNICAL', description: 'Every movement mapped. Every shot analyzed. We break down your game into clear, repeatable steps.' },
+  { title: 'TACTICAL', description: 'Court intelligence. Pattern recognition. Decision-making under pressure. We build players who think as fast as they move.' },
+  { title: 'PHYSICAL', description: 'Explosive agility. Lateral stability. Endurance that lasts. Conditioning built specifically for padel.' },
+];
+
+import MainLayout from '@/layouts/Layout.astro';
+---
+
+<MainLayout title="About BRESSEL" description="The world's leading high-performance padel academy.">
+  <main class="pt-20 md:pt-24">
+    <!-- Hero -->
+    <section class="relative min-h-[50vh] flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
+      <div class="relative z-10 text-center px-6">
+        <div class="flex items-center justify-center gap-4 mb-6">
+          <div class="w-8 h-0.5" style="background: var(--color-bressel-red);"></div>
+          <span class="caption">{hero.tagline}</span>
+          <div class="w-8 h-0.5" style="background: var(--color-bressel-red);"></div>
+        </div>
+        <h1 class="heading-xl mb-6">{hero.title}<br /><span style="color: var(--color-bressel-red);">{hero.highlight}</span></h1>
+        <p class="body-lg max-w-2xl mx-auto">{hero.description}</p>
+      </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="py-20 noise-overlay">
+      <div class="container-custom">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <p class="caption mb-4">{mission.label}</p>
+            <h2 class="heading-lg mb-6">{mission.title}<br /><span style="color: var(--color-bressel-red);">{mission.highlight}</span></h2>
+            <p class="body-lg mb-6">{mission.p1}</p>
+            <p class="body">{mission.p2}</p>
+          </div>
+          <div class="overflow-hidden" style="background: var(--color-card); border: 1px solid var(--color-border);">
+            <img src={mission.image} alt="BRESSEL Academy" class="w-full h-full object-cover" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Strip -->
+    <section class="py-16 border-y" style="border-color: var(--color-border);">
+      <div class="container-custom">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+          {stats.map((s) => (
+            <div>
+              <p class="text-4xl md:text-5xl mb-2" style="font-family: var(--font-header); font-weight: 900; color: var(--color-bressel-red);">{s.value}</p>
+              <p class="heading-sm" style="color: var(--color-muted-foreground);">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Methodology -->
+    <section class="py-20">
+      <div class="container-custom text-center">
+        <p class="caption mb-4">THE METHODOLOGY</p>
+        <h2 class="heading-lg mb-16">THREE <span style="color: var(--color-bressel-red);">PILLARS.</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {methodologies.map((m) => (
+            <div class="p-8" style="background: var(--color-card); border: 1px solid var(--color-border);">
+              <div class="w-10 h-0.5 mb-6 mx-auto" style="background: var(--color-bressel-red);"></div>
+              <h3 class="heading-md mb-4">{m.title}</h3>
+              <p class="body text-sm">{m.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</MainLayout>

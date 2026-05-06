@@ -1,0 +1,94 @@
+---
+/**
+ * Academy + Community — Two horizontal cards
+ * Brand voice: Option A
+ * TRAIN BEYOND — "Level Up Your Game"
+ * CONNECT BEYOND — "Find Your Squad"
+ */
+import Card from '../starwind/card/Card.astro';
+import CardHeader from '../starwind/card/CardHeader.astro';
+import CardTitle from '../starwind/card/CardTitle.astro';
+import CardDescription from '../starwind/card/CardDescription.astro';
+import CardContent from '../starwind/card/CardContent.astro';
+import WhatsAppButton from '../WhatsAppButton.astro';
+---
+
+<section class="py-24">
+  <div class="container-custom">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+
+      <!-- Academy Card — TRAIN BEYOND -->
+      <Card class="overflow-hidden transition-colors duration-300" data-aos="fade-up">
+        <div class="flex flex-col md:flex-row h-auto md:h-80">
+          <div class="w-full md:w-1/2 h-64 md:h-full flex-shrink-0 overflow-hidden">
+            <img
+              src="/assets/academy-card.jpg"
+              alt="BRESSEL Academy"
+              class="w-full h-full object-cover"
+              data-swap="academy-card"
+            />
+          </div>
+          <div class="w-full md:w-1/2 flex flex-col justify-center h-full">
+            <CardHeader>
+              <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-bressel-red mb-3">
+                <span class="w-2 h-2 bg-bressel-red inline-block"></span>
+                TRAIN BEYOND
+              </span>
+              <CardTitle class="heading-md text-xl">Level Up Your Game</CardTitle>
+              <CardDescription class="body">
+                Champion-led coaching that meets you where you are.
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="mt-auto">
+              <WhatsAppButton
+                message="Hi BRESSEL! I'm interested in your training programs. Could you share the details and pricing?"
+                variant="outline"
+                size="sm"
+              >
+                Explore Programs
+              </WhatsAppButton>
+            </CardContent>
+          </div>
+        </div>
+      </Card>
+
+      <!-- Community Card — CONNECT BEYOND -->
+      <Card class="overflow-hidden transition-colors duration-300" data-aos="fade-up" data-aos-delay="150">
+        <div class="flex flex-col md:flex-row h-auto md:h-80">
+          <div class="w-full md:w-1/2 h-64 md:h-full flex-shrink-0 overflow-hidden">
+            <img
+              src="/assets/community-card.jpg"
+              alt="BRESSEL Community"
+              class="w-full h-full object-cover"
+              data-swap="community-card"
+            />
+          </div>
+          <div class="w-full md:w-1/2 flex flex-col justify-center h-full">
+            <CardHeader>
+              <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-bressel-zinc-400 mb-3">
+                <span class="w-2 h-2 bg-bressel-zinc-400 inline-block"></span>
+                CONNECT BEYOND
+              </span>
+              <CardTitle class="heading-md text-xl">Find Your Squad</CardTitle>
+              <CardDescription class="body">
+                Ladders, tournaments, friendships forged on court.
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="mt-auto">
+              <WhatsAppButton
+                message="Hi BRESSEL! I'd like to join a court or community program. How do I get started?"
+                variant="outline"
+                size="sm"
+              >
+                Find a Court
+              </WhatsAppButton>
+            </CardContent>
+          </div>
+        </div>
+      </Card>
+
+    </div>
+
+  </div>
+</section>

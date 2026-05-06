@@ -1,0 +1,37 @@
+---
+/**
+ * 404 — Page not found
+ *
+ * ── WP-GraphQL Ready ──
+ * Replace frontmatter with WP response:
+ *   const page = data.data.page;
+ *   const hero = { title: page.title, ... };
+ */
+import MainLayout from '@/layouts/Layout.astro';
+import Button from '@/components/starwind/button/Button.astro';
+
+// ── Default Content ──
+const hero = {
+  error: 'ERROR',
+  code: '404',
+  title: 'PAGE NOT',
+  highlight: 'FOUND.',
+  description: 'The page you\'re looking for doesn\'t exist or has been moved.',
+  cta: 'BACK TO HOME',
+  ctaHref: '/',
+};
+---
+
+<MainLayout title="404 — Page Not Found" description="The page you're looking for doesn't exist.">
+  <main class="pt-20 md:pt-24 min-h-screen flex items-center">
+    <div class="container-custom text-center">
+      <p class="caption mb-4">{hero.error}</p>
+      <h1 class="font-header font-black text-8xl md:text-9xl mb-6" style="color: var(--color-bressel-red);">{hero.code}</h1>
+      <h2 class="heading-lg mb-6">{hero.title} <span style="color: var(--color-bressel-red);">{hero.highlight}</span></h2>
+      <p class="body-lg max-w-md mx-auto mb-8">{hero.description}</p>
+      <Button href={hero.ctaHref} variant="primary" size="lg">
+        {hero.cta}
+      </Button>
+    </div>
+  </main>
+</MainLayout>

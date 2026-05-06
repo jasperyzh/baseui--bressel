@@ -1,0 +1,73 @@
+---
+/**
+ * Layout.astro — BRESSEL™ Base Layout
+ *
+ * Props:
+ *   title?     — Page title (appended with " — BRESSEL™")
+ *   description? — Meta description (fallback to default)
+ *
+ * Theme:
+ *   This is a single-theme site (BRESSEL dark).
+ *   data-theme="bressel" is set statically.
+ *   No dark/light toggle needed.
+ */
+
+import "../styles/global.css";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import VisualDev from "@/components/visual-dev/VisualDev.astro";
+
+const { title, description } = Astro.props;
+const pageTitle = title ? `${title} — BRESSEL™` : "BRESSEL™";
+const pageDescription = description || "World-class padel, within reach.";
+---
+
+<!doctype html>
+<html lang="en" data-theme="bressel">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{pageTitle}</title>
+
+    <!-- Google Fonts: Oswald (display) + Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- AOS (Animate on Scroll) — 2KB gzipped -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- BRESSEL theme sync — persists single theme, no toggle needed -->
+    <script is:inline>
+      (function() {
+        var theme = 'bressel';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+
+  <body>
+    <Header />
+    <slot />
+    <Footer />
+    {import.meta.env.DEV && <VisualDev />}
+
+    <!-- AOS scroll animations — load from CDN, init on load -->
+    <script is:inline src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script is:inline>
+      (function checkAos() {
+        if (typeof AOS !== 'undefined') {
+          AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 80 });
+          document.addEventListener('astro:page-load', function() { AOS.refresh(); });
+        } else {
+          setTimeout(checkAos, 50);
+        }
+      })();
+    </script>
+  </body>
+</html>

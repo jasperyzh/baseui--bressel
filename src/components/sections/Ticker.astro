@@ -1,0 +1,56 @@
+---
+/**
+ * Ticker — Scrolling news bar
+ * Accepts an array of items, duplicates them for seamless infinite scroll.
+ */
+interface TickerItem {
+  label: string;
+  value: string;
+  labelColor?: "muted" | "primary";
+}
+
+interface Props {
+  items?: TickerItem[];
+}
+
+const { items = [
+  { label: "UPCOMING:", value: "MALAYSIA OPEN QUALIFIERS", labelColor: "muted" },
+  { label: "EVENT:", value: "BRESSEL JUNIOR PADEL CIRCUIT", labelColor: "primary" },
+  { label: "LIVE:", value: "ACADEMY RANKING UPDATES", labelColor: "muted" },
+  { label: "NEW DROP:", value: "PRECISION SERIES V2", labelColor: "muted" },
+] } = Astro.props;
+
+const labelColorClass = (color: TickerItem["labelColor"]) =>
+  color === "primary" ? "text-bressel-red" : "text-bressel-zinc-400";
+
+// Duplicate items for seamless loop
+const loopItems = [...items, ...items];
+---
+
+<div class="bg-bressel-black-soft border-y border-bressel-zinc-800/60 overflow-hidden py-3">
+  <div class="ticker-track animate-ticker flex items-center whitespace-nowrap">
+
+    {loopItems.map((item, i) => (
+      <>
+        <span class="inline-flex items-center gap-2 px-8 text-[0.6875rem] font-header font-bold uppercase tracking-wider">
+          <span class={labelColorClass(item.labelColor)}>{item.label}</span>
+          <span class="text-bressel-white">{item.value}</span>
+        </span>
+        {i < loopItems.length - 1 && (
+          <span class="text-bressel-zinc-800 px-2">|</span>
+        )}
+      </>
+    ))}
+
+  </div>
+</div>
+
+<style>
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-ticker {
+    animation: ticker 30s linear infinite;
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+/**
+ * Newsletter CTA — "Stay in the Game."
+ * Brand voice: Option A — warm, human, direct
+ */
+import Button from '../starwind/button/Button.astro';
+import Input from '../starwind/input/Input.astro';
+---
+
+<section id="newsletter" class="relative py-24 md:py-32 overflow-hidden">
+
+  <!-- Dark Scarlet background (from brand tokens) -->
+  <div class="absolute inset-0 bg-dark-scarlet"></div>
+  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60"></div>
+
+  <!-- Optional BG image -->
+  <img
+    src="/assets/cta-bg-overlay.jpg"
+    alt=""
+    class="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
+    data-swap="cta-bg"
+  />
+
+  <!-- Content -->
+  <div class="relative z-10 container-custom text-center" data-aos="fade-up">
+
+    <h2 class="heading-xl mb-6">
+      Stay in the <span class="text-bressel-black">Game.</span>
+    </h2>
+
+    <p class="body-lg max-w-2xl mx-auto mb-10 text-bressel-white/80">
+      Gear drops, tournament invites, stories from the court — straight to your inbox.
+    </p>
+
+    <!-- Email Form -->
+    <form
+      class="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto"
+      onsubmit="event.preventDefault(); alert('Subscribed!');"
+    >
+      <Input
+        type="email"
+        name="email"
+        required
+        placeholder="ENTER EMAIL"
+        class="flex-1 bg-black/20 border-2 border-white/20 text-bressel-white text-xs font-bold uppercase tracking-wide outline-none placeholder:text-bressel-white/40 focus:border-bressel-white transition-colors"
+      />
+      <Button type="submit" variant="primary-solid" class="!bg-bressel-black !text-bressel-white hover:!bg-bressel-black/80" size="lg">
+        SUBSCRIBE
+        <svg width="14" height="10" viewBox="0 0 20 14" fill="currentColor" class="opacity-90">
+          <rect x="0" y="0" width="20" height="5" rx="0" />
+          <rect x="0" y="9" width="20" height="5" rx="0" />
+        </svg>
+      </Button>
+    </form>
+
+  </div>
+
+</section>
+
+<style>
+  .bg-dark-scarlet {
+    background-color: #E02D1B;
+  }
+</style>
