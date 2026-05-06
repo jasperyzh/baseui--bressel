@@ -3,6 +3,7 @@
  * Newsletter CTA — "Stay in the Game."
  * Brand voice: Option A — warm, human, direct
  */
+import Icon from '../Icon.astro';
 import Button from '../starwind/button/Button.astro';
 import Input from '../starwind/input/Input.astro';
 ---
@@ -46,10 +47,7 @@ import Input from '../starwind/input/Input.astro';
       />
       <Button type="submit" variant="primary-solid" class="!bg-bressel-black !text-bressel-white hover:!bg-bressel-black/80" size="lg">
         SUBSCRIBE
-        <svg width="14" height="10" viewBox="0 0 20 14" fill="currentColor" class="opacity-90">
-          <rect x="0" y="0" width="20" height="5" rx="0" />
-          <rect x="0" y="9" width="20" height="5" rx="0" />
-        </svg>
+        <Icon name="mail" size={14} class="opacity-90" />
       </Button>
     </form>
 

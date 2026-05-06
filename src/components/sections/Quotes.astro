@@ -4,6 +4,7 @@
  * Section: VOICES FROM THE COURT
  * 2 player testimonials + 1 coach perspective
  */
+import Icon from '../Icon.astro';
 const voices = [
   {
     text: "I started with zero padel experience. Six months later, I qualified for my first tournament. The coaches actually listened.",
@@ -42,10 +43,7 @@ const voices = [
 
         <div class="relative z-10 px-6 py-10 md:px-12 md:py-14">
           <!-- Quote mark -->
-          <svg width="32" height="20" viewBox="0 0 20 14" fill="currentColor" class="text-bressel-red mb-6 opacity-80">
-            <rect x="0" y="0" width="20" height="5" rx="2" />
-            <rect x="0" y="9" width="20" height="5" rx="2" />
-          </svg>
+          <Icon name="quote" size={32} class="text-bressel-red mb-6 opacity-80" />
 
           <blockquote class="quote-text mb-8 max-w-3xl">
             &ldquo;{voice.text}&rdquo;
