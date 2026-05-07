@@ -1,0 +1,95 @@
+---
+/**
+ * [slug].astro — Dynamic Page Template
+ *
+ * Renders any WordPress Page by its slug.
+ * Uses getStaticPaths() to pre-generate all WP pages at build time.
+ *
+ * Reserved slugs (academy, community, shop, about, contact) are excluded
+ * — they have their own static .astro files with custom layout/sections.
+ *
+ * HTML content from WP is rendered via set:html (safe — WP sanitizes output).
+ * Inline images in content load from the WP origin.
+ */
+
+import MainLayout from '@/layouts/Layout.astro';
+import {
+  getAllPageSlugs,
+  getPageBySlug,
+} from '@/lib/wordpress';
+import type { WPPage } from '@/lib/wordpress';
+
+// ── Static Paths ───────────────────────────────────────────
+export async function getStaticPaths() {
+  // Reserved slugs have dedicated .astro files with custom layouts.
+  // Excluding them prevents route collisions and build warnings.
+  const RESERVED_SLUGS = [
+    'academy',
+    'community',
+    'shop',
+    'about',
+    'contact',
+  ];
+  const allSlugs = await getAllPageSlugs();
+  const filtered = allSlugs.filter(
+    ({ slug }) => !RESERVED_SLUGS.includes(slug),
+  );
+  return filtered.map(({ slug }) => ({ params: { slug } }));
+}
+
+// ── Page Data ──────────────────────────────────────────────
+const { slug } = Astro.params;
+const page: WPPage | null = await getPageBySlug(slug!);
+
+// If page not found (shouldn't happen with SSG, but safe guard)
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+// Strip HTML for meta description
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
+
+const metaDesc = stripHtml(page.content).slice(0, 160);
+---
+
+<MainLayout title={page.title} description={metaDesc}>
+  <main class="pt-20 md:pt-24 min-h-screen">
+
+    <!-- ── Hero Section ── -->
+    <section class="relative flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
+
+      {page.featuredImage?.node?.sourceUrl && (
+        <div class="absolute inset-0 z-0 opacity-30">
+          <img
+            src={page.featuredImage.node.sourceUrl}
+            alt={page.featuredImage.node.altText || page.title}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      <div class="relative z-10 text-center px-6 py-20">
+        <h1 class="heading-xl mb-6">{page.title}</h1>
+        {page.content && (
+          <p class="body-lg max-w-2xl mx-auto text-sm" style="color: var(--color-muted-foreground);">
+            {stripHtml(page.content).slice(0, 200)}…
+          </p>
+        )}
+      </div>
+    </section>
+
+    <!-- ── Content Section ── -->
+    <section class="py-16">
+      <div class="container-custom">
+        <div class="max-w-3xl mx-auto prose prose-invert prose-lg">
+          <div set:html={page.content} />
+        </div>
+      </div>
+    </section>
+
+  </main>
+</MainLayout>

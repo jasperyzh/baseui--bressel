@@ -1,0 +1,125 @@
+---
+/**
+ * blog/index.astro — Blog Archive
+ *
+ * Lists all published WordPress posts in reverse chronological order.
+ * Provides discoverability for blog content and SEO content hub.
+ *
+ * Each entry shows: featured image (thumbnail), title, date, excerpt.
+ * Clicking a title links to /blog/[slug].
+ *
+ * Event posts also appear here — they're WordPress posts with CMB2 fields.
+ */
+
+import MainLayout from '@/layouts/Layout.astro';
+import { getAllPosts } from '@/lib/wordpress';
+
+// ── Archive Data ───────────────────────────────────────────
+const posts = await getAllPosts();
+
+// Utility
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+---
+
+<MainLayout
+  title="Blog"
+  description="The latest from BRESSEL — tournament recaps, coaching tips, community stories."
+>
+  <main class="pt-20 md:pt-24 min-h-screen">
+
+    <!-- ── Hero ── -->
+    <section class="relative flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
+      <div class="relative z-10 text-center px-6 py-20">
+        <p class="caption mb-4">THE LATEST</p>
+        <h1 class="heading-xl mb-6">BRESSEL <span style="color: var(--color-bressel-red);">BLOG.</span></h1>
+        <p class="body-lg max-w-xl mx-auto">Tournament recaps, coaching tips, and stories from the community.</p>
+      </div>
+    </section>
+
+    <!-- ── Posts List ── -->
+    <section class="py-20 noise-overlay">
+      <div class="container-custom">
+
+        {posts.length === 0 && (
+          <div class="text-center py-20">
+            <p class="body-lg" style="color: var(--color-muted-foreground);">No posts yet. Check back soon.</p>
+          </div>
+        )}
+
+        <div class="space-y-6">
+          {posts.map((p) => {
+            const excerpt = stripHtml(p.excerpt || '').slice(0, 200);
+            return (
+              <article
+                class="flex flex-col sm:flex-row gap-6 p-6 transition-colors"
+                style="background: var(--color-card); border: 1px solid var(--color-border);"
+              >
+                <!-- Thumbnail -->
+                <a href={`/blog/${p.slug}`} class="block w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 overflow-hidden">
+                  {p.featuredImage?.node?.sourceUrl ? (
+                    <img
+                      src={p.featuredImage.node.sourceUrl}
+                      alt={p.featuredImage.node.altText || p.title}
+                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  ) : (
+                    <div class="w-full h-full flex items-center justify-center" style="background: var(--color-muted);">
+                      <span class="font-header font-black text-3xl" style="color: var(--color-bressel-red);">
+                        {p.title.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </a>
+
+                <!-- Content -->
+                <div class="flex-1 flex flex-col justify-center">
+                  <time
+                    datetime={p.date}
+                    class="text-[0.625rem] font-bold uppercase tracking-wider mb-2"
+                    style="color: var(--color-bressel-red);"
+                  >
+                    {formatDate(p.date)}
+                  </time>
+                  <h2 class="font-header font-black italic text-xl uppercase mb-2" style="color: var(--color-foreground);">
+                    <a href={`/blog/${p.slug}`} class="no-underline hover:underline" style="color: inherit;">
+                      {p.title}
+                    </a>
+                  </h2>
+                  {excerpt && (
+                    <p class="body text-sm line-clamp-2">{excerpt}</p>
+                  )}
+                  <a
+                    href={`/blog/${p.slug}`}
+                    class="mt-3 inline-flex items-center gap-1.5 font-header font-bold text-[0.625rem] uppercase tracking-wider no-underline transition-colors"
+                    style="color: var(--color-muted-foreground);"
+                  >
+                    READ MORE
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</MainLayout>

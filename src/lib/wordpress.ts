@@ -52,6 +52,39 @@ export interface WPEvent {
   featuredImage: FeaturedImage | null;
 }
 
+// WordPress Page (standard 'page' post type) — for [slug].astro
+// Note: Pages lack 'excerpt' in WPGraphQL (only Posts have it)
+export interface WPPage {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  date: string;
+  modified: string;
+  featuredImage: FeaturedImage | null;
+}
+
+// WordPress Post — for blog/[slug].astro, blog/index.astro
+export interface WPPost {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt: string;
+  date: string;
+  modified: string;
+  featuredImage: FeaturedImage | null;
+  // Event fields (from CMB2 — nullable for non-event posts)
+  eventDate: string | null;
+  eventLocation: string | null;
+  eventRegistrationUrl: string | null;
+}
+
+// Lightweight slug-only type for getStaticPaths
+interface SlugNode {
+  slug: string;
+}
+
 // ── Core Fetch ─────────────────────────────────────────────
 interface GraphQLResponse<T> {
   data: T;
@@ -85,12 +118,12 @@ async function fetchWP<T>(
   return json.data;
 }
 
-// ── Queries ────────────────────────────────────────────────
+// ── Queries: Existing ──────────────────────────────────────
 
 export async function getCoaches(): Promise<Coach[]> {
   const data = await fetchWP<{ coaches: { nodes: Coach[] } }>(`
     query GetCoaches {
-      coaches(first: 50) {
+      coaches(first: 50, where: { status: PUBLISH }) {
         nodes {
           id
           title
@@ -119,7 +152,7 @@ export async function getCoaches(): Promise<Coach[]> {
 export async function getMerch(): Promise<Merch[]> {
   const data = await fetchWP<{ merches: { nodes: Merch[] } }>(`
     query GetMerch {
-      merches(first: 50) {
+      merches(first: 50, where: { status: PUBLISH }) {
         nodes {
           id
           title
@@ -147,7 +180,7 @@ export async function getMerch(): Promise<Merch[]> {
 export async function getEvents(): Promise<WPEvent[]> {
   const data = await fetchWP<{ posts: { nodes: WPEvent[] } }>(`
     query GetEvents {
-      posts(first: 50, where: { orderby: { field: DATE, order: DESC } }) {
+      posts(first: 50, where: { status: PUBLISH, orderby: { field: DATE, order: DESC } }) {
         nodes {
           id
           title
@@ -157,6 +190,149 @@ export async function getEvents(): Promise<WPEvent[]> {
           eventDate
           eventLocation
           eventRegistrationUrl
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+        }
+      }
+    }
+  `);
+  return data.posts.nodes;
+}
+
+// ── Queries: Dynamic Routes (Pages) ────────────────────────
+
+/** Fetch all published page slugs for getStaticPaths */
+export async function getAllPageSlugs(): Promise<{ slug: string }[]> {
+  const data = await fetchWP<{ pages: { nodes: SlugNode[] } }>(`
+    query AllPageSlugs {
+      pages(first: 100, where: { status: PUBLISH }) {
+        nodes {
+          slug
+        }
+      }
+    }
+  `);
+  return data.pages.nodes;
+}
+
+/** Fetch a single published page by URI slug */
+export async function getPageBySlug(slug: string): Promise<WPPage | null> {
+  try {
+    const data = await fetchWP<{ pageBy: WPPage | null }>(
+      `
+      query PageBySlug($slug: String!) {
+        pageBy(uri: $slug) {
+          id
+          title
+          slug
+          content
+          date
+          modified
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    `,
+      { slug },
+    );
+    // pageBy resolves uri against the 'page' post type
+    return data.pageBy;
+  } catch (e) {
+    console.error('[wordpress] getPageBySlug failed:', slug, e);
+    return null;
+  }
+}
+
+// ── Queries: Dynamic Routes (Posts / Blog) ─────────────────
+
+/** Fetch all published post slugs for getStaticPaths */
+export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
+  const data = await fetchWP<{ posts: { nodes: SlugNode[] } }>(`
+    query AllPostSlugs {
+      posts(first: 100, where: { status: PUBLISH }) {
+        nodes {
+          slug
+        }
+      }
+    }
+  `);
+  return data.posts.nodes;
+}
+
+/** Fetch a single published post by slug */
+export async function getPostBySlug(slug: string): Promise<WPPost | null> {
+  try {
+    const data = await fetchWP<{ post: WPPost | null }>(
+      `
+      query PostBySlug($slug: ID!) {
+        post(id: $slug, idType: SLUG) {
+          id
+          title
+          slug
+          content
+          excerpt
+          date
+          modified
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
+          eventDate
+          eventLocation
+          eventRegistrationUrl
+        }
+      }
+    `,
+      { slug },
+    );
+    return data.post;
+  } catch {
+    return null;
+  }
+}
+
+/** Fetch all published posts for blog archive (lightweight) */
+export async function getAllPosts(): Promise<
+  { id: string; title: string; slug: string; excerpt: string; date: string; featuredImage: FeaturedImage | null }[]
+> {
+  const data = await fetchWP<{
+    posts: {
+      nodes: {
+        id: string;
+        title: string;
+        slug: string;
+        excerpt: string;
+        date: string;
+        featuredImage: FeaturedImage | null;
+      }[];
+    };
+  }>(`
+    query BlogArchive {
+      posts(first: 50, where: { status: PUBLISH, orderby: { field: DATE, order: DESC } }) {
+        nodes {
+          id
+          title
+          slug
+          excerpt
+          date
           featuredImage {
             node {
               sourceUrl
