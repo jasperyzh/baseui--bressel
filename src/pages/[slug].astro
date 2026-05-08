@@ -1,14 +1,14 @@
 ---
 /**
- * [slug].astro — Dynamic Page Template
+ * [slug].astro - Dynamic Page Template
  *
  * Renders any WordPress Page by its slug.
  * Uses getStaticPaths() to pre-generate all WP pages at build time.
  *
  * Reserved slugs (academy, community, shop, about, contact) are excluded
- * — they have their own static .astro files with custom layout/sections.
+ * - they have their own static .astro files with custom layout/sections.
  *
- * HTML content from WP is rendered via set:html (safe — WP sanitizes output).
+ * HTML content from WP is rendered via set:html (safe - WP sanitizes output).
  * Inline images in content load from the WP origin.
  */
 
@@ -17,6 +17,7 @@ import {
   getAllPageSlugs,
   getPageBySlug,
 } from '@/lib/wordpress';
+import { fixImageUrl, fixImageUrlsInHtml } from '@/lib/fix-image-url';
 import type { WPPage } from '@/lib/wordpress';
 
 // ── Static Paths ───────────────────────────────────────────
@@ -53,6 +54,12 @@ function stripHtml(html: string): string {
 }
 
 const metaDesc = stripHtml(page.content).slice(0, 160);
+
+// Fix mixed content — rewrite HTTP WP URLs to HTTPS proxy
+const fixedFeaturedImage = page.featuredImage?.node?.sourceUrl
+  ? fixImageUrl(page.featuredImage.node.sourceUrl)
+  : undefined;
+const fixedContent = fixImageUrlsInHtml(page.content);
 ---
 
 <MainLayout title={page.title} description={metaDesc}>
@@ -62,10 +69,10 @@ const metaDesc = stripHtml(page.content).slice(0, 160);
     <section class="relative flex items-center justify-center overflow-hidden">
       <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
 
-      {page.featuredImage?.node?.sourceUrl && (
+      {fixedFeaturedImage && (
         <div class="absolute inset-0 z-0 opacity-30">
           <img
-            src={page.featuredImage.node.sourceUrl}
+            src={fixedFeaturedImage}
             alt={page.featuredImage.node.altText || page.title}
             class="w-full h-full object-cover"
           />
@@ -86,7 +93,7 @@ const metaDesc = stripHtml(page.content).slice(0, 160);
     <section class="py-16">
       <div class="container-custom">
         <div class="max-w-3xl mx-auto prose prose-invert prose-lg">
-          <div set:html={page.content} />
+          <div set:html={fixedContent} />
         </div>
       </div>
     </section>

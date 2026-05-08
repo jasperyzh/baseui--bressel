@@ -1,6 +1,6 @@
 ---
 /**
- * blog/index.astro — Blog Archive
+ * blog/index.astro - Blog Archive
  *
  * Lists all published WordPress posts in reverse chronological order.
  * Provides discoverability for blog content and SEO content hub.
@@ -8,11 +8,12 @@
  * Each entry shows: featured image (thumbnail), title, date, excerpt.
  * Clicking a title links to /blog/[slug].
  *
- * Event posts also appear here — they're WordPress posts with CMB2 fields.
+ * Event posts also appear here - they're WordPress posts with CMB2 fields.
  */
 
 import MainLayout from '@/layouts/Layout.astro';
 import { getAllPosts } from '@/lib/wordpress';
+import { fixImageUrl } from '@/lib/fix-image-url';
 
 // ── Archive Data ───────────────────────────────────────────
 const posts = await getAllPosts();
@@ -36,7 +37,7 @@ function formatDate(dateStr: string): string {
 
 <MainLayout
   title="Blog"
-  description="The latest from BRESSEL — tournament recaps, coaching tips, community stories."
+  description="The latest from BRESSEL - tournament recaps, coaching tips, community stories."
 >
   <main class="pt-20 md:pt-24 min-h-screen">
 
@@ -63,13 +64,14 @@ function formatDate(dateStr: string): string {
         <div class="space-y-6">
           {posts.map((p) => {
             const excerpt = stripHtml(p.excerpt || '').slice(0, 200);
+            const fixedThumb = fixImageUrl(p.featuredImage?.node?.sourceUrl);
             return (
               <article class="premium-card flex flex-col sm:flex-row gap-6 p-6">
                 <!-- Thumbnail -->
                 <a href={`/blog/${p.slug}`} class="block w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 overflow-hidden">
-                  {p.featuredImage?.node?.sourceUrl ? (
+                  {fixedThumb ? (
                     <img
-                      src={p.featuredImage.node.sourceUrl}
+                      src={fixedThumb}
                       alt={p.featuredImage.node.altText || p.title}
                       class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />

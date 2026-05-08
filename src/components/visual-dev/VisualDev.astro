@@ -1,15 +1,15 @@
 ---
 /**
- * Visual Dev Tool — Image swap dev panel for Astro
+ * Visual Dev Tool - Image swap dev panel for Astro
  *
  * Usage:
  *   import VisualDev from '../components/visual-dev/VisualDev.astro';
  *   {import.meta.env.DEV && <VisualDev />}
  *
  * Props:
- *   library: string[] — optional image picker options
- *   pageGrouping: boolean — group slots by page (default: true)
- *   defaultView: 'component' | 'page' | 'flat' — default grouping (default: 'component')
+ *   library: string[] - optional image picker options
+ *   pageGrouping: boolean - group slots by page (default: true)
+ *   defaultView: 'component' | 'page' | 'flat' - default grouping (default: 'component')
  *
  * Tag your images:
  *   <img src="/assets/hero.jpg" data-swap="hero-bg" />
@@ -173,7 +173,7 @@ const isDev = import.meta.env.DEV;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(swaps));
     } catch (e) {
       console.warn('[visual-dev] localStorage full:', e);
-      flashMessage('⚠ Storage full — swaps may not persist');
+      flashMessage('⚠ Storage full - swaps may not persist');
     }
   }
 
@@ -852,7 +852,7 @@ const isDev = import.meta.env.DEV;
 
 <style>
   /* ======================================================
-     SCOPED: VisualDev UI — isolated from site theme
+     SCOPED: VisualDev UI - isolated from site theme
      ====================================================== */
 
   #visual-dev-wrapper {
@@ -1354,7 +1354,7 @@ const isDev = import.meta.env.DEV;
 
 <style is:global>
   /* ======================================================
-     GLOBAL: Body manipulation — Astro can't scope these
+     GLOBAL: Body manipulation - Astro can't scope these
      ====================================================== */
 
   body.vd-inspect-mode {

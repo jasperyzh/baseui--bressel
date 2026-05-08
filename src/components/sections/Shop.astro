@@ -1,6 +1,6 @@
 ---
 /**
- * Shop — Product grid with "BRESSEL PRO" watermark
+ * Shop - Product grid with "BRESSEL PRO" watermark
  * Props: products array from WordPress GraphQL (merch CPT)
  */
 import type { Merch } from '../../lib/wordpress';
@@ -32,7 +32,7 @@ function stripHtml(html: string): string {
   <div class="container-custom">
 
     <!-- Ghost watermark -->
-    <div class="absolute top-8 right-8 font-header font-black italic text-6xl md:text-8xl text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.03);">BRESSEL PRO</div>
+    <div class="pointer-events-none absolute top-8 right-8 font-header font-black italic text-6xl md:text-8xl text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.03);">BRESSEL PRO</div>
 
     <!-- Section Header -->
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">

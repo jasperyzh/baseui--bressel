@@ -52,7 +52,7 @@ export interface WPEvent {
   featuredImage: FeaturedImage | null;
 }
 
-// WordPress Page (standard 'page' post type) — for [slug].astro
+// WordPress Page (standard 'page' post type) - for [slug].astro
 // Note: Pages lack 'excerpt' in WPGraphQL (only Posts have it)
 export interface WPPage {
   id: string;
@@ -64,7 +64,7 @@ export interface WPPage {
   featuredImage: FeaturedImage | null;
 }
 
-// WordPress Post — for blog/[slug].astro, blog/index.astro
+// WordPress Post - for blog/[slug].astro, blog/index.astro
 export interface WPPost {
   id: string;
   title: string;
@@ -74,7 +74,7 @@ export interface WPPost {
   date: string;
   modified: string;
   featuredImage: FeaturedImage | null;
-  // Event fields (from CMB2 — nullable for non-event posts)
+  // Event fields (from CMB2 - nullable for non-event posts)
   eventDate: string | null;
   eventLocation: string | null;
   eventRegistrationUrl: string | null;

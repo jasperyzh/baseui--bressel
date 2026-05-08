@@ -1,10 +1,10 @@
 ---
 /**
- * Layout.astro — BRESSEL™ Base Layout
+ * Layout.astro - BRESSEL™ Base Layout
  *
  * Props:
- *   title?     — Page title (appended with " — BRESSEL™")
- *   description? — Meta description (fallback to default)
+ *   title?     - Page title (appended with " - BRESSEL™")
+ *   description? - Meta description (fallback to default)
  *
  * Theme:
  *   This is a single-theme site (BRESSEL dark).
@@ -19,7 +19,7 @@ import VisualDev from "@/components/visual-dev/VisualDev.astro";
 
 const { title, description } = Astro.props;
 const currentPath = Astro.url.pathname;
-const pageTitle = title ? `${title} — BRESSEL™` : "BRESSEL™";
+const pageTitle = title ? `${title} - BRESSEL™` : "BRESSEL™";
 const pageDescription = description || "World-class padel, within reach.";
 ---
 
@@ -52,10 +52,10 @@ const pageDescription = description || "World-class padel, within reach.";
       rel="stylesheet"
     />
 
-    <!-- AOS (Animate on Scroll) — 2KB gzipped -->
+    <!-- AOS (Animate on Scroll) - 2KB gzipped -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
-    <!-- BRESSEL theme sync — persists single theme, no toggle needed -->
+    <!-- BRESSEL theme sync - persists single theme, no toggle needed -->
     <script is:inline>
       (function() {
         var theme = 'bressel';
@@ -65,7 +65,7 @@ const pageDescription = description || "World-class padel, within reach.";
   </head>
 
   <body>
-    <!-- Skip to content — accessibility -->
+    <!-- Skip to content - accessibility -->
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-bressel-red focus:text-bressel-white focus:font-bold focus:uppercase focus:text-xs focus:tracking-wider focus:no-underline">
       Skip to content
     </a>
@@ -77,7 +77,7 @@ const pageDescription = description || "World-class padel, within reach.";
     <Footer />
     {import.meta.env.DEV && <VisualDev />}
 
-    <!-- AOS scroll animations — load from CDN, init on load -->
+    <!-- AOS scroll animations - load from CDN, init on load -->
     <script is:inline src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script is:inline>
       (function checkAos() {

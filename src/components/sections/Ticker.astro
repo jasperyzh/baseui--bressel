@@ -1,22 +1,22 @@
 ---
 /**
- * Ticker — Scrolling news bar with TRUE seamless infinite loop.
+ * Ticker - Scrolling news bar with TRUE seamless infinite loop.
  *
  * How it works:
  *   - Render the full item list as ONE <ul> track.
  *   - Duplicate that entire track (aria-hidden) inside a flex wrapper.
- *   - Animate the wrapper by translateX(-100%) — at which point track 2
+ *   - Animate the wrapper by translateX(-100%) - at which point track 2
  *     sits exactly where track 1 started, producing a seamless wrap.
  *
  * Variants:
- *   variant="default"  — edge-to-edge bar (with top/bottom borders)
- *   variant="fade"     — transparent bg + faded edges, for mid-page use
- *   variant="bare"     — no borders, no bg; fade mask only
+ *   variant="default"  - edge-to-edge bar (with top/bottom borders)
+ *   variant="fade"     - transparent bg + faded edges, for mid-page use
+ *   variant="bare"     - no borders, no bg; fade mask only
  *
  * Props:
  *   items: TickerItem[]
  *   variant?: "default" | "fade" | "bare"
- *   speed?: number        — seconds for one full loop (default 40)
+ *   speed?: number        - seconds for one full loop (default 40)
  */
 interface TickerItem {
   label: string;

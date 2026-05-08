@@ -1,18 +1,19 @@
 ---
 /**
- * blog/[slug].astro — Blog Post Template
+ * blog/[slug].astro - Blog Post Template
  *
  * Renders individual WordPress posts (including event posts with CMB2 fields).
  * getStaticPaths() generates pages for all published posts at build time.
  *
  * Supports both:
- *   1. Regular blog posts — shows title, date, content
+ *   1. Regular blog posts - shows title, date, content
  *   2. Event posts (with CMB2 eventDate/eventLocation/eventRegistrationUrl)
- *      — shows event badge, date, location, registration CTA
+ *      - shows event badge, date, location, registration CTA
  */
 
 import MainLayout from '@/layouts/Layout.astro';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/wordpress';
+import { fixImageUrl, fixImageUrlsInHtml } from '@/lib/fix-image-url';
 import type { WPPost } from '@/lib/wordpress';
 
 // ── Static Paths ───────────────────────────────────────────
@@ -45,6 +46,12 @@ function formatDate(dateStr: string): string {
   });
 }
 
+// Fix mixed content — rewrite HTTP WP URLs to HTTPS proxy
+const fixedFeaturedImage = post.featuredImage?.node?.sourceUrl
+  ? fixImageUrl(post.featuredImage.node.sourceUrl)
+  : undefined;
+const fixedContent = fixImageUrlsInHtml(post.content);
+
 const metaDesc = stripHtml(post.excerpt || post.content).slice(0, 160);
 const isEvent = !!post.eventDate;
 const eventDate = post.eventDate ? new Date(post.eventDate) : null;
@@ -57,11 +64,11 @@ const eventDate = post.eventDate ? new Date(post.eventDate) : null;
     <section class="relative flex items-center justify-center overflow-hidden">
       <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
 
-      {post.featuredImage?.node?.sourceUrl && (
+      {fixedFeaturedImage && (
         <div class="absolute inset-0 z-0 opacity-30">
           <img
-            src={post.featuredImage.node.sourceUrl}
-            alt={post.featuredImage.node.altText || post.title}
+            src={fixedFeaturedImage}
+            alt={post.featuredImage?.node?.altText || post.title}
             class="w-full h-full object-cover"
           />
         </div>
@@ -134,7 +141,7 @@ const eventDate = post.eventDate ? new Date(post.eventDate) : null;
     <section class="py-16">
       <div class="container-custom">
         <div class="max-w-3xl mx-auto prose prose-invert prose-lg">
-          <div set:html={post.content} />
+          <div set:html={fixedContent} />
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 ---
 /**
- * Shop Page — Full product catalog
+ * Shop Page - Full product catalog
  * Data: WordPress GraphQL (merch CPT)
  */
 import MainLayout from '@/layouts/Layout.astro';
@@ -12,6 +12,7 @@ import CardDescription from '@/components/starwind/card/CardDescription.astro';
 import CardFooter from '@/components/starwind/card/CardFooter.astro';
 import { getMerch } from '@/lib/wordpress';
 import { whatsappUrl } from '@/lib/config';
+import { fixImageUrl } from '@/lib/fix-image-url';
 import type { Merch } from '@/lib/wordpress';
 
 const products: Merch[] = await getMerch();
@@ -29,7 +30,7 @@ const hero = {
 };
 ---
 
-<MainLayout title="BRESSEL Shop" description="BRESSEL PRO equipment — engineered for precision.">
+<MainLayout title="BRESSEL Shop" description="BRESSEL PRO equipment - engineered for precision.">
   <main class="pt-20 md:pt-24">
     <!-- Hero -->
     <section class="relative min-h-[40vh] flex items-center justify-center overflow-hidden">
@@ -53,8 +54,8 @@ const hero = {
           {products.map((product) => (
             <Card class="overflow-hidden group">
               <div class="relative aspect-square overflow-hidden" style="background: var(--color-background);">
-                {product.featuredImage?.node?.sourceUrl ? (
-                  <img src={product.featuredImage.node.sourceUrl} alt={product.title} class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105" />
+                {fixImageUrl(product.featuredImage?.node?.sourceUrl) ? (
+                  <img src={fixImageUrl(product.featuredImage.node.sourceUrl)} alt={product.title} class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105" />
                 ) : (
                   <div class="w-full h-full flex items-center justify-center text-bressel-zinc-600 font-header text-2xl font-black">{product.title.charAt(0)}</div>
                 )}

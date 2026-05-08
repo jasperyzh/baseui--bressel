@@ -1,12 +1,13 @@
 ---
 /**
- * Academy Page — Coaches grid, programs info, booking CTA
+ * Academy Page - Coaches grid, programs info, booking CTA
  * Data: WordPress GraphQL (coach CPT)
  */
 import MainLayout from '@/layouts/Layout.astro';
 import Button from '@/components/starwind/button/Button.astro';
 import { getCoaches } from '@/lib/wordpress';
 import { whatsappUrl } from '@/lib/config';
+import { fixImageUrl } from '@/lib/fix-image-url';
 import type { Coach } from '@/lib/wordpress';
 
 const coaches: Coach[] = await getCoaches();
@@ -43,12 +44,12 @@ const hero = {
           <p class="caption mb-2">OUR TEAM</p>
           <h2 class="heading-lg">MEET THE <span style="color: var(--color-bressel-red);">COACHES.</span></h2>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {coaches.map((coach) => (
             <article class="premium-card overflow-hidden group">
               <div class="aspect-[3/4] overflow-hidden">
-                {coach.featuredImage?.node?.sourceUrl ? (
-                  <img src={coach.featuredImage.node.sourceUrl} alt={coach.title} class="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" />
+                {fixImageUrl(coach.featuredImage?.node?.sourceUrl) ? (
+                  <img src={fixImageUrl(coach.featuredImage.node.sourceUrl)} alt={coach.title} class="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" />
                 ) : (
                   <div class="w-full h-full flex items-center justify-center bg-bressel-muted text-bressel-zinc-600 font-header text-4xl font-black">{coach.title.charAt(0)}</div>
                 )}

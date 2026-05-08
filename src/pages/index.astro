@@ -1,6 +1,6 @@
 ---
 /**
- * Index / Homepage — Full page assembly
+ * Index / Homepage - Full page assembly
  * Data: WordPress GraphQL for dynamic sections
  */
 import MainLayout from '@/layouts/Layout.astro';
@@ -11,7 +11,7 @@ import Ticker from '@/components/sections/Ticker.astro';
 import ProgramPillars from '@/components/sections/ProgramPillars.astro';
 import Pricing from '@/components/sections/Pricing.astro';
 import Voices from '@/components/sections/Quotes.astro';
-import Centers from '@/components/sections/Centers.astro';
+import BresselAcademy from '@/components/sections/BresselAcademy.astro';
 import Shop from '@/components/sections/Shop.astro';
 import NewsletterCTA from '@/components/sections/NewsletterCTA.astro';
 import { getMerch } from '@/lib/wordpress';
@@ -20,8 +20,8 @@ const products = await getMerch();
 ---
 
 <MainLayout
-  title="BRESSEL™ — World-Class Padel, Built Around People"
-  description="World-class padel coaching built around community. From your first swing to tournament day — we're in it together."
+  title="BRESSEL™ - World-Class Padel, Built Around People"
+  description="World-class padel coaching built around community. From your first swing to tournament day - we're in it together."
 >
   <Hero />
 
@@ -30,17 +30,18 @@ const products = await getMerch();
     <BrandEssence />
   </section>
 
-  <!-- ✦ Section: Academy Cards (soft black — visual lift) -->
-  <section class="bg-bressel-black-soft">
+  <!-- ✦ Section: Academy Cards (soft black - visual lift) -->
+  <!-- <section class="bg-bressel-black-soft">
     <AcademyCards />
-  </section>
-
-  <Ticker variant="fade" />
+  </section> -->
 
   <!-- ✦ Section: Program Pillars (dark) -->
   <section class="bg-bressel-black">
     <ProgramPillars />
   </section>
+
+  <Ticker variant="fade" />
+
 
   <!-- ✦ Swoosh divider: black → dark scarlet -->
   <div class="relative h-16 md:h-24 overflow-hidden bg-bressel-black">
@@ -60,9 +61,9 @@ const products = await getMerch();
     <Voices />
   </section>
 
-  <!-- ✦ Section: Centers (dark) -->
+  <!-- ✦ Section: BresselAcademy (dark) -->
   <section class="bg-bressel-black">
-    <Centers />
+    <BresselAcademy />
   </section>
 
   <!-- ✦ Thin red accent divider -->

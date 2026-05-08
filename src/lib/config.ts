@@ -1,9 +1,9 @@
 // src/lib/config.ts
-// Shared site configuration — single source of truth for hardcoded values.
+// Shared site configuration - single source of truth for hardcoded values.
 // KISE: One file, no env var parsing, no dependency injection.
 
 /** WhatsApp business number (international format, no +) */
-export const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '60123456789';
+export const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '+34669923724';
 
 /** Brand email for contact */
 export const BRAND_EMAIL = 'hola@bresselsports.com';
