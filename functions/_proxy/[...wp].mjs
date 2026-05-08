@@ -2,8 +2,6 @@
 // Rewrites http://104.248.157.67/wp-content/uploads/... to HTTPS
 // Usage: /_proxy/wp-content/uploads/2026/05/image.jpg
 
-export const prerender = false;
-
 const WP_IP = "http://104.248.157.67";
 
 export async function onRequest(context) {
