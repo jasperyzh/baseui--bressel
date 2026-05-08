@@ -41,18 +41,17 @@ function stripHtml(html: string): string {
         <h2 class="heading-lg">SHOP</h2>
       </div>
       <a
-          href={whatsappUrl("Hi BRESSEL! I'm interested in your equipment. Is it available?")}
+          href="/shop"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-red-hover"
         >
-          <Icon name="whatsapp" size={14} />
           VISIT CATALOG
         </a>
     </div>
 
     <!-- Product Grid -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative z-10">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 relative z-10">
 
       {products.map((product, i) => (
         <Card class="overflow-hidden transition-colors duration-300 group" data-aos="fade-up" data-aos-delay={String(i * 100)}>
