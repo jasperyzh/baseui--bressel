@@ -11,20 +11,20 @@ import WhatsAppButton from '../WhatsAppButton.astro';
  */
 ---
 
-<section id="hero" class="relative min-h-screen flex flex-col justify-end items-center text-center overflow-hidden">
+<section id="hero" class="relative min-h-screen flex flex-col justify-center items-center text-center overflow-hidden">
 
   <!-- Background Video — let the image breathe at 65% opacity -->
   <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-65" poster="/assets/hero-bg.webp">
     <source src="/assets/background-video.mp4" type="video/mp4" />
   </video>
 
-  <!-- Gradient overlay — only black at bottom 40% where text lives -->
-  <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90"></div>
+  <!-- Cinematic gradient: darker top (header legibility) + darker bottom (text legibility) -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/80"></div>
   <!-- Subtle vignette for image framing -->
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(0,0,0,0.3)_100%)]"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.55)_100%)]"></div>
 
-  <!-- Content — centered -->
-  <div class="relative z-10 px-6 pt-48 pb-12 max-w-4xl" data-aos="fade-up" data-aos-delay="200">
+  <!-- Content — vertically centered, leaves room for scroll indicator below -->
+  <div class="relative z-10 px-6 pt-24 pb-32 md:pb-40 max-w-4xl" data-aos="fade-up" data-aos-delay="200">
 
     <!-- EST / tagline -->
     <div class="flex items-center justify-center gap-4 mb-6">
@@ -64,9 +64,11 @@ import WhatsAppButton from '../WhatsAppButton.astro';
   </div>
 
   <!-- Scroll indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-bounce" data-aos="fade-up" data-aos-delay="800">
-    <span class="caption text-bressel-zinc-600">SCROLL TO BEGIN</span>
-    <Icon name="chevron-down" size={16} class="text-bressel-zinc-600" />
-  </div>
+  <a href="#essence" aria-label="Scroll to next section" class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 no-underline group" data-aos="fade-up" data-aos-delay="800">
+    <span class="caption text-bressel-zinc-400 group-hover:text-bressel-red transition-colors">SCROLL TO BEGIN</span>
+    <span class="animate-bounce">
+      <Icon name="chevron-down" size={16} class="text-bressel-zinc-400 group-hover:text-bressel-red transition-colors" />
+    </span>
+  </a>
 
 </section>

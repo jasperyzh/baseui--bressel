@@ -64,10 +64,7 @@ function formatDate(dateStr: string): string {
           {posts.map((p) => {
             const excerpt = stripHtml(p.excerpt || '').slice(0, 200);
             return (
-              <article
-                class="flex flex-col sm:flex-row gap-6 p-6 transition-colors"
-                style="background: var(--color-card); border: 1px solid var(--color-border);"
-              >
+              <article class="premium-card flex flex-col sm:flex-row gap-6 p-6">
                 <!-- Thumbnail -->
                 <a href={`/blog/${p.slug}`} class="block w-full sm:w-48 h-48 sm:h-32 flex-shrink-0 overflow-hidden">
                   {p.featuredImage?.node?.sourceUrl ? (

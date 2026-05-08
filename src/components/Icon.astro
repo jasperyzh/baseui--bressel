@@ -68,9 +68,9 @@ const iconMap: Record<string, { viewBox: string; fill?: string; stroke?: string;
     content: `<rect x="0" y="0" width="20" height="5" rx="0" /><rect x="0" y="9" width="20" height="5" rx="0" />`,
   },
   "quote": {
-    viewBox: "0 0 20 14",
+    viewBox: "0 0 24 24",
     fill: "currentColor",
-    content: `<rect x="0" y="0" width="20" height="5" rx="2" /><rect x="0" y="9" width="20" height="5" rx="2" />`,
+    content: `<path d="M7.17 6A5.17 5.17 0 002 11.17V18a1 1 0 001 1h5a1 1 0 001-1v-5a1 1 0 00-1-1H5.2a.2.2 0 01-.2-.2v-.63A2.17 2.17 0 017.17 9a1 1 0 000-3zm10 0A5.17 5.17 0 0012 11.17V18a1 1 0 001 1h5a1 1 0 001-1v-5a1 1 0 00-1-1h-2.8a.2.2 0 01-.2-.2v-.63A2.17 2.17 0 0117.17 9a1 1 0 000-3z"/>`,
   },
   "download": {
     viewBox: "0 0 24 24",
@@ -84,7 +84,7 @@ const iconMap: Record<string, { viewBox: string; fill?: string; stroke?: string;
 };
 
 const icon = iconMap[name];
-const svgHeight = name === "chevron-down" ? size * 1.5 : name === "mail" || name === "quote" ? size * 0.625 : size;
+const svgHeight = name === "chevron-down" ? size * 1.5 : name === "mail" ? size * 0.625 : size;
 ---
 
 <svg

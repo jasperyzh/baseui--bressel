@@ -1,68 +1,176 @@
 ---
 /**
- * Community Voices — Authentic player testimonials, not poetic coach quotes
- * Section: VOICES FROM THE COURT
- * 2 player testimonials + 1 coach perspective
+ * Community Voices — Carousel of testimonials with full-bleed background images.
+ * Each slide: hero-style background image + dark gradient overlay + quote content.
+ * Uses Starwind Carousel (Embla) with autoplay via setInterval.
  */
 import Icon from '../Icon.astro';
+import Carousel from '../starwind/carousel/Carousel.astro';
+import CarouselContent from '../starwind/carousel/CarouselContent.astro';
+import CarouselItem from '../starwind/carousel/CarouselItem.astro';
+import CarouselPrevious from '../starwind/carousel/CarouselPrevious.astro';
+import CarouselNext from '../starwind/carousel/CarouselNext.astro';
+
 const voices = [
   {
     text: "I started with zero padel experience. Six months later, I qualified for my first tournament. The coaches actually listened.",
     author: "AARON TAN",
     role: "PLAYER, BEGINNER TO COMPETITIVE",
-    image: "/assets/quote-bg-silhouette.jpg"
+    image: "/assets/20260402_115035.webp",
   },
   {
     text: "It's not just about getting better. It's about the people you meet. My match friends have become my training friends.",
     author: "MAYA S.",
     role: "PLAYER, COMMUNITY MEMBER",
-    image: "/assets/quote-bg-silhouette.jpg"
+    image: "/assets/20260402_115921.webp",
   },
   {
     text: "The BRESSEL methodology changed how I teach. It's about building confidence that lasts off court too.",
     author: "DARREN LEE",
     role: "COACH, BRESSEL CERTIFIED",
-    image: "/assets/quote-bg-silhouette.jpg"
-  }
+    image: "/assets/20260402_120136.webp",
+  },
 ];
 ---
 
-<section id="voices" class="relative py-24 md:py-32 overflow-hidden">
+<section id="voices" class="relative py-20 md:py-28 overflow-hidden">
   <div class="container-custom">
 
     <!-- Section Header -->
-    <div class="mb-12">
+    <div class="mb-10 md:mb-14">
       <p class="caption mb-2">Real Players. Real Stories.</p>
       <h2 class="heading-lg">VOICES FROM <span class="text-bressel-red">THE COURT.</span></h2>
     </div>
 
-    {voices.map((voice, i) => (
-      <div class={`relative mb-20 last:mb-0 ${i % 2 === 1 ? 'md:ml-16' : 'md:mr-16'}`} data-aos="fade-up" data-aos-delay={String(i * 100)}>
-        <!-- Subtle texture background instead of dimmed photo -->
-        <div class="absolute inset-0 bg-bressel-black-soft opacity-50 rounded-sm"></div>
+    <!-- Carousel -->
+    <Carousel
+      class="voices-carousel relative"
+      opts={{ loop: true, align: "start" }}
+      autoInit={false}
+      data-autoplay="6000"
+    >
+      <CarouselContent>
+        {voices.map((voice, i) => (
+          <CarouselItem>
+            <article
+              class="relative overflow-hidden min-h-[28rem] md:min-h-[32rem] flex items-end"
+              data-aos="fade-up"
+              data-aos-delay={String(i * 80)}
+            >
+              <!-- Background image -->
+              <img
+                src={voice.image}
+                alt=""
+                aria-hidden="true"
+                class="absolute inset-0 w-full h-full object-cover"
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+              <!-- Dark gradient overlay for legibility -->
+              <div class="absolute inset-0 bg-gradient-to-t from-bressel-black via-bressel-black/70 to-bressel-black/20"></div>
+              <div class="absolute inset-0 bg-gradient-to-r from-bressel-black/80 via-transparent to-transparent"></div>
 
-        <div class="relative z-10 px-6 py-10 md:px-12 md:py-14">
-          <!-- Quote mark -->
-          <Icon name="quote" size={32} class="text-bressel-red mb-6 opacity-80" />
+              <!-- Content -->
+              <div class="relative z-10 px-6 py-10 md:px-14 md:py-16 max-w-3xl">
+                <Icon name="quote" size={32} class="text-bressel-red mb-5 opacity-90" />
+                <blockquote class="quote-text mb-8">
+                  &ldquo;{voice.text}&rdquo;
+                </blockquote>
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-0.5 bg-bressel-red"></div>
+                  <div>
+                    <p class="font-header font-bold text-[0.75rem] uppercase tracking-widest text-bressel-white">
+                      {voice.author}
+                    </p>
+                    <p class="text-[0.625rem] font-medium uppercase tracking-wider text-bressel-zinc-400">
+                      {voice.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
 
-          <blockquote class="quote-text mb-8 max-w-3xl">
-            &ldquo;{voice.text}&rdquo;
-          </blockquote>
+      <!-- Controls -->
+      <CarouselPrevious class="!left-4 md:!left-6 !bg-bressel-black/60 !border-bressel-white/30 !text-bressel-white hover:!bg-bressel-red hover:!border-bressel-red hover:!text-bressel-white !rounded-none !size-10" />
+      <CarouselNext class="!right-4 md:!right-6 !bg-bressel-black/60 !border-bressel-white/30 !text-bressel-white hover:!bg-bressel-red hover:!border-bressel-red hover:!text-bressel-white !rounded-none !size-10" />
 
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-0.5 bg-bressel-red"></div>
-            <div>
-              <p class="font-header font-bold text-[0.75rem] uppercase tracking-widest text-bressel-white">
-                {voice.author}
-              </p>
-              <p class="text-[0.625rem] font-medium uppercase tracking-wider text-bressel-zinc-500">
-                {voice.role}
-              </p>
-            </div>
-          </div>
-        </div>
+      <!-- Dot indicators -->
+      <div class="voices-dots flex items-center justify-center gap-2 mt-6" role="tablist" aria-label="Testimonial navigation">
+        {voices.map((_, i) => (
+          <button
+            type="button"
+            class="voices-dot w-8 h-0.5 bg-bressel-zinc-700 hover:bg-bressel-zinc-400 transition-colors"
+            data-index={i}
+            aria-label={`Go to testimonial ${i + 1}`}
+          ></button>
+        ))}
       </div>
-    ))}
+    </Carousel>
 
   </div>
 </section>
+
+<script>
+  import { initCarousel } from '../starwind/carousel/carousel-script';
+
+  // Manual init so we can capture the Embla API for autoplay + dot sync.
+  function setupVoicesCarousel() {
+    const root = document.querySelector<HTMLElement>('.voices-carousel');
+    if (!root || root.dataset.initialized === 'true') return;
+
+    const dots = root.querySelectorAll<HTMLButtonElement>('.voices-dot');
+    const autoplayMs = Number(root.getAttribute('data-autoplay') || '0');
+
+    const manager = initCarousel(root, {
+      setApi: (api) => {
+        // Sync dot states
+        const updateDots = () => {
+          const idx = api.selectedScrollSnap();
+          dots.forEach((d, i) => {
+            d.classList.toggle('bg-bressel-red', i === idx);
+            d.classList.toggle('bg-bressel-zinc-700', i !== idx);
+          });
+        };
+        updateDots();
+        api.on('select', updateDots);
+        api.on('reInit', updateDots);
+
+        // Dot click handlers
+        dots.forEach((d, i) => {
+          d.addEventListener('click', () => api.scrollTo(i));
+        });
+
+        // Autoplay with hover / focus / offscreen pausing
+        if (autoplayMs > 0) {
+          let timer: number | undefined;
+          const play = () => {
+            if (timer) return;
+            timer = window.setInterval(() => api.scrollNext(), autoplayMs);
+          };
+          const pause = () => {
+            if (timer) { window.clearInterval(timer); timer = undefined; }
+          };
+
+          root.addEventListener('mouseenter', pause);
+          root.addEventListener('mouseleave', play);
+          root.addEventListener('focusin', pause);
+          root.addEventListener('focusout', play);
+
+          const io = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) play(); else pause();
+          }, { threshold: 0.1 });
+          io.observe(root);
+        }
+      },
+    });
+
+    if (!manager) {
+      console.warn('[voices-carousel] init failed');
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', setupVoicesCarousel);
+  document.addEventListener('astro:after-swap', setupVoicesCarousel);
+</script>

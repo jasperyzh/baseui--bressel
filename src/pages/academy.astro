@@ -45,7 +45,7 @@ const hero = {
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {coaches.map((coach) => (
-            <article class="overflow-hidden group transition-colors" style="background: var(--color-card); border: 1px solid var(--color-border);">
+            <article class="premium-card overflow-hidden group">
               <div class="aspect-[3/4] overflow-hidden">
                 {coach.featuredImage?.node?.sourceUrl ? (
                   <img src={coach.featuredImage.node.sourceUrl} alt={coach.title} class="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" />
@@ -78,7 +78,7 @@ const hero = {
             { title: 'COMPETITION', description: 'Designed for regional tournament competitors. Strategy, endurance, and mental toughness.', features: ['Team training modules', 'Match simulation drills', 'Circuit participation'], source: 'competition' },
             { title: 'COACHES', description: 'Certification programs using the BRESSEL™ methodology. Train the next generation of coaches.', features: ['Level 1-3 certification', 'Teaching methodology', 'Practical assessment'], source: 'coaches' },
           ].map((prog) => (
-            <div class="p-8" style="background: var(--color-card); border: 1px solid var(--color-border);">
+            <div class="premium-card p-8">
               <div class="w-10 h-0.5 mb-6" style="background: var(--color-bressel-red);"></div>
               <h3 class="heading-md mb-4">{prog.title}</h3>
               <p class="body text-sm mb-6">{prog.description}</p>

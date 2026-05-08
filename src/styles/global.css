@@ -267,14 +267,37 @@
    Starwind Component Overrides — BRESSEL Brand
    ═══════════════════════════════════════════════ */
 @layer components {
-  /* ── Cards: sharp industrial (no rounded corners), dark muted bg ── */
+  /* ── Cards: premium sport-brand — sharp corners, layered depth, red accent on hover ── */
   [data-slot="card"] {
     border-radius: 0 !important;
     border-color: var(--color-border);
-    transition: border-color 0.2s ease;
+    background: var(--color-card);
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+  }
+  [data-slot="card"]::after {
+    /* red accent bar — revealed on hover, signature sport-brand detail */
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    background: var(--color-bressel-red);
+    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 3;
   }
   [data-slot="card"]:hover {
-    border-color: var(--color-muted-foreground);
+    border-color: var(--color-bressel-zinc-600);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.6),
+                0 8px 16px -8px rgba(255, 51, 31, 0.12);
+  }
+  [data-slot="card"]:hover::after {
+    width: 100%;
   }
 
   /* ── Full-bleed image cards: remove padding (used in ProgramPillars) ── */
@@ -284,6 +307,14 @@
   [data-slot="card"].card-full-bleed > [data-slot="card-content"] {
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+
+  /* ── Image containers inside cards: subtle zoom on hover ── */
+  [data-slot="card"] img {
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  [data-slot="card"]:hover img {
+    transform: scale(1.04);
   }
 
   /* ── Buttons: athletic font, uppercase, tracked ── */
@@ -299,5 +330,95 @@
     font-family: var(--font-body);
     font-weight: 600;
     letter-spacing: 0.08em;
+  }
+
+  /* ══ Universal premium card utility — for non-Starwind cards (blog, events, contact) ══ */
+  .premium-card {
+    position: relative;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+  }
+  .premium-card::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 0;
+    background: var(--color-bressel-red);
+    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .premium-card:hover {
+    border-color: var(--color-bressel-zinc-600);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.6),
+                0 8px 16px -8px rgba(255, 51, 31, 0.12);
+  }
+  .premium-card:hover::after {
+    width: 100%;
+  }
+  .premium-card img {
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .premium-card:hover img {
+    transform: scale(1.04);
+  }
+}
+
+/* ════════════════════════════════════
+   TICKER — Smooth infinite loop + fade mask variant
+   ═══════════════════════════════════ */
+@layer components {
+  .ticker-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Seamless scroll: two identical tracks side-by-side; translate one full track width */
+  .ticker-track {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    white-space: nowrap;
+    min-width: max-content;
+    animation: ticker-scroll 40s linear infinite;
+    will-change: transform;
+  }
+
+  .ticker-wrap:hover .ticker-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-100%); }
+  }
+
+  /* Fade variant — for ticker in middle of page (not edge-to-edge) */
+  .ticker-wrap.ticker-fade {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    );
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
   }
 }

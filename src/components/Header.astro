@@ -5,6 +5,7 @@
  * Mobile: Full-screen overlay menu
  */
 import Icon from './Icon.astro';
+import { whatsappUrl } from '../lib/config';
 
 const { currentPath = '/' } = Astro.props;
 
@@ -15,22 +16,25 @@ const navLinks = [
   { href: '/about', label: 'ABOUT' },
   { href: '/contact', label: 'CONTACT' },
 ];
+
+const ctaHref = whatsappUrl("Hi BRESSEL! I'd like to book a session. Could you share the next available slots?");
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-bressel-black/90 backdrop-blur-md border-b border-bressel-zinc-800/60 px-6 md:px-8 transition-all duration-300" id="site-header">
-  <div class="max-w-[80rem] mx-auto flex items-center justify-between h-16 md:h-20 transition-all duration-300" id="header-inner">
+  <div class="max-w-[80rem] mx-auto flex items-center justify-between h-20 md:h-24 transition-all duration-300" id="header-inner">
 
     <!-- Logo -->
     <a href="/" class="flex-shrink-0" aria-label="BRESSEL Home">
       <img
         src="/assets/logo-bressel-white.png"
         alt="BRESSEL™"
-        class="h-6 md:h-8 w-auto"
+        class="h-9 md:h-11 w-auto transition-all duration-300"
+        id="site-logo"
       />
     </a>
 
-    <!-- Desktop Navigation -->
-    <nav class="hidden md:flex items-center gap-0">
+    <!-- Desktop Navigation (centered) -->
+    <nav class="hidden md:flex items-center gap-0 absolute left-1/2 -translate-x-1/2">
       {navLinks.map(link => {
         const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
         return (
@@ -47,8 +51,17 @@ const navLinks = [
       })}
     </nav>
 
-    <!-- Right: Mobile hamburger only (no BOOK SESSION button in nav) -->
-    <div class="flex items-center gap-4">
+    <!-- Right: Book Session CTA (desktop) + Mobile hamburger -->
+    <div class="flex items-center gap-3">
+      <a
+        href={ctaHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-all duration-200 hover:bg-bressel-red-hover hover:scale-[1.03]"
+      >
+        <Icon name="whatsapp" size={13} />
+        BOOK SESSION
+      </a>
       <button
         id="menu-toggle"
         class="md:hidden text-bressel-white text-2xl p-1"
@@ -112,19 +125,19 @@ const navLinks = [
 <script is:inline>
   const header = document.getElementById('site-header');
   const inner = document.getElementById('header-inner');
-  const logo = header.querySelector('img');
+  const logo = document.getElementById('site-logo');
   if (header && inner) {
     window.addEventListener('scroll', () => {
       if (window.scrollY > 100) {
         header.style.setProperty('background-color', 'rgba(9,8,8,0.98)');
-        inner.classList.add('h-12', 'md:h-14');
-        inner.classList.remove('h-16', 'md:h-20');
-        if (logo) { logo.style.height = '1.25rem'; }
+        inner.classList.add('h-14', 'md:h-16');
+        inner.classList.remove('h-20', 'md:h-24');
+        if (logo) { logo.classList.add('h-7', 'md:h-8'); logo.classList.remove('h-9', 'md:h-11'); }
       } else {
         header.style.setProperty('background-color', 'rgba(9,8,8,0.9)');
-        inner.classList.add('h-16', 'md:h-20');
-        inner.classList.remove('h-12', 'md:h-14');
-        if (logo) { logo.style.height = ''; }
+        inner.classList.add('h-20', 'md:h-24');
+        inner.classList.remove('h-14', 'md:h-16');
+        if (logo) { logo.classList.add('h-9', 'md:h-11'); logo.classList.remove('h-7', 'md:h-8'); }
       }
     }, { passive: true });
   }

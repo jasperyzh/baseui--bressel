@@ -1,7 +1,22 @@
 ---
 /**
- * Ticker — Scrolling news bar
- * Accepts an array of items, duplicates them for seamless infinite scroll.
+ * Ticker — Scrolling news bar with TRUE seamless infinite loop.
+ *
+ * How it works:
+ *   - Render the full item list as ONE <ul> track.
+ *   - Duplicate that entire track (aria-hidden) inside a flex wrapper.
+ *   - Animate the wrapper by translateX(-100%) — at which point track 2
+ *     sits exactly where track 1 started, producing a seamless wrap.
+ *
+ * Variants:
+ *   variant="default"  — edge-to-edge bar (with top/bottom borders)
+ *   variant="fade"     — transparent bg + faded edges, for mid-page use
+ *   variant="bare"     — no borders, no bg; fade mask only
+ *
+ * Props:
+ *   items: TickerItem[]
+ *   variant?: "default" | "fade" | "bare"
+ *   speed?: number        — seconds for one full loop (default 40)
  */
 interface TickerItem {
   label: string;
@@ -11,46 +26,55 @@ interface TickerItem {
 
 interface Props {
   items?: TickerItem[];
+  variant?: "default" | "fade" | "bare";
+  speed?: number;
 }
 
-const { items = [
-  { label: "UPCOMING:", value: "MALAYSIA OPEN QUALIFIERS", labelColor: "muted" },
-  { label: "EVENT:", value: "BRESSEL JUNIOR PADEL CIRCUIT", labelColor: "primary" },
-  { label: "LIVE:", value: "ACADEMY RANKING UPDATES", labelColor: "muted" },
-  { label: "NEW DROP:", value: "PRECISION SERIES V2", labelColor: "muted" },
-] } = Astro.props;
+const {
+  items = [
+    { label: "UPCOMING:", value: "MALAYSIA OPEN QUALIFIERS", labelColor: "muted" },
+    { label: "EVENT:", value: "BRESSEL JUNIOR PADEL CIRCUIT", labelColor: "primary" },
+    { label: "LIVE:", value: "ACADEMY RANKING UPDATES", labelColor: "muted" },
+    { label: "NEW DROP:", value: "PRECISION SERIES V2", labelColor: "muted" },
+  ],
+  variant = "default",
+  speed = 40,
+} = Astro.props;
 
 const labelColorClass = (color: TickerItem["labelColor"]) =>
   color === "primary" ? "text-bressel-red" : "text-bressel-zinc-400";
 
-// Duplicate items for seamless loop
-const loopItems = [...items, ...items];
+const wrapClasses = [
+  "ticker-wrap",
+  variant === "default" ? "bg-bressel-black-soft border-y border-bressel-zinc-800/60" : "",
+  variant === "fade" ? "ticker-fade" : "",
+  variant === "bare" ? "ticker-fade" : "",
+  "py-3",
+].filter(Boolean).join(" ");
 ---
 
-<div class="bg-bressel-black-soft border-y border-bressel-zinc-800/60 overflow-hidden py-3">
-  <div class="ticker-track animate-ticker flex items-center whitespace-nowrap">
-
-    {loopItems.map((item, i) => (
-      <>
-        <span class="inline-flex items-center gap-2 px-8 text-[0.6875rem] font-header font-bold uppercase tracking-wider">
-          <span class={labelColorClass(item.labelColor)}>{item.label}</span>
-          <span class="text-bressel-white">{item.value}</span>
-        </span>
-        {i < loopItems.length - 1 && (
-          <span class="text-bressel-zinc-800 px-2">|</span>
-        )}
-      </>
+<div class={wrapClasses}>
+  <div class="ticker-track" style={`animation-duration: ${speed}s`}>
+    {/* Two identical tracks back-to-back. Translate by -100% = exactly one track = seamless. */}
+    {[0, 1].map((copy) => (
+      <ul
+        class="flex items-center gap-0 list-none m-0 p-0 flex-shrink-0"
+        aria-hidden={copy === 1 ? "true" : undefined}
+      >
+        {items.map((item, i) => (
+          <li class="flex items-center">
+            <span class="inline-flex items-center gap-2 px-8 text-[0.6875rem] font-header font-bold uppercase tracking-wider">
+              <span class={labelColorClass(item.labelColor)}>{item.label}</span>
+              <span class="text-bressel-white">{item.value}</span>
+            </span>
+            {i < items.length - 1 && (
+              <span class="text-bressel-zinc-700" aria-hidden="true">•</span>
+            )}
+          </li>
+        ))}
+        {/* Separator between the two tracks for visual continuity */}
+        <li aria-hidden="true"><span class="text-bressel-zinc-700 px-2">•</span></li>
+      </ul>
     ))}
-
   </div>
 </div>
-
-<style>
-  @keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  .animate-ticker {
-    animation: ticker 30s linear infinite;
-  }
-</style>

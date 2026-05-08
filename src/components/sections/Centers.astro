@@ -67,11 +67,11 @@ const encode = (s: string) => encodeURIComponent(s);
       <!-- Right: Image Grid -->
       <div class="grid grid-cols-2 gap-3" data-aos="fade-left" data-aos-delay="150">
         {images.map((img) => (
-          <div class={`${img.span} overflow-hidden bg-bressel-black-soft border border-bressel-zinc-800`}>
+          <div class={`${img.span} premium-card`}>
             <img
               src={img.src}
               alt={img.alt}
-              class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+              class="w-full h-full object-cover"
               data-swap={img.id}
             />
           </div>
