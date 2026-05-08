@@ -5,8 +5,11 @@
 const WP_IP = "http://104.248.157.67";
 
 export async function onRequest(context) {
-  const url = new URL(context.request.url);
-  const proxyPath = url.pathname.replace(/^\/_proxy\//, "");
+  // CF Pages catch-all: /_proxy/anything/here → context.params.path = ["anything", "here"]
+  const segments = Array.isArray(context.params.path)
+    ? context.params.path
+    : [context.params.path];
+  const proxyPath = segments.join("/");
   const targetUrl = `${WP_IP}/${proxyPath}`;
 
   const res = await fetch(targetUrl, {
