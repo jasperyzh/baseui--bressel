@@ -51,13 +51,13 @@ const hero = {
                 {fixImageUrl(coach.featuredImage?.node?.sourceUrl) ? (
                   <img src={fixImageUrl(coach.featuredImage.node.sourceUrl)} alt={coach.title} class="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" />
                 ) : (
-                  <div class="w-full h-full flex items-center justify-center bg-bressel-muted text-bressel-zinc-600 font-header text-4xl font-black">{coach.title.charAt(0)}</div>
+                  <div class="w-full h-full flex items-center justify-center bg-bressel-muted text-muted-foreground, #a1a1aa) font-header text-4xl font-black">{coach.title.charAt(0)}</div>
                 )}
               </div>
               <div class="p-5">
                 <h3 class="font-header font-black italic text-lg uppercase mb-1" style="color: var(--color-foreground);">{coach.title}</h3>
                 {coach.coachRole && <p class="text-[0.625rem] font-bold uppercase tracking-wider mb-1" style="color: var(--color-bressel-red);">{coach.coachRole}</p>}
-                {coach.coachSpecialty && <p class="text-[0.625rem] font-bold uppercase tracking-wider mb-3" style="color: var(--color-bressel-zinc-600);">{coach.coachSpecialty}</p>}
+                {coach.coachSpecialty && <p class="text-[0.625rem] font-bold uppercase tracking-wider mb-3" style="color: var(--color-border, #52525b);">{coach.coachSpecialty}</p>}
                 <p class="body text-sm">{stripHtml(coach.content)}</p>
               </div>
             </article>

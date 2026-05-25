@@ -1,0 +1,291 @@
+---
+/**
+ * Premium Scroll Animations & Effects
+ * BRESSEL™ Alternate Landing Page
+ */
+
+/* ═══════════════════════════════════════════
+   PARALLAX EFFECTS
+   ═══════════════════════════════════════════ */
+.parallax-bg,
+.parallax-slow {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* ═══════════════════════════════════════════
+   STAT COUNTER ANIMATION
+   ═══════════════════════════════════════════ */
+.stat-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-bressel-red);
+  transition: width 1s ease-out;
+}
+
+.stat-item.visible::after {
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════
+   PREMIUM CARD HOVER EFFECTS
+   ═══════════════════════════════════════════ */
+.premium-hover {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.premium-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  transition: left 0.7s ease;
+}
+
+.premium-hover:hover::before {
+  left: 100%;
+}
+
+.premium-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 60px -15px rgba(0, 0, 0, 0.6),
+    0 10px 20px -10px rgba(255, 51, 31, 0.15);
+}
+
+/* ═══════════════════════════════════════════
+   GRADIENT TEXT EFFECTS
+   ═══════════════════════════════════════════ */
+.gradient-text-red {
+  background: linear-gradient(135deg, #ff331f 0%, #ff6b5a 50%, #ff331f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 5s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ═══════════════════════════════════════════
+   LINE ANIMATIONS
+   ═══════════════════════════════════════════ */
+.animated-line {
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-line::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-bressel-red);
+  transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.animated-line:hover::after {
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLL DOWN INDICATOR
+   ═══════════════════════════════════════════ */
+@keyframes scroll-down {
+  0%, 100% { 
+    transform: scaleY(1); 
+    opacity: 1;
+  }
+  50% { 
+    transform: scaleY(1.8); 
+    opacity: 0.6;
+  }
+}
+
+.animate-scroll-down {
+  animation: scroll-down 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: top;
+}
+
+/* ═══════════════════════════════════════════
+   CIRCULAR BORDER ANIMATION
+   ═══════════════════════════════════════════ */
+@keyframes rotate-border {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.rotating-border {
+  position: relative;
+}
+
+.rotating-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    var(--color-bressel-red),
+    transparent
+  );
+  animation: rotate-border 3s linear infinite;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rotating-border:hover::before {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   MAGNETIC BUTTON EFFECT
+   ═══════════════════════════════════════════ */
+.magnetic-button {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+   ═══════════════════════════════════════════ */
+.noise-overlay-premium {
+  position: relative;
+}
+
+.noise-overlay-premium::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════
+   GLOW EFFECTS
+   ═══════════════════════════════════════════ */
+.glow-red {
+  box-shadow: 
+    0 0 20px rgba(255, 51, 31, 0.3),
+    0 0 60px rgba(255, 51, 31, 0.1);
+}
+
+.glow-red-hover:hover {
+  box-shadow: 
+    0 0 30px rgba(255, 51, 31, 0.4),
+    0 0 80px rgba(255, 51, 31, 0.15);
+}
+
+/* ═══════════════════════════════════════════
+   STAGGER ANIMATION DELAYS
+   ═══════════════════════════════════════════ */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* ═══════════════════════════════════════════
+   BLUR UNVEIL EFFECT
+   ═══════════════════════════════════════════ */
+.blur-unveil {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.blur-unveil.visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════
+   PREMIUM BUTTON SHINE
+   ═══════════════════════════════════════════ */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 60%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+}
+
+.btn-shine:hover::after {
+  left: 150%;
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+   ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .parallax-bg,
+  .parallax-slow {
+    transform: none !important;
+  }
+  
+  .premium-hover:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   REDUCED MOTION SUPPORT
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .parallax-bg,
+  .parallax-slow {
+    transform: none !important;
+  }
+}

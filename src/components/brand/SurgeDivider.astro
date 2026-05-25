@@ -1,0 +1,45 @@
+---
+/**
+ * SurgeDivider.astro — BRESSEL™ SURGE Shape Component
+ *
+ * The SURGE is the 80° forward-leaning module from the BRESSEL symbol.
+ * Brand Guidelines Ref: Section 5.1 — THE "SURGE" AS A GRAPHIC SILO
+ *
+ * @prop direction - "horizontal" | "vertical" (default: "horizontal")
+ * @prop color - "primary" | "dark-scarlet" | "unity-blue" (default: "primary")
+ * @prop size - "sm" | "md" | "lg" (default: "md")
+ * @prop class - Additional CSS classes
+ */
+
+interface Props {
+  direction?: "horizontal" | "vertical";
+  color?: "primary" | "dark-scarlet" | "unity-blue";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { direction = "horizontal", color = "primary", size = "md", class: className = "" } = Astro.props;
+
+const sizeMap = { sm: { w: 60, h: 14 }, md: { w: 100, h: 22 }, lg: { w: 160, h: 34 } };
+const { w, h } = sizeMap[size];
+const vb = `${w} ${h}`;
+---
+
+<div class:list={["surge", `surge-${direction}`, `surge-${color}`, `surge-${size}`, className]} aria-hidden="true">
+  <svg viewBox={`0 0 ${vb}`} preserveAspectRatio="none" class="w-full h-full">
+    <rect x="5" y="3" width={w * 0.6} height={h * 0.7} rx={h * 0.35}
+      transform={`rotate(-10 ${w * 0.35} ${h * 0.35})`} fill="currentColor" />
+    <circle cx={w * 0.78} cy={h * 0.45} r={h * 0.32} fill="currentColor" />
+  </svg>
+</div>
+
+<style>
+  .surge { display: block; overflow: hidden; }
+  .surge-horizontal.surge-sm, .surge-vertical.surge-sm { width: 100%; height: 8px; }
+  .surge-horizontal.surge-md { width: 100%; height: 18px; }
+  .surge-horizontal.surge-lg { width: 100%; height: 32px; }
+  .surge-vertical { width: 18px; height: 100%; }
+  .surge-primary { color: var(--color-primary, #FF331F); }
+  .surge-dark-scarlet { color: var(--color-dark-scarlet, #E02D1B); }
+  .surge-unity-blue { color: var(--color-unity-blue, #6699FF); }
+</style>

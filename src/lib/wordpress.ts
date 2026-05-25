@@ -5,7 +5,11 @@
 // ── Configuration ──────────────────────────────────────────
 const endpoint =
   import.meta.env.WPGRAPHQL_ENDPOINT ||
-  'http://localhost:8080/graphql';
+  'http://104.248.157.67/graphql'; // Default to live WP
+
+// Auth for protected WordPress instances (HTTP Basic Auth)
+const wpUser = import.meta.env.WP_AUTH_USER;
+const wpPass = import.meta.env.WP_AUTH_PASSWORD;
 
 // ── Types ──────────────────────────────────────────────────
 export interface FeaturedImage {
@@ -95,9 +99,19 @@ async function fetchWP<T>(
   query: string,
   variables?: Record<string, unknown>,
 ): Promise<T> {
+  // Build headers with optional auth
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  
+  if (wpUser && wpPass) {
+    const authToken = Buffer.from(`${wpUser}:${wpPass}`).toString('base64');
+    headers['Authorization'] = `Basic ${authToken}`;
+  }
+
   const res = await fetch(endpoint, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({ query, variables }),
   });
 

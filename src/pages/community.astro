@@ -63,7 +63,7 @@ const hero = {
                   <h3 class="font-header font-black italic text-xl uppercase mb-2" style="color: var(--color-foreground);">{event.title}</h3>
                   <Fragment set:html={event.excerpt} />
                   {event.eventLocation && (
-                    <p class="text-[0.6875rem] font-bold uppercase tracking-wider" style="color: var(--color-bressel-zinc-600);">📍 {event.eventLocation}</p>
+                    <p class="text-[0.6875rem] font-bold uppercase tracking-wider" style="color: var(--color-border, #52525b);">📍 {event.eventLocation}</p>
                   )}
                 </div>
                 {event.eventRegistrationUrl && (
