@@ -1,941 +1,255 @@
 ---
 /**
- * Visual Dev Tool - Image swap dev panel for Astro
+ * Visual Dev Tool — Image Browser
+ *
+ * A minimal tool to browse available images and copy their URLs.
+ * Designed for quick visual reference during development.
  *
  * Usage:
  *   import VisualDev from '../components/visual-dev/VisualDev.astro';
- *   {import.meta.env.DEV && <VisualDev />}
+ *   {import.meta.env.DEV && <VisualDev library={[
+ *     '/assets/brandvisual--/tshirt_bressel--OP-BRESSEL-SPORTS-TSHIRT-BLACK-FA.webp',
+ *     '/assets/brandvisual--/beyond.svg',
+ *   ]} />}
  *
  * Props:
- *   library: string[] - optional image picker options
- *   pageGrouping: boolean - group slots by page (default: true)
- *   defaultView: 'component' | 'page' | 'flat' - default grouping (default: 'component')
+ *   library: string[] — Array of image paths to browse (required)
+ *   title: string — Optional panel title (default: 'Image Browser')
  *
- * Tag your images:
- *   <img src="/assets/hero.jpg" data-swap="hero-bg" />
- *   <div data-swap="hero-bg" style="background-image: url('/assets/bg.jpg')" />
+ * Features:
+ *   ← → arrows to navigate images
+ *   Click the URL to copy to clipboard
+ *   Works only in dev mode (import.meta.env.DEV check built-in)
  */
 
-const { library = [], pageGrouping = true, defaultView = 'component' } = Astro.props;
+const { library = [], title = 'Image Browser' } = Astro.props;
 const isDev = import.meta.env.DEV;
+const total = library.length;
+const fileName = (path) => path.split('/').pop();
+const groupLabel = () => {
+  // Try to detect a meaningful group name from the first image path
+  if (!library.length) return 'Assets';
+  const parts = library[0].split('/');
+  // Find the most specific common directory
+  // e.g. /assets/brandvisual--/img.webp → /assets/brandvisual--
+  for (let i = parts.length - 2; i >= 0; i--) {
+    const candidate = parts.slice(0, i + 1).join('/');
+    const matches = library.filter(p => p.startsWith(candidate)).length;
+    if (matches === library.length) return candidate;
+  }
+  return parts.slice(0, -1).join('/') || 'Assets';
+};
 ---
 
 {isDev && (
-  <div id="visual-dev-wrapper">
-    <!-- Floating Toggle Button -->
-    <button
-      id="vd-toggle"
-      class="vd-toggle"
-      title="Visual Dev Tool (V)"
-      aria-label="Toggle Visual Dev Tool"
-    >
-      🎨
+  <div id="vd-root">
+    <!-- Floating toggle -->
+    <button id="vd-toggle" class="vd-btn vd-toggle" title="Image Browser (B)" aria-label="Toggle Image Browser">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <path d="M21 15l-5-5L5 21" />
+      </svg>
     </button>
 
-    <!-- Main Panel -->
-    <div id="vd-panel" class="vd-panel vd-surface">
+    <!-- Panel -->
+    <div id="vd-panel" class="vd-panel">
+      <!-- Header -->
       <div class="vd-header">
-        <span class="vd-title">🎨 Visual Dev Tool</span>
-        <div class="vd-header-actions">
-          <select id="vd-page-select" class="vd-input vd-select" title="Select page">
-            <option value="all">All Pages</option>
-            <option value="/">Homepage</option>
-            <option value="/about">About</option>
-            <option value="/academy">Academy</option>
-            <option value="/community">Community</option>
-            <option value="/shop">Shop</option>
-            <option value="/contact">Contact</option>
-          </select>
-          <select id="vd-view-select" class="vd-input vd-select" title="Grouping mode">
-            <option value="component" selected>By Component</option>
-            <option value="page">By Page</option>
-            <option value="flat">Flat List</option>
-          </select>
-          <input id="vd-search" type="text" class="vd-input vd-search" placeholder="Search slots..." />
-          <button id="vd-inspect-btn" class="vd-btn vd-btn-sm" title="Inspect Mode (I)">🔎 Inspect</button>
-          <button id="vd-ghost-btn" class="vd-btn vd-btn-sm" title="Ghost Mode (G)">👻 Ghost</button>
-          <button id="vd-clear-btn" class="vd-btn vd-btn-sm" title="Clear All Swaps">🗑 Clear</button>
-          <button id="vd-close-btn" class="vd-btn vd-btn-sm" title="Close (ESC)">✕</button>
-        </div>
+        <span class="vd-title">{title}</span>
+        <span class="vd-count" id="vd-count">1 / {total}</span>
+        <button id="vd-close" class="vd-btn vd-btn-sm vd-close" title="Close (ESC)">✕</button>
       </div>
 
-      <div id="vd-slots" class="vd-slots">
-        <!-- Populated by JS -->
-      </div>
+      <!-- Image display -->
+      <div class="vd-viewer" id="vd-viewer">
+        <button id="vd-prev" class="vd-arrow" title="Previous (←)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
 
-      <div class="vd-footer">
-        <button id="vd-export-json" class="vd-btn" title="Export JSON (E)">📤 Export JSON</button>
-        <button id="vd-export-code" class="vd-btn" title="Copy Code (C)">📋 Copy Code</button>
-        <button id="vd-export-diff" class="vd-btn" title="Copy Diff">📋 Copy Diff</button>
-      </div>
-    </div>
-
-    <!-- Preview Modal -->
-    <div id="vd-preview" class="vd-overlay">
-      <div class="vd-card">
-        <div class="vd-card-header">
-          <span id="vd-preview-title" class="vd-preview-title"></span>
-          <button id="vd-preview-close" class="vd-btn vd-btn-sm">✕</button>
-        </div>
-        <div class="vd-card-body">
-          <div class="vd-preview-compare">
-            <div>
-              <div class="vd-label">Before</div>
-              <img id="vd-preview-before" alt="Before" />
+        <div class="vd-image-wrap">
+          {total > 0 ? (
+            <img id="vd-image" src={library[0]} alt={fileName(library[0])} loading="lazy" />
+          ) : (
+            <div class="vd-empty">
+              <p>No images in library</p>
+              <p class="vd-hint">Pass <code>library={"[...]"}</code> prop to VisualDev</p>
             </div>
-            <div>
-              <div class="vd-label">After</div>
-              <img id="vd-preview-after" alt="After" />
-            </div>
-          </div>
-          <div class="vd-preview-actions">
-            <button id="vd-preview-prev" class="vd-btn vd-btn-sm">←</button>
-            <button id="vd-preview-apply" class="vd-btn vd-btn-sm vd-btn-accent">✓ Apply</button>
-            <button id="vd-preview-next" class="vd-btn vd-btn-sm">→</button>
-            <button id="vd-preview-cancel" class="vd-btn vd-btn-sm">✗ Cancel</button>
-          </div>
+          )}
+        </div>
+
+        <button id="vd-next" class="vd-arrow" title="Next (→)">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Info bar -->
+      <div class="vd-info">
+        <span id="vd-filename" class="vd-filename">{total > 0 ? fileName(library[0]) : ''}</span>
+        <div class="vd-path-row">
+          <input id="vd-url" class="vd-url" type="text" value={total > 0 ? library[0] : ''} readonly onClick="this.select()" />
+          <button id="vd-copy" class="vd-btn" title="Copy URL">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copy
+          </button>
         </div>
       </div>
-    </div>
 
-    <!-- Library Browser Modal -->
-    <div id="vd-library" class="vd-overlay">
-      <div class="vd-card">
-        <div class="vd-card-header">
-          <span>📷 Image Library</span>
-          <button id="vd-library-close" class="vd-btn vd-btn-sm">✕</button>
-        </div>
-        <div id="vd-library-grid" class="vd-library-grid">
-          <!-- Populated by JS -->
-        </div>
+      <!-- Thumbnail strip -->
+      <div class="vd-strip" id="vd-strip">
+        {library.map((path, i) => (
+          <button class="vd-thumb" data-index={i} title={fileName(path)}>
+            <img src={path} alt={fileName(path)} loading="lazy" />
+          </button>
+        ))}
       </div>
     </div>
   </div>
 )}
 
-<script is:inline define:vars={{ defaultLibrary: library, defaultView: defaultView }}>
+<script define:vars={{ library }}>
 (() => {
-  'use strict';
+  if (library.length === 0) return;
 
-  const STORAGE_KEY = 'visual-dev-swaps';
-
-  // ---- STATE ----
-  const state = {
-    isOpen: false,
-    isGhost: false,
-    isInspect: false,
-    selectedSlot: null,
-    previewingSlot: null,
-    previewIndex: 0,
-    library: JSON.parse(JSON.stringify(defaultLibrary || [])),
-    viewMode: defaultView || 'component',
-    pageFilter: 'all',
-    searchQuery: '',
-    autoImgCounter: 0,
-  };
-
-  // ---- DOM REFS ----
-  const toggle = document.getElementById('vd-toggle');
+  const state = { index: 0 };
+  const img = document.getElementById('vd-image');
+  const url = document.getElementById('vd-url');
+  const filename = document.getElementById('vd-filename');
+  const count = document.getElementById('vd-count');
   const panel = document.getElementById('vd-panel');
-  const slotsEl = document.getElementById('vd-slots');
-  const searchInput = document.getElementById('vd-search');
-  const viewSelect = document.getElementById('vd-view-select');
-  const pageSelect = document.getElementById('vd-page-select');
-  const inspectBtn = document.getElementById('vd-inspect-btn');
-  const ghostBtn = document.getElementById('vd-ghost-btn');
-  const clearBtn = document.getElementById('vd-clear-btn');
-  const closeBtn = document.getElementById('vd-close-btn');
-  const exportJsonBtn = document.getElementById('vd-export-json');
-  const exportCodeBtn = document.getElementById('vd-export-code');
-  const exportDiffBtn = document.getElementById('vd-export-diff');
-  const previewOverlay = document.getElementById('vd-preview');
-  const previewBefore = document.getElementById('vd-preview-before');
-  const previewAfter = document.getElementById('vd-preview-after');
-  const previewTitle = document.getElementById('vd-preview-title');
-  const previewApply = document.getElementById('vd-preview-apply');
-  const previewCancel = document.getElementById('vd-preview-cancel');
-  const previewPrev = document.getElementById('vd-preview-prev');
-  const previewNext = document.getElementById('vd-preview-next');
-  const previewClose = document.getElementById('vd-preview-close');
-  const libraryOverlay = document.getElementById('vd-library');
-  const libraryGrid = document.getElementById('vd-library-grid');
-  const libraryClose = document.getElementById('vd-library-close');
+  const toggle = document.getElementById('vd-toggle');
+  const closeBtn = document.getElementById('vd-close');
+  const prevBtn = document.getElementById('vd-prev');
+  const nextBtn = document.getElementById('vd-next');
+  const copyBtn = document.getElementById('vd-copy');
+  const strip = document.getElementById('vd-strip');
 
-  // ---- STORAGE ----
-  function loadSwaps() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    } catch { return {}; }
-  }
-
-  function saveSwaps(swaps) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(swaps));
-    } catch (e) {
-      console.warn('[visual-dev] localStorage full:', e);
-      flashMessage('⚠ Storage full - swaps may not persist');
-    }
-  }
-
-  // ---- DOM SCAN ----
-  function detectSlotType(el) {
-    if (el.tagName === 'IMG') return 'img';
-    if (el.tagName === 'VIDEO') return 'video';
-    if (el.tagName === 'SOURCE') return 'source';
-    if (el.style?.backgroundImage) return 'bg';
-    return 'img';
-  }
-
-  function getCurrentPath(el, type) {
-    if (type === 'img') return el.getAttribute('src') || '';
-    if (type === 'video') return el.getAttribute('poster') || '';
-    if (type === 'source') return el.getAttribute('src') || '';
-    if (type === 'bg') {
-      const m = el.style?.backgroundImage?.match(/url\(['"]?([^'"]+)['"]?\)/);
-      return m?.[1] || '';
-    }
-    return '';
-  }
-
-  function createThumb(el, type) {
-    if (type === 'img') return el.getAttribute('src') || null;
-    if (type === 'video') return el.getAttribute('poster') || null;
-    if (type === 'bg') {
-      const m = el.style?.backgroundImage?.match(/url\(['"]?([^'"]+)['"]?\)/);
-      return m?.[1] || null;
-    }
-    return null;
-  }
-
-  function scanSlots() {
-    const swaps = loadSwaps();
-    const slots = [];
-    const els = document.querySelectorAll('[data-swap]');
-
-    els.forEach((el) => {
-      const slotId = el.getAttribute('data-swap');
-      const type = detectSlotType(el);
-      const currentPath = getCurrentPath(el, type);
-      const hasSwap = swaps[slotId] && swaps[slotId] !== currentPath;
-      const originalPath = el.getAttribute('data-swap-original') || currentPath;
-
-      if (!el.hasAttribute('data-swap-original')) {
-        el.setAttribute('data-swap-original', originalPath);
-      }
-
-      slots.push({
-        id: slotId,
-        type,
-        element: el,
-        currentPath,
-        originalPath,
-        hasSwap,
-        thumbnail: createThumb(el, type),
-      });
-    });
-
-    return slots;
-  }
-
-  // ---- APPLY / RESET ----
-  function applySwap(slotId, newPath) {
-    const el = document.querySelector(`[data-swap="${slotId}"]`);
-    if (!el) return false;
-
-    const type = detectSlotType(el);
-    const swaps = loadSwaps();
-
-    if (type === 'img') {
-      el.setAttribute('src', newPath);
-    } else if (type === 'video') {
-      el.setAttribute('poster', newPath);
-    } else if (type === 'source') {
-      el.setAttribute('src', newPath);
-    } else if (type === 'bg') {
-      el.style.backgroundImage = `url('${newPath}')`;
-    }
-
-    swaps[slotId] = newPath;
-    saveSwaps(swaps);
-    return true;
-  }
-
-  function resetSlot(slotId) {
-    const swaps = loadSwaps();
-    delete swaps[slotId];
-    saveSwaps(swaps);
-
-    const el = document.querySelector(`[data-swap="${slotId}"]`);
-    if (!el) return;
-
-    const type = detectSlotType(el);
-    const original = el.getAttribute('data-swap-original');
-    if (!original) return;
-
-    if (type === 'img') el.setAttribute('src', original);
-    else if (type === 'video') el.setAttribute('poster', original);
-    else if (type === 'source') el.setAttribute('src', original);
-    else if (type === 'bg') el.style.backgroundImage = `url('${original}')`;
-  }
-
-  // ---- BASE64 CONVERSION (canvas compress) ----
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-
-      img.onload = () => {
-        const MAX_DIM = 1920;
-        let { width, height } = img;
-
-        if (width > MAX_DIM || height > MAX_DIM) {
-          const ratio = Math.min(MAX_DIM / width, MAX_DIM / height);
-          width = Math.round(width * ratio);
-          height = Math.round(height * ratio);
-        }
-
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const dataUrl = canvas.toDataURL('image/webp', 0.8);
-        URL.revokeObjectURL(url);
-        resolve(dataUrl);
-      };
-
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error('Failed to load image'));
-      };
-
-      img.src = url;
+  function show(i) {
+    state.index = (i + library.length) % library.length;
+    const path = library[state.index];
+    img.src = path;
+    url.value = path;
+    filename.textContent = path.split('/').pop();
+    count.textContent = `${state.index + 1} / ${library.length}`;
+    // Highlight active thumbnail
+    strip.querySelectorAll('.vd-thumb').forEach((el, idx) => {
+      el.classList.toggle('vd-active', idx === state.index);
     });
   }
 
-  // ---- RENDER ----
-  function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function renderSlot(slot) {
-    return `
-      <div class="vd-slot ${slot.hasSwap ? 'vd-slot-swapped' : ''} ${slot.id === state.selectedSlot ? 'vd-slot-selected' : ''}" data-slot="${slot.id}">
-        <div class="vd-slot-header">
-          ${slot.thumbnail ? `<img class="vd-slot-thumb" src="${slot.thumbnail}" alt="" loading="lazy" />` : '<div class="vd-slot-thumb vd-thumb-empty"></div>'}
-          <div class="vd-slot-info">
-            <span class="vd-slot-id">${slot.id}</span>
-            <span class="vd-slot-path">${escapeHtml(slot.currentPath)}</span>
-          </div>
-          ${slot.hasSwap ? '<span class="vd-badge">✓</span>' : ''}
-        </div>
-        <div class="vd-slot-actions">
-          <button class="vd-btn vd-btn-sm vd-swap-btn" data-action="browse" data-slot="${slot.id}" title="Browse library">📷</button>
-          <button class="vd-btn vd-btn-sm vd-swap-btn" data-action="paste" data-slot="${slot.id}" title="Paste URL">🔗</button>
-          <button class="vd-btn vd-btn-sm vd-swap-btn" data-action="reset" data-slot="${slot.id}" title="Reset (R)">↩</button>
-          <button class="vd-btn vd-btn-sm vd-swap-btn" data-action="copy" data-slot="${slot.id}" title="Copy path">📋</button>
-        </div>
-      </div>`;
-  }
-
-  function renderSlots() {
-    const slots = scanSlots();
-
-    if (slots.length === 0) {
-      slotsEl.innerHTML = `
-        <div class="vd-empty">
-          No <code>data-swap</code> tags found on this page.<br/>
-          <span class="vd-hint">Add data-swap="your-id" to images you want to manage.</span>
-        </div>`;
-      return;
-    }
-
-    let filtered = slots;
-    if (state.searchQuery) {
-      const q = state.searchQuery.toLowerCase();
-      filtered = slots.filter(s => s.id.toLowerCase().includes(q) || s.currentPath.toLowerCase().includes(q));
-    }
-
-    let html = '';
-    if (state.viewMode === 'component') {
-      const groups = {};
-      filtered.forEach(s => {
-        const group = s.id.split('-')[0];
-        if (!groups[group]) groups[group] = [];
-        groups[group].push(s);
-      });
-      Object.entries(groups).forEach(([group, gs]) => {
-        html += `<div class="vd-group"><div class="vd-group-title">${group}</div>`;
-        gs.forEach(s => { html += renderSlot(s); });
-        html += '</div>';
-      });
-    } else if (state.viewMode === 'page') {
-      html += `<div class="vd-group"><div class="vd-group-title">Current Page</div>`;
-      filtered.forEach(s => { html += renderSlot(s); });
-      html += '</div>';
-    } else {
-      filtered.forEach(s => { html += renderSlot(s); });
-    }
-
-    slotsEl.innerHTML = html;
-  }
-
-  // ---- PANEL ----
   function openPanel() {
-    state.isOpen = true;
     panel.classList.add('vd-open');
-    renderSlots();
+    toggle.classList.remove('vd-open');
   }
 
   function closePanel() {
-    state.isOpen = false;
     panel.classList.remove('vd-open');
+    toggle.classList.add('vd-open');
   }
 
   function togglePanel() {
-    if (state.isOpen) closePanel(); else openPanel();
+    if (panel.classList.contains('vd-open')) closePanel();
+    else openPanel();
   }
 
-  // ---- GHOST ----
-  function toggleGhost() {
-    state.isGhost = !state.isGhost;
-    panel.classList.toggle('vd-ghost', state.isGhost);
-    ghostBtn.classList.toggle('vd-active', state.isGhost);
-  }
-
-  // ---- INSPECT ----
-  function toggleInspect() {
-    state.isInspect = !state.isInspect;
-    document.body.classList.toggle('vd-inspect-mode', state.isInspect);
-    inspectBtn.classList.toggle('vd-active', state.isInspect);
-    if (state.isInspect) closePanel();
-  }
-
-  // ---- PREVIEW ----
-  function showPreview(slotId, newPath) {
-    const slot = document.querySelector(`[data-swap="${slotId}"]`);
-    if (!slot) return;
-
-    state.previewingSlot = slotId;
-    state.previewIndex = state.library.indexOf(newPath);
-    if (state.previewIndex === -1) state.previewIndex = 0;
-    previewTitle.textContent = slotId;
-
-    const type = detectSlotType(slot);
-    const thumb = createThumb(slot, type);
-    previewBefore.src = thumb || '';
-    previewAfter.src = newPath;
-
-    previewOverlay.classList.add('vd-open');
-  }
-
-  function hidePreview() {
-    previewOverlay.classList.remove('vd-open');
-    state.previewingSlot = null;
-  }
-
-  // ---- LIBRARY ----
-  function openLibrary(slotId) {
-    state.selectedSlot = slotId;
-    renderLibrary();
-    libraryOverlay.classList.add('vd-open');
-  }
-
-  function closeLibrary() {
-    libraryOverlay.classList.remove('vd-open');
-    state.selectedSlot = null;
-  }
-
-  function renderLibrary() {
-    if (state.library.length === 0) {
-      libraryGrid.innerHTML = '<div class="vd-empty">No images in library.<br/>Pass <code>library={[...]}</code> to VisualDev component.</div>';
-      return;
-    }
-
-    libraryGrid.innerHTML = state.library.map(img => `
-      <div class="vd-lib-item" data-img="${img}">
-        <img src="${img}" alt="" class="vd-lib-thumb" loading="lazy" />
-        <span class="vd-lib-name">${img.split('/').pop()}</span>
-      </div>
-    `).join('');
-  }
-
-  // ---- EXPORT ----
-  function exportJSON() {
-    const swaps = loadSwaps();
-    const data = {
-      project: 'base-ui-starwind',
-      version: '2.0',
-      exported: new Date().toISOString(),
-      swaps,
-    };
-    const json = JSON.stringify(data, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `visual-dev-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    flashMessage('JSON exported!');
-  }
-
-  function exportCode() {
-    const swaps = loadSwaps();
-    let code = '';
-    Object.entries(swaps).forEach(([id, path]) => {
-      const el = document.querySelector(`[data-swap="${id}"]`);
-      if (el) {
-        const tag = el.tagName.toLowerCase();
-        const pathAttr = tag === 'img' || tag === 'source' ? `src="${path}"` :
-                         tag === 'video' ? `poster="${path}"` :
-                         `style="background-image: url('${path}')"`;
-        const typeAttr = tag === 'source' ? `type="${el.getAttribute('type') || ''}"` : '';
-        code += `<${tag} ${pathAttr} data-swap="${id}" ${typeAttr} />\n`;
-      } else {
-        code += `<!-- data-swap="${id}" -->\n<img src="${path}" data-swap="${id}" />\n`;
-      }
-    });
-    navigator.clipboard.writeText(code.trim()).then(() => {
-      flashMessage('Code copied to clipboard!');
-    });
-  }
-
-  function exportDiff() {
-    const swaps = loadSwaps();
-    let diff = '';
-    Object.entries(swaps).forEach(([id, newPath]) => {
-      const el = document.querySelector(`[data-swap="${id}"]`);
-      const original = el ? (el.getAttribute('data-swap-original') || `/${id}.jpg`) : `/${id}.jpg`;
-      diff += `${id}: ${original} → ${newPath}\n`;
-    });
-    navigator.clipboard.writeText(diff.trim()).then(() => {
-      flashMessage('Diff copied to clipboard!');
-    });
-  }
-
-  // ---- FLASH ----
-  function flashMessage(text) {
-    const msg = document.createElement('div');
-    msg.className = 'vd-flash';
-    msg.textContent = text;
-    document.body.appendChild(msg);
-    requestAnimationFrame(() => msg.classList.add('vd-flash-show'));
-    setTimeout(() => {
-      msg.classList.remove('vd-flash-show');
-      setTimeout(() => msg.remove(), 300);
-    }, 2000);
-  }
-
-  // ---- DRAG & DROP ----
-  async function handleDrop(slotId, file) {
-    if (!file.type.startsWith('image/')) {
-      flashMessage('⚠ Only image files');
-      return;
-    }
-    try {
-      const base64 = await fileToBase64(file);
-      showPreview(slotId, base64);
-    } catch (e) {
-      console.warn('[visual-dev] compression failed:', e);
-      flashMessage('⚠ Failed to process image');
-    }
-  }
-
-  function handlePasteUrl(slotId, url) {
-    if (!url) return;
-    if (!url.startsWith('http') && !url.startsWith('data:') && !url.startsWith('/')) {
-      url = '/' + url;
-    }
-    showPreview(slotId, url);
-  }
-
-  // ---- EVENT LISTENERS ----
   toggle.addEventListener('click', togglePanel);
   closeBtn.addEventListener('click', closePanel);
-  ghostBtn.addEventListener('click', toggleGhost);
-  inspectBtn.addEventListener('click', toggleInspect);
-  clearBtn.addEventListener('click', () => {
-    if (confirm('Clear all swaps? This resets all images to their originals.')) {
-      localStorage.removeItem(STORAGE_KEY);
-      scanSlots().forEach(s => resetSlot(s.id));
-      renderSlots();
-      flashMessage('All swaps cleared');
-    }
-  });
-  exportJsonBtn.addEventListener('click', exportJSON);
-  exportCodeBtn.addEventListener('click', exportCode);
-  exportDiffBtn.addEventListener('click', exportDiff);
-  previewClose.addEventListener('click', hidePreview);
-  previewCancel.addEventListener('click', hidePreview);
-  previewApply.addEventListener('click', () => {
-    if (state.previewingSlot) {
-      const src = previewAfter.src;
-      if (applySwap(state.previewingSlot, src)) {
-        hidePreview();
-        renderSlots();
-        flashMessage('Swap applied!');
-      }
-    }
-  });
-  previewPrev.addEventListener('click', () => {
-    if (state.library.length > 0 && state.previewingSlot) {
-      state.previewIndex = (state.previewIndex - 1 + state.library.length) % state.library.length;
-      previewAfter.src = state.library[state.previewIndex];
-    }
-  });
-  previewNext.addEventListener('click', () => {
-    if (state.library.length > 0 && state.previewingSlot) {
-      state.previewIndex = (state.previewIndex + 1) % state.library.length;
-      previewAfter.src = state.library[state.previewIndex];
-    }
-  });
-  libraryClose.addEventListener('click', closeLibrary);
+  prevBtn.addEventListener('click', () => show(state.index - 1));
+  nextBtn.addEventListener('click', () => show(state.index + 1));
 
-  searchInput.addEventListener('input', (e) => {
-    state.searchQuery = e.target.value;
-    renderSlots();
+  // Thumbnail click
+  strip.addEventListener('click', (e) => {
+    const thumb = e.target.closest('.vd-thumb');
+    if (thumb) show(parseInt(thumb.dataset.index));
   });
 
-  viewSelect.addEventListener('change', (e) => {
-    state.viewMode = e.target.value;
-    renderSlots();
-  });
-
-  if (pageSelect) {
-    pageSelect.addEventListener('change', (e) => {
-      state.pageFilter = e.target.value;
-      renderSlots();
+  // Copy URL
+  copyBtn.addEventListener('click', () => {
+    url.select();
+    navigator.clipboard.writeText(url.value).then(() => {
+      const orig = copyBtn.innerHTML;
+      copyBtn.innerHTML = '✓ Copied';
+      setTimeout(() => { copyBtn.innerHTML = orig; }, 1500);
     });
-  }
-
-  libraryGrid.addEventListener('click', (e) => {
-    const item = e.target.closest('.vd-lib-item');
-    if (item) {
-      const img = item.dataset.img;
-      if (state.selectedSlot) showPreview(state.selectedSlot, img);
-      closeLibrary();
-    }
   });
 
-  slotsEl.addEventListener('click', (e) => {
-    const btn = e.target.closest('.vd-swap-btn');
-    if (!btn) return;
-    e.stopPropagation();
-
-    const action = btn.dataset.action;
-    const slotId = btn.dataset.slot;
-
-    switch (action) {
-      case 'browse':
-        openLibrary(slotId);
-        break;
-      case 'paste': {
-        const url = prompt('Paste image URL:');
-        if (url) handlePasteUrl(slotId, url);
-        break;
-      }
-      case 'reset':
-        resetSlot(slotId);
-        renderSlots();
-        flashMessage('Slot reset');
-        break;
-      case 'copy': {
-        const el = document.querySelector(`[data-swap="${slotId}"]`);
-        if (el) {
-          const path = getCurrentPath(el, detectSlotType(el));
-          navigator.clipboard.writeText(path).then(() => flashMessage('Path copied!'));
-        }
-        break;
-      }
-    }
-  });
-
-  // Slot drag-and-drop
-  slotsEl.addEventListener('dragover', (e) => {
-    const slot = e.target.closest('.vd-slot');
-    if (slot) {
-      e.preventDefault();
-      slot.classList.add('vd-slot-dragover');
-    }
-  });
-
-  slotsEl.addEventListener('dragleave', (e) => {
-    const slot = e.target.closest('.vd-slot');
-    if (slot) slot.classList.remove('vd-slot-dragover');
-  });
-
-  slotsEl.addEventListener('drop', async (e) => {
-    const slot = e.target.closest('.vd-slot');
-    if (slot) {
-      e.preventDefault();
-      slot.classList.remove('vd-slot-dragover');
-      const slotId = slot.dataset.slot;
-      const file = e.dataTransfer.files[0];
-      if (file) await handleDrop(slotId, file);
-    }
-  });
-
-  // Global drag-and-drop
-  let dragCounter = 0;
-  document.addEventListener('dragenter', (e) => {
-    if (state.isOpen) return;
-    dragCounter++;
-    e.preventDefault();
-    document.body.classList.add('vd-drag-active');
-  });
-
-  document.addEventListener('dragleave', (e) => {
-    if (state.isOpen) return;
-    dragCounter--;
-    if (dragCounter <= 0) {
-      dragCounter = 0;
-      document.body.classList.remove('vd-drag-active');
-    }
-  });
-
-  document.addEventListener('dragover', (e) => {
-    if (!state.isOpen) e.preventDefault();
-  });
-
-  document.addEventListener('drop', async (e) => {
-    dragCounter = 0;
-    document.body.classList.remove('vd-drag-active');
-    if (state.isOpen) return;
-
-    const file = e.dataTransfer.files[0];
-    if (!file || !file.type.startsWith('image/')) return;
-
-    e.preventDefault();
-    const el = e.target.closest('[data-swap]') || e.target;
-    if (el.dataset?.swap) {
-      await handleDrop(el.dataset.swap, file);
-      openPanel();
-      renderSlots();
-    } else {
-      flashMessage('⚠ Drop on an image with data-swap');
-    }
-  });
-
-  // Inspect mode
-  document.addEventListener('click', (e) => {
-    if (!state.isInspect) return;
-    const target = e.target;
-
-    // Don't inspect the tool itself
-    if (target.closest('#visual-dev-wrapper')) return;
-
-    if (target.tagName === 'IMG' || target.style?.backgroundImage) {
-      let slotId = target.dataset.swap;
-      if (!slotId) {
-        state.autoImgCounter++;
-        slotId = `auto-img-${state.autoImgCounter}`;
-        target.setAttribute('data-swap', slotId);
-      }
-      state.isInspect = false;
-      inspectBtn.classList.remove('vd-active');
-      document.body.classList.remove('vd-inspect-mode');
-      openPanel();
-      setTimeout(() => {
-        const slotHeader = slotsEl.querySelector(`[data-slot="${slotId}"]`);
-        if (slotHeader) slotHeader.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 150);
-    }
-  });
-
-  // Stop propagation inside panel during inspect
-  panel.addEventListener('click', (e) => {
-    if (state.isInspect) e.stopPropagation();
-  });
-
-  // Keyboard shortcuts
+  // Keyboard
   document.addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
-      if (e.key === 'Escape') {
-        e.target.blur();
-        return;
-      }
-      return;
-    }
-
-    const key = e.key.toLowerCase();
-
-    switch (key) {
-      case 'v':
-        e.preventDefault();
-        togglePanel();
+    if (e.target.tagName === 'INPUT') return;
+    switch (e.key) {
+      case 'b': case 'B':
+        if (!e.ctrlKey && !e.metaKey) togglePanel();
         break;
-      case 'escape':
-        if (previewOverlay.classList.contains('vd-open')) hidePreview();
-        else if (libraryOverlay.classList.contains('vd-open')) closeLibrary();
-        else if (state.isInspect) toggleInspect();
-        else if (state.isOpen) closePanel();
+      case 'Escape':
+        closePanel();
         break;
-      case 'g':
-        e.preventDefault();
-        toggleGhost();
+      case 'ArrowLeft':
+        if (panel.classList.contains('vd-open')) show(state.index - 1);
         break;
-      case 'i':
-        e.preventDefault();
-        toggleInspect();
+      case 'ArrowRight':
+        if (panel.classList.contains('vd-open')) show(state.index + 1);
         break;
-      case 'r':
-        if (state.previewingSlot) {
-          resetSlot(state.previewingSlot);
-          hidePreview();
-          renderSlots();
-          flashMessage('Slot reset');
-        }
-        break;
-    }
-
-    if (e.ctrlKey || e.metaKey) {
-      switch (key) {
-        case 'e':
-          e.preventDefault();
-          exportJSON();
-          break;
-        case 'c':
-          e.preventDefault();
-          exportCode();
-          break;
-      }
-    }
-
-    if (state.previewingSlot && state.library.length > 0) {
-      switch (e.key) {
-        case 'arrowleft':
-          e.preventDefault();
-          state.previewIndex = (state.previewIndex - 1 + state.library.length) % state.library.length;
-          previewAfter.src = state.library[state.previewIndex];
-          break;
-        case 'arrowright':
-          e.preventDefault();
-          state.previewIndex = (state.previewIndex + 1) % state.library.length;
-          previewAfter.src = state.library[state.previewIndex];
-          break;
-      }
     }
   });
-
-  // ---- AUTO-POPULATE LIBRARY ----
-  function buildPageLibrary() {
-    if (state.library.length > 0) return;
-    const els = document.querySelectorAll('[data-swap]');
-    const paths = new Set();
-    els.forEach((el) => {
-      const type = detectSlotType(el);
-      const path = getCurrentPath(el, type);
-      if (path && !path.startsWith('data:')) paths.add(path);
-      const original = el.getAttribute('data-swap-original');
-      if (original && !original.startsWith('data:')) paths.add(original);
-    });
-    state.library = Array.from(paths);
-  }
-
-  // ---- INIT ----
-  function restoreSwaps() {
-    const swaps = loadSwaps();
-    const slots = scanSlots();
-    const slotIds = new Set(slots.map(s => s.id));
-    Object.entries(swaps).forEach(([id, path]) => {
-      if (slotIds.has(id)) applySwap(id, path);
-    });
-  }
-
-  restoreSwaps();
-  buildPageLibrary();
-  renderSlots();
 })();
 </script>
 
 <style>
-  /* ======================================================
-     SCOPED: VisualDev UI - isolated from site theme
-     ====================================================== */
+  /*
+   * Visual Dev Tool — Image Browser
+   * Minimal, essential styles. No dependencies.
+   */
 
-  #visual-dev-wrapper {
-    /* Color tokens */
-    --vd-z-base: 99999;
-    --vd-z-overlay: 100000;
-    --vd-z-toast: 100001;
-    --vd-bg-base: #0f172a;
-    --vd-bg-panel: #1e293b;
-    --vd-bg-input: #1e293b;
-    --vd-bg-hover: #334155;
-    --vd-bg-active: #475569;
-    --vd-border-default: #334155;
-    --vd-border-hover: #475569;
-    --vd-border-focus: #fbbf24;
-    --vd-text-primary: #e2e8f0;
-    --vd-text-muted: #64748b;
-    --vd-text-dim: #94a3b8;
-    --vd-accent: #fbbf24;
-    --vd-accent-contrast: #0f172a;
-    --vd-success: #22c55e;
-    --vd-danger: #ef4444;
-
-    /* Layout */
+  #vd-root {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: var(--vd-z-base);
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
-    color: var(--vd-text-primary);
+    font-size: 13px;
+    color: #e2e8f0;
     line-height: 1.5;
   }
 
-  #visual-dev-wrapper * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: inherit;
-    color: inherit;
-  }
+  #vd-root * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Toggle Button */
+  /* ── Toggle ── */
   .vd-toggle {
-    width: 48px;
-    height: 48px;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    border: 2px solid var(--vd-border-default);
-    background: var(--vd-bg-panel);
-    color: var(--vd-accent);
-    font-size: 20px;
+    background: #1e293b;
+    border: 2px solid #334155;
+    color: #fbbf24;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: all 0.15s;
   }
-  .vd-toggle:hover {
-    background: var(--vd-bg-hover);
-    transform: scale(1.1);
-  }
+  .vd-toggle:hover { background: #334155; transform: scale(1.1); }
+  .vd-toggle.vd-open { display: none; }
 
-  /* Shared surface chrome */
-  .vd-surface {
-    background: var(--vd-bg-panel);
-    border: 1px solid var(--vd-border-default);
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  }
-
-  /* Panel */
+  /* ── Panel ── */
   .vd-panel {
     position: absolute;
-    bottom: 56px;
+    bottom: 52px;
     right: 0;
-    width: min(600px, calc(100vw - 24px));
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
+    width: min(520px, calc(100vw - 32px));
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     opacity: 0;
-    transform: translateY(10px) scale(0.95);
+    transform: translateY(8px) scale(0.96);
     pointer-events: none;
     transition: all 0.2s ease;
   }
@@ -944,441 +258,144 @@ const isDev = import.meta.env.DEV;
     transform: translateY(0) scale(1);
     pointer-events: auto;
   }
-  .vd-panel.vd-ghost {
-    opacity: 0.5;
-    pointer-events: none;
-    user-select: none;
-  }
 
-  /* Header */
+  /* ── Header ── */
   .vd-header {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 16px;
-    background: var(--vd-bg-base);
-    border-bottom: 1px solid var(--vd-border-default);
-    flex-wrap: wrap;
+    padding: 10px 14px;
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
   }
-  .vd-title {
-    font-weight: 600;
-    color: var(--vd-accent);
-    white-space: nowrap;
-  }
-  .vd-header-actions {
+  .vd-title { font-weight: 600; color: #fbbf24; flex: 1; }
+  .vd-count { color: #64748b; font-size: 12px; }
+  .vd-close { background: transparent; border: none; color: #64748b; cursor: pointer; padding: 2px 6px; border-radius: 4px; }
+  .vd-close:hover { background: #334155; color: #e2e8f0; }
+
+  /* ── Image viewer ── */
+  .vd-viewer {
     display: flex;
-    gap: 4px;
-    flex: 1;
-    justify-content: flex-end;
-    flex-wrap: wrap;
     align-items: center;
+    background: #0f172a;
+    padding: 8px;
+    gap: 8px;
+    min-height: 200px;
   }
-
-  /* Inputs */
-  .vd-input {
-    appearance: none;
-    -webkit-appearance: none;
-    background: var(--vd-bg-input);
-    border: 1px solid var(--vd-border-hover);
-    border-radius: 6px;
-    color: var(--vd-text-primary);
-    font-size: 12px;
-    padding: 4px 8px;
-    outline: none;
-    line-height: 1.4;
-    min-height: 28px;
-  }
-  .vd-input:focus {
-    border-color: var(--vd-border-focus);
-  }
-  .vd-input option {
-    background: var(--vd-bg-panel);
-    color: var(--vd-text-primary);
-  }
-  .vd-select {
+  .vd-arrow {
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #94a3b8;
     cursor: pointer;
-    padding-right: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M3 5l3 3 3-3'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 6px center;
-  }
-  .vd-search {
-    width: 140px;
-  }
-
-  /* Buttons */
-  .vd-btn {
-    padding: 4px 8px;
-    border: 1px solid var(--vd-border-hover);
-    border-radius: 6px;
-    background: var(--vd-bg-panel);
-    color: var(--vd-text-primary);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-    line-height: 1.4;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    transition: all 0.1s;
   }
-  .vd-btn:hover {
-    background: var(--vd-bg-hover);
-    border-color: var(--vd-border-hover);
-  }
-  .vd-btn:active {
-    background: var(--vd-bg-active);
-  }
-  .vd-btn.vd-active {
-    background: var(--vd-accent);
-    color: var(--vd-accent-contrast);
-    border-color: var(--vd-accent);
-  }
-  .vd-btn.vd-btn-sm {
-    padding: 2px 6px;
-    font-size: 11px;
-    min-height: 24px;
-  }
-  .vd-btn.vd-btn-accent {
-    background: var(--vd-accent);
-    color: var(--vd-accent-contrast);
-    border-color: var(--vd-accent);
-  }
-
-  /* Slots area */
-  .vd-slots {
+  .vd-arrow:hover { background: #334155; color: #fbbf24; border-color: #fbbf24; }
+  .vd-image-wrap {
     flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-    max-height: calc(80vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    max-height: 320px;
+    overflow: hidden;
+    border-radius: 6px;
   }
-  .vd-slots::-webkit-scrollbar { width: 6px; }
-  .vd-slots::-webkit-scrollbar-track { background: transparent; }
-  .vd-slots::-webkit-scrollbar-thumb { background: var(--vd-border-hover); border-radius: 3px; }
-
-  /* Empty state */
+  .vd-image-wrap img {
+    max-width: 100%;
+    max-height: 320px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+  }
   .vd-empty {
     text-align: center;
     padding: 40px 20px;
-    color: var(--vd-text-muted);
-    font-size: 13px;
+    color: #64748b;
   }
-  .vd-empty code {
-    background: var(--vd-bg-hover);
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: var(--vd-accent);
-    font-size: 12px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  }
-  .vd-hint {
-    display: block;
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--vd-text-dim);
-  }
+  .vd-hint { font-size: 11px; margin-top: 8px; color: #475569; }
+  .vd-hint code { background: #1e293b; padding: 1px 4px; border-radius: 3px; color: #fbbf24; }
 
-  /* Group */
-  .vd-group {
-    margin-bottom: 8px;
+  /* ── Info ── */
+  .vd-info {
+    padding: 10px 14px;
+    border-top: 1px solid #334155;
   }
-  .vd-group-title {
+  .vd-filename {
     font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--vd-text-muted);
-    padding: 4px 8px;
-    margin-bottom: 2px;
+    color: #94a3b8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    display: block;
+    margin-bottom: 6px;
   }
-
-  /* Slot */
-  .vd-slot {
-    border: 1px solid var(--vd-border-default);
-    border-radius: 8px;
-    margin-bottom: 4px;
-    overflow: hidden;
-    transition: all 0.15s;
-  }
-  .vd-slot:hover {
-    border-color: var(--vd-border-hover);
-  }
-  .vd-slot.vd-slot-swapped {
-    border-color: var(--vd-success);
-    background: rgba(34, 197, 94, 0.05);
-  }
-  .vd-slot.vd-slot-dragover {
-    border-color: var(--vd-accent);
-    background: rgba(251, 191, 36, 0.1);
-  }
-  .vd-slot-header {
+  .vd-path-row {
     display: flex;
+    gap: 6px;
     align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
-    cursor: pointer;
   }
-  .vd-slot-thumb {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 4px;
-    flex-shrink: 0;
-    display: block;
-  }
-  .vd-thumb-empty {
-    width: 40px;
-    height: 40px;
-    background: var(--vd-bg-hover);
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
-  .vd-slot-info {
+  .vd-url {
     flex: 1;
-    min-width: 0;
-  }
-  .vd-slot-id {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    color: #e2e8f0;
     font-size: 12px;
-    font-weight: 600;
-    color: var(--vd-text-primary);
-    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    padding: 4px 8px;
+    outline: none;
+    cursor: text;
   }
-  .vd-slot-path {
-    font-size: 11px;
-    color: var(--vd-text-muted);
+  .vd-url:focus { border-color: #fbbf24; }
+  .vd-btn {
+    padding: 4px 10px;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 12px;
+    cursor: pointer;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.1s;
   }
-  .vd-badge {
-    background: var(--vd-success);
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-  .vd-slot-actions {
-    display: flex;
-    gap: 2px;
-    padding: 0 8px 8px;
-  }
+  .vd-btn:hover { background: #334155; border-color: #475569; }
+  .vd-btn-sm { padding: 2px 6px; font-size: 11px; }
 
-  /* Footer */
-  .vd-footer {
+  /* ── Thumbnail strip ── */
+  .vd-strip {
     display: flex;
     gap: 4px;
-    padding: 8px;
-    border-top: 1px solid var(--vd-border-default);
-    background: var(--vd-bg-base);
+    padding: 8px 14px 10px;
+    overflow-x: auto;
+    border-top: 1px solid #334155;
+    background: #0f172a;
   }
-  .vd-footer .vd-btn {
-    flex: 1;
-    text-align: center;
-  }
-
-  /* Overlay base (preview + library) */
-  .vd-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: var(--vd-z-overlay);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .vd-overlay.vd-open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  /* Card (shared by preview + library) */
-  .vd-card {
-    background: var(--vd-bg-panel);
-    border: 1px solid var(--vd-border-hover);
-    border-radius: 12px;
-    width: 700px;
-    max-width: 90vw;
-    max-height: 90vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  }
-  .vd-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--vd-border-default);
-    font-weight: 600;
-    color: var(--vd-accent);
-    font-size: 14px;
-  }
-  .vd-card-body {
-    padding: 16px;
-    overflow-y: auto;
-  }
-
-  /* Preview specific */
-  .vd-preview-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--vd-accent);
-  }
-  .vd-preview-compare {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .vd-preview-compare > div {
-    flex: 1;
-    text-align: center;
-  }
-  .vd-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--vd-text-muted);
-    margin-bottom: 8px;
-  }
-  .vd-preview-compare img {
-    width: 100%;
-    max-height: 300px;
-    object-fit: contain;
-    border-radius: 8px;
-    border: 1px solid var(--vd-border-default);
-    background: var(--vd-bg-base);
-    display: block;
-  }
-  .vd-preview-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-  }
-
-  /* Library grid */
-  .vd-library-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 8px;
-    padding: 12px;
-    overflow-y: auto;
-    max-height: 60vh;
-  }
-  .vd-lib-item {
-    cursor: pointer;
+  .vd-strip::-webkit-scrollbar { height: 3px; }
+  .vd-strip::-webkit-scrollbar-track { background: transparent; }
+  .vd-strip::-webkit-scrollbar-thumb { background: #475569; border-radius: 2px; }
+  .vd-thumb {
+    flex-shrink: 0;
+    width: 48px; height: 48px;
+    border-radius: 4px;
     border: 2px solid transparent;
-    border-radius: 8px;
     overflow: hidden;
-    transition: all 0.15s;
-    background: var(--vd-bg-base);
+    cursor: pointer;
+    background: #1e293b;
+    padding: 0;
+    transition: all 0.1s;
   }
-  .vd-lib-item:hover {
-    border-color: var(--vd-accent);
-    transform: scale(1.05);
-  }
-  .vd-lib-item img {
-    width: 100%;
-    height: 100px;
+  .vd-thumb:hover { border-color: #64748b; }
+  .vd-thumb.vd-active { border-color: #fbbf24; }
+  .vd-thumb img {
+    width: 100%; height: 100%;
     object-fit: cover;
     display: block;
-  }
-  .vd-lib-name {
-    display: block;
-    font-size: 10px;
-    color: var(--vd-text-dim);
-    padding: 4px;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Flash message */
-  .vd-flash {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--vd-success);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    z-index: var(--vd-z-toast);
-    opacity: 0;
-    transition: all 0.3s ease;
-    pointer-events: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  }
-  .vd-flash.vd-flash-show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* Preview after image style */
-  #vd-preview-after {
-    max-width: 100%;
-    display: block;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .vd-header {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .vd-header-actions {
-      justify-content: flex-start;
-    }
-    .vd-search {
-      width: 100%;
-    }
-    .vd-preview-compare {
-      flex-direction: column;
-    }
-    .vd-card {
-      max-height: 95vh;
-    }
-  }
-</style>
-
-<style is:global>
-  /* ======================================================
-     GLOBAL: Body manipulation - Astro can't scope these
-     ====================================================== */
-
-  body.vd-inspect-mode {
-    cursor: crosshair !important;
-  }
-
-  body.vd-inspect-mode img,
-  body.vd-inspect-mode [style*="background-image"] {
-    cursor: crosshair !important;
-  }
-
-  body.vd-inspect-mode [data-swap] {
-    outline: 3px dashed #fbbf24 !important;
-    outline-offset: 2px;
-  }
-
-  body.vd-inspect-mode img:hover,
-  body.vd-inspect-mode [style*="background-image"]:hover {
-    outline: 3px dashed #fbbf24 !important;
-    outline-offset: 2px;
-  }
-
-  body.vd-drag-active [data-swap] {
-    outline: 3px dashed #ff007f !important;
-    outline-offset: -3px;
   }
 </style>
