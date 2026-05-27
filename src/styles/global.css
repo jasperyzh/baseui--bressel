@@ -3,6 +3,23 @@
    Astro.js + Tailwind CSS v4 + Starwind
    ================================================== */
 
+/* ── Self-Hosted Fonts (woff2) ── */
+@font-face {
+  font-family: 'Neue Regrade';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/assets/fonts/Neue_Regrade_Variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Avenir Next';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/AvenirNextWorld-Regular.woff2') format('woff2');
+}
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/forms";
