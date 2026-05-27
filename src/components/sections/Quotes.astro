@@ -4,7 +4,7 @@
  * Each slide: hero-style background image + dark gradient overlay + quote content.
  * Uses Starwind Carousel (Embla) with autoplay via setInterval.
  */
-import Icon from '../Icon.astro';
+import { Icon } from 'astro-icon/components';
 import Carousel from '../starwind/carousel/Carousel.astro';
 import CarouselContent from '../starwind/carousel/CarouselContent.astro';
 import CarouselItem from '../starwind/carousel/CarouselItem.astro';
@@ -39,7 +39,7 @@ const voices = [
     <!-- Section Header -->
     <div class="mb-10 md:mb-14">
       <p class="caption mb-2">Real Players. Real Stories.</p>
-      <h2 class="heading-lg">VOICES FROM <span class="text-bressel-red">THE COURT.</span></h2>
+      <h2>VOICES FROM <span class="text-bressel-red">THE COURT</span></h2>
     </div>
 
     <!-- Carousel -->
@@ -81,7 +81,7 @@ const voices = [
                     <p class="font-header font-bold text-[0.75rem] uppercase tracking-widest text-bressel-white">
                       {voice.author}
                     </p>
-                    <p class="text-[0.625rem] font-medium uppercase tracking-wider text-ash-haze, #D9D9D9)">
+                    <p class="text-[0.625rem] font-medium uppercase tracking-wider text-ash-haze">
                       {voice.role}
                     </p>
                   </div>
@@ -101,7 +101,7 @@ const voices = [
         {voices.map((_, i) => (
           <button
             type="button"
-            class="voices-dot w-8 h-0.5 bg-bressel-zinc-700 hover:bg-ash-haze, #D9D9D9) transition-colors"
+            class="voices-dot w-8 h-0.5 bg-bressel-zinc-700 hover:bg-ash-haze transition-colors"
             data-index={i}
             aria-label={`Go to testimonial ${i + 1}`}
           ></button>

@@ -13,9 +13,9 @@
  */
 
 import "../styles/global.css";
+
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import VisualDev from "@/components/visual-dev/VisualDev.astro";
 
 const { title, description } = Astro.props;
 const currentPath = Astro.url.pathname;
@@ -75,7 +75,6 @@ const pageDescription = description || "World-class padel, within reach.";
       <slot />
     </main>
     <Footer />
-    {import.meta.env.DEV && <VisualDev />}
 
     <!-- AOS scroll animations - load from CDN, init on load -->
     <script is:inline src="https://unpkg.com/aos@next/dist/aos.js"></script>

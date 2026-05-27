@@ -12,8 +12,7 @@ import CardTitle from '../starwind/card/CardTitle.astro';
 import CardDescription from '../starwind/card/CardDescription.astro';
 import CardContent from '../starwind/card/CardContent.astro';
 import CardFooter from '../starwind/card/CardFooter.astro';
-import Icon from '../Icon.astro';
-import ArrowRight from '../icons/ArrowRight.astro';
+import { Icon } from 'astro-icon/components';
 
 interface Props {
   products: Merch[];
@@ -32,13 +31,13 @@ function stripHtml(html: string): string {
   <div class="container-custom">
 
     <!-- Ghost watermark -->
-    <div class="pointer-events-none absolute top-8 right-8 font-header font-black italic text-6xl md:text-8xl text-transparent" style="-webkit-text-stroke: 1px rgba(255,255,255,0.03);">BRESSEL PRO</div>
+    <div class="watermark-ghost pointer-events-none absolute top-8 right-8">BRESSEL PRO</div>
 
     <!-- Section Header -->
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
       <div>
         <p class="caption mb-2">Engineered for communities and beyond.</p>
-        <h2 class="heading-lg">SHOP</h2>
+        <h2>SHOP</h2>
       </div>
       <a
           href="/shop"
@@ -93,7 +92,7 @@ function stripHtml(html: string): string {
               href={whatsappUrl("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 text-ash-haze, #D9D9D9) font-header font-bold text-[0.625rem] uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"
+              class="inline-flex items-center gap-1.5 text-ash-haze font-header font-bold text-[0.625rem] uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"
             >
               INQUIRE
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -1,11 +1,19 @@
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
+import icon from "astro-icon";
 import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  integrations: [
+    icon({
+      svgoOptions: {
+        multipass: true,
+      },
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     resolve: {
@@ -13,6 +21,10 @@ export default defineConfig({
         "@": path.resolve(__dirname, "./src"),
       },
     },
+  },
+  server: {
+    port: 4323,
+    host: true, // Equivalent to --host flag; matches your npm script's 0.0.0.0 binding
   },
 
   // Remote image optimization — fetches from WP, converts to WebP, caches on CDN

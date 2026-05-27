@@ -81,10 +81,10 @@ const eventDate = post.eventDate ? new Date(post.eventDate) : null;
           {isEvent ? 'COMMUNITY EVENT' : 'BLOG'}
         </p>
 
-        <h1 class="heading-xl mb-6">{post.title}</h1>
+        <h1 class="mb-6">{post.title}</h1>
 
         <!-- Meta row: date + category -->
-        <div class="flex items-center justify-center gap-4 text-sm mb-6" style="color: var(--color-muted-foreground);">
+        <div class="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-6">
           <time datetime={post.date}>{formatDate(post.date)}</time>
           {isEvent && post.eventLocation && (
             <>
@@ -117,18 +117,18 @@ const eventDate = post.eventDate ? new Date(post.eventDate) : null;
 
     <!-- ── Event Date Badge (if event) ── -->
     {isEvent && eventDate && (
-      <section class="py-8 border-y" style="border-color: var(--color-border);">
+      <section class="py-8 border-y border-border">
         <div class="container-custom">
           <div class="flex flex-wrap items-center justify-center gap-8">
             <div class="flex items-center gap-3">
-              <span class="text-xs uppercase font-bold tracking-wider" style="color: var(--color-muted-foreground);">Date</span>
-              <span class="font-header font-black text-lg" style="color: var(--color-bressel-red);">
+              <span class="text-xs uppercase font-bold tracking-wider text-muted-foreground">Date</span>
+              <span class="font-header font-black text-lg text-bressel-red">
                 {eventDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
               </span>
             </div>
             {post.eventLocation && (
               <div class="flex items-center gap-3">
-                <span class="text-xs uppercase font-bold tracking-wider" style="color: var(--color-muted-foreground);">Location</span>
+                <span class="text-xs uppercase font-bold tracking-wider text-muted-foreground">Location</span>
                 <span class="font-header font-bold text-lg">{post.eventLocation}</span>
               </div>
             )}
@@ -151,8 +151,7 @@ const eventDate = post.eventDate ? new Date(post.eventDate) : null;
       <div class="container-custom text-center">
         <a
           href="/blog"
-          class="inline-flex items-center gap-2 font-header font-bold text-xs uppercase tracking-wider no-underline transition-colors"
-          style="color: var(--color-muted-foreground);"
+          class="inline-flex items-center gap-2 font-header font-bold text-xs uppercase tracking-wider no-underline transition-colors text-muted-foreground"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" />

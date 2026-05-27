@@ -1,5 +1,5 @@
 ---
-import Icon from '../Icon.astro';
+import { Icon } from 'astro-icon/components';
 import WhatsAppButton from '../WhatsAppButton.astro';
 
 /**
@@ -34,8 +34,7 @@ import WhatsAppButton from '../WhatsAppButton.astro';
     </div>
 
     <!-- Headline -->
-    <h1 class="heading-xl mb-6">
-      Every Player Has<br />
+    <h1>Every Player Has<br />
       <span class="text-bressel-red">a Place Here.</span>
     </h1>
 
@@ -55,7 +54,7 @@ import WhatsAppButton from '../WhatsAppButton.astro';
       </WhatsAppButton>
       <a
         href="#essence"
-        class="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-border, #52525b) text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-all duration-200 hover:border-bressel-red hover:text-bressel-red"
+        class="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-[#52525b] text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-all duration-200 hover:border-bressel-red hover:text-bressel-red"
       >
         See How It Works
       </a>
@@ -65,9 +64,9 @@ import WhatsAppButton from '../WhatsAppButton.astro';
 
   <!-- Scroll indicator -->
   <a href="#essence" aria-label="Scroll to next section" class="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 no-underline group" data-aos="fade-up" data-aos-delay="800">
-    <span class="caption text-ash-haze, #D9D9D9) group-hover:text-bressel-red transition-colors">SCROLL TO BEGIN</span>
+    <span class="caption text-ash-haze group-hover:text-bressel-red transition-colors">SCROLL TO BEGIN</span>
     <span class="animate-bounce">
-      <Icon name="chevron-down" size={16} class="text-ash-haze, #D9D9D9) group-hover:text-bressel-red transition-colors" />
+      <Icon name="chevron-down" size={16} class="text-ash-haze group-hover:text-bressel-red transition-colors" />
     </span>
   </a>
 

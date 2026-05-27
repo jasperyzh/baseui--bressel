@@ -1,22 +1,21 @@
 ---
 /**
- * Ticker - Scrolling news bar with TRUE seamless infinite loop.
+ * Ticker — Scrolling news bar with seamless infinite loop.
  *
  * How it works:
- *   - Render the full item list as ONE <ul> track.
- *   - Duplicate that entire track (aria-hidden) inside a flex wrapper.
- *   - Animate the wrapper by translateX(-100%) - at which point track 2
- *     sits exactly where track 1 started, producing a seamless wrap.
+ *   - Duplicate the item list so the track is exactly 2× the content.
+ *   - Animate translateX from 0 → -50% (exactly one set of items).
+ *   - At 50%, the duplicated items align perfectly with the originals → seamless wrap.
  *
  * Variants:
- *   variant="default"  - edge-to-edge bar (with top/bottom borders)
- *   variant="fade"     - transparent bg + faded edges, for mid-page use
- *   variant="bare"     - no borders, no bg; fade mask only
+ *   variant="default" — edge-to-edge bar with top/bottom borders
+ *   variant="fade"    — transparent bg + faded edges, for mid-page use
+ *   variant="bare"    — no borders, no bg; fade mask only
  *
  * Props:
  *   items: TickerItem[]
  *   variant?: "default" | "fade" | "bare"
- *   speed?: number        - seconds for one full loop (default 40)
+ *   speed?: number  — seconds for one full loop (default 40)
  */
 interface TickerItem {
   label: string;
@@ -41,40 +40,137 @@ const {
   speed = 40,
 } = Astro.props;
 
-const labelColorClass = (color: TickerItem["labelColor"]) =>
-  color === "primary" ? "text-bressel-red" : "text-ash-haze, #D9D9D9)";
-
-const wrapClasses = [
-  "ticker-wrap",
-  variant === "default" ? "bg-bressel-black-soft border-y border-border, #27272a)/60" : "",
-  variant === "fade" ? "ticker-fade" : "",
-  variant === "bare" ? "ticker-fade" : "",
-  "py-3",
-].filter(Boolean).join(" ");
+// Duplicate for seamless loop
+const loopItems = [...items, ...items];
 ---
 
-<div class={wrapClasses}>
-  <div class="ticker-track" style={`animation-duration: ${speed}s`}>
-    {/* Two identical tracks back-to-back. Translate by -100% = exactly one track = seamless. */}
-    {[0, 1].map((copy) => (
-      <ul
-        class="flex items-center gap-0 list-none m-0 p-0 flex-shrink-0"
-        aria-hidden={copy === 1 ? "true" : undefined}
-      >
-        {items.map((item, i) => (
-          <li class="flex items-center">
-            <span class="inline-flex items-center gap-2 px-8 text-[0.6875rem] font-header font-bold uppercase tracking-wider">
-              <span class={labelColorClass(item.labelColor)}>{item.label}</span>
-              <span class="text-bressel-white">{item.value}</span>
+<!-- Variant: default — bordered bar -->
+{variant === "default" && (
+  <div class="ticker-wrap ticker-default">
+    <div class="ticker-track" style={`animation-duration: ${speed}s`}>
+      {loopItems.map((item, i) => (
+        <>
+          <span class="ticker-item">
+            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-ash-haze)"};`}>
+              {item.label}
             </span>
-            {i < items.length - 1 && (
-              <span class="text-bressel-zinc-700" aria-hidden="true">•</span>
-            )}
-          </li>
-        ))}
-        {/* Separator between the two tracks for visual continuity */}
-        <li aria-hidden="true"><span class="text-bressel-zinc-700 px-2">•</span></li>
-      </ul>
-    ))}
+            <span class="ticker-value">{item.value}</span>
+          </span>
+          {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true">•</span>}
+        </>
+      ))}
+    </div>
   </div>
-</div>
+)}
+
+<!-- Variant: fade — transparent with edge fades -->
+{variant === "fade" && (
+  <div class="ticker-wrap ticker-fade">
+    <div class="ticker-track" style={`animation-duration: ${speed}s`}>
+      {loopItems.map((item, i) => (
+        <>
+          <span class="ticker-item">
+            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-ash-haze)"};`}>
+              {item.label}
+            </span>
+            <span class="ticker-value">{item.value}</span>
+          </span>
+          {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true">•</span>}
+        </>
+      ))}
+    </div>
+  </div>
+)}
+
+<!-- Variant: bare — minimal, no decoration -->
+{variant === "bare" && (
+  <div class="ticker-wrap ticker-bare">
+    <div class="ticker-track" style={`animation-duration: ${speed}s`}>
+      {loopItems.map((item, i) => (
+        <>
+          <span class="ticker-item">
+            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-ash-haze)"};`}>
+              {item.label}
+            </span>
+            <span class="ticker-value">{item.value}</span>
+          </span>
+          {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true">•</span>}
+        </>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .ticker-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-default {
+    background: var(--color-bressel-black-soft);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ticker-fade::before,
+  .ticker-fade::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4rem;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .ticker-fade::before {
+    left: 0;
+    background: linear-gradient(to right, var(--color-bressel-black-soft), transparent);
+  }
+
+  .ticker-fade::after {
+    right: 0;
+    background: linear-gradient(to left, var(--color-bressel-black-soft), transparent);
+  }
+
+  .ticker-bare {
+    /* No bg, no borders */
+  }
+
+  .ticker-track {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker linear infinite;
+    gap: 0;
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 2rem;
+    font-size: 0.6875rem;
+    font-family: var(--font-header);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    flex-shrink: 0;
+  }
+
+  .ticker-value {
+    color: var(--color-bressel-white);
+  }
+
+  .ticker-sep {
+    color: var(--color-secondary);
+    padding: 0 0.5rem;
+    flex-shrink: 0;
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>

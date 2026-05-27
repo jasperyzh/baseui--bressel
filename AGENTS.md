@@ -1,6 +1,6 @@
 # Bressel AGENTS.md
 
-> AI Agent instructions for working with this project.
+> **Inherits:** `~/Desktop/AGENTS.md`
 
 ## Design System
 
@@ -28,18 +28,22 @@ This project uses the **baseui design system** with a **single-brand, dark-only*
 - Tailwind inline — Layout/grids ONLY
 
 ### 4. Guardrails
-- `scripts/check-ai-hallucinations.js` — Run to detect dead code
-- `scripts/verify-system.sh` — Run to verify design system compliance
+- Validators live in `baseui--/scripts/` (canonical location)
+- Run via `npm run verify` (full suite) or individual checks
 
 ## Verification
 
 ```bash
-# Verify design system compliance
-bash scripts/verify-system.sh .
+# Full suite (architecture + system + brand)
+npm run verify
 
-# Check for AI hallucinations
-node scripts/check-ai-hallucinations.js
+# Individual checks
+npm run check:ai       # Architectural guardrails
+npm run verify:system  # System compliance
+npm run verify:brand   # Brand compliance
 ```
+
+> Validators are in `baseui--/scripts/`. This project calls them via npm scripts.
 
 ## Starwind Components
 
@@ -59,19 +63,13 @@ node scripts/check-ai-hallucinations.js
 | textarea | ✅ Installed |
 | tooltip | ✅ Installed |
 
-## Guardrails
+## Guardrails (via `npm run verify`)
 
-| Check | Status | Description |
-|-------|--------|-----------|
-| Starwind barrel files | ⚠️ 40 found | Dead re-exports to delete |
-| tailwind.config.js | ✅ Not present | v4 compliant |
-| @layer base | ✅ 17/17 | Complete semantic coverage |
-| Theme system | ✅ Single-brand | No multi-theme switching needed |
+| Check | Script | Status |
+|-------|--------|--------|
+| Architecture | `validator--baseui.mjs` | ✅ Active |
+| System | `verify-system.sh` | ✅ 90/100 |
+| Brand | `verify-brand-compliance.js` | ✅ Passed |
 
-## Next Steps
+> Validators live in `baseui--/scripts/`. This project calls them via npm scripts.
 
-- [x] Expand @layer base (17 elements)
-- [x] Add guardrail script
-- [ ] Delete Starwind barrel files (40)
-- [ ] Add missing Starwind components (6)
-- [ ] Clean up dead imports

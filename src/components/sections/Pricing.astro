@@ -4,7 +4,7 @@
  * Brand voice: Transparent, human, "from" pricing
  * Client direction: Show rough pricing on landing page, offer PDF for details
  */
-import Icon from '../Icon.astro';
+import { Icon } from 'astro-icon/components';
 import { whatsappUrl } from '../../lib/config';
 ---
 
@@ -13,15 +13,15 @@ import { whatsappUrl } from '../../lib/config';
 
     <!-- Section Header -->
     <div class="text-center mb-12" data-aos="fade-up">
-      <p class="caption text-muted-foreground, #a1a1aa) mb-2">INVESTMENT</p>
-      <h2 class="heading-lg text-bressel-black">
+      <p class="caption text-muted-foreground mb-2">INVESTMENT</p>
+      <h2 class="text-bressel-black">
         TRAINING <span class="text-bressel-red">PROGRAMS.</span>
       </h2>
     </div>
 
     <!-- Pricing Table -->
     <div class="max-w-2xl mx-auto">
-      <div class="border border-border, #27272a)/20 divide-y divide-bressel-zinc-800/10">
+      <div class="border border-[#27272a]/20 divide-y divide-bressel-zinc-800/10">
         <div class="flex items-center justify-between px-6 py-4">
           <span class="font-header font-bold uppercase tracking-wide text-sm">Individual Sessions</span>
           <span class="font-header font-black text-lg text-bressel-red">from RM 120/session</span>
@@ -45,7 +45,7 @@ import { whatsappUrl } from '../../lib/config';
       </div>
 
       <!-- Disclaimer -->
-      <p class="body text-sm text-muted-foreground, #a1a1aa) mt-4 mb-8 text-center">
+      <p class="body text-sm text-muted-foreground mt-4 mb-8 text-center">
         Pricing varies based on level, schedule, and program length.
       </p>
 
