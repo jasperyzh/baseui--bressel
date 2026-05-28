@@ -51,7 +51,7 @@ const loopItems = [...items, ...items];
       {loopItems.map((item, i) => (
         <>
           <span class="ticker-item">
-            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-ash-haze)"};`}>
+            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-bressel-grey)"};`}>
               {item.label}
             </span>
             <span class="ticker-value">{item.value}</span>
@@ -70,7 +70,7 @@ const loopItems = [...items, ...items];
       {loopItems.map((item, i) => (
         <>
           <span class="ticker-item">
-            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-ash-haze)"};`}>
+            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-bressel-grey)"};`}>
               {item.label}
             </span>
             <span class="ticker-value">{item.value}</span>
@@ -89,7 +89,7 @@ const loopItems = [...items, ...items];
       {loopItems.map((item, i) => (
         <>
           <span class="ticker-item">
-            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-ash-haze)"};`}>
+            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-bressel-grey)"};`}>
               {item.label}
             </span>
             <span class="ticker-value">{item.value}</span>
@@ -108,7 +108,7 @@ const loopItems = [...items, ...items];
   }
 
   .ticker-default {
-    background: var(--color-bressel-black-soft);
+    background: var(--color-bressel-grey);
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
   }
@@ -126,12 +126,12 @@ const loopItems = [...items, ...items];
 
   .ticker-fade::before {
     left: 0;
-    background: linear-gradient(to right, var(--color-bressel-black-soft), transparent);
+    background: linear-gradient(to right, var(--color-bressel-grey), transparent);
   }
 
   .ticker-fade::after {
     right: 0;
-    background: linear-gradient(to left, var(--color-bressel-black-soft), transparent);
+    background: linear-gradient(to left, var(--color-bressel-grey), transparent);
   }
 
   .ticker-bare {
@@ -152,7 +152,7 @@ const loopItems = [...items, ...items];
     gap: 0.5rem;
     padding: 0 2rem;
     font-size: 0.6875rem;
-    font-family: var(--font-header);
+    font-family: var(--font-heading);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.15em;

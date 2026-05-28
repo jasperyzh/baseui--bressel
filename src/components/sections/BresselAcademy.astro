@@ -20,9 +20,9 @@ const locations = [
 ];
 
 const images = [
-  { id: "court-1", src: "/assets/20260227_195629.webp", alt: "BRESSEL Court Malaysia", span: "col-span-1 row-span-2" },
-  { id: "court-2", src: "/assets/20260402_115248.webp", alt: "BRESSEL Court", span: "col-span-1" },
-  { id: "court-3", src: "/assets/20260402_120037.webp", alt: "BRESSEL Court", span: "col-span-1" },
+  { id: "court-1", src: "/assets/brandvisual--/20260227_195629.webp", alt: "BRESSEL Court Malaysia", span: "col-span-1 row-span-2" },
+  { id: "court-2", src: "/assets/brandvisual--/20260402_115248.webp", alt: "BRESSEL Court", span: "col-span-1" },
+  { id: "court-3", src: "/assets/brandvisual--/20260402_120037.webp", alt: "BRESSEL Court", span: "col-span-1" },
 ];
 
 const encode = (s: string) => encodeURIComponent(s);
@@ -31,7 +31,7 @@ const encode = (s: string) => encodeURIComponent(s);
 <section id="locations" class="py-20 noise-overlay">
   <div class="container-custom">
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center">
 
       <!-- Left: Info + Locations -->
       <div data-aos="fade-right">
@@ -56,16 +56,16 @@ const encode = (s: string) => encodeURIComponent(s);
               class="flex items-center justify-between py-3 border-b border-border group no-underline"
             >
               <span class="font-header font-bold text-[0.75rem] uppercase tracking-wide group-hover:text-bressel-red transition-colors">{loc.name}</span>
-              <span class="text-bressel-red font-header font-bold text-[0.625rem] uppercase tracking-wide">
+              {/* <span class="text-bressel-red font-header font-bold text-[0.625rem] uppercase tracking-wide">
                 Inquire via WhatsApp →
-              </span>
+              </span> */}
             </a>
           ))}
         </div>
       </div>
 
       <!-- Right: Image Grid -->
-      <div class="grid grid-cols-2 gap-3" data-aos="fade-left" data-aos-delay="150">
+      <div class="grid grid-cols-2 col-span-2 gap-x-2 " data-aos="fade-left" data-aos-delay="150">
         {images.map((img) => (
           <div class={`${img.span} premium-card`}>
             <img
