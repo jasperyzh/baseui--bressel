@@ -39,9 +39,9 @@ const quickInquiries = [
 ];
 
 const locations = [
-  { name: "MALAYSIA", message: "Hi BRESSEL! I'd like to know more about the Malaysia facility." },
-  { name: "PHILIPPINES", message: "Hi BRESSEL! I'd like to know more about the Philippines facility." },
-  { name: "SINGAPORE", message: "Hi BRESSEL! I'd like to know more about the Singapore facility." },
+  { name: "SELANGOR", country: "MALAYSIA", message: "Hi BRESSEL! I'd like to know more about the Selangor facility." },
+  { name: "LANGKAWI", country: "MALAYSIA", message: "Hi BRESSEL! I'd like to know more about the Langkawi facility." },
+  { name: "JAKARTA", country: "INDONESIA", message: "Hi BRESSEL! I'd like to know more about the Jakarta facility." },
 ];
 ---
 
@@ -114,9 +114,10 @@ const locations = [
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 class="font-header font-bold text-sm uppercase tracking-wide mb-2 group-hover:text-bressel-red transition-colors text-foreground">
+              <h3 class="font-header font-bold text-sm uppercase tracking-wide mb-1 group-hover:text-bressel-red transition-colors text-foreground">
                 {loc.name}
               </h3>
+              <p class="text-[0.625rem] uppercase tracking-wider text-muted-foreground mb-1">{loc.country}</p>
               <p class="body text-xs text-muted-foreground">Inquire via WhatsApp →</p>
             </a>
           ))}

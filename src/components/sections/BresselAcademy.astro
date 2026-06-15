@@ -6,16 +6,19 @@
 import { whatsappUrl } from '../../lib/config';
 const locations = [
   {
-    name: "MALAYSIA",
-    waMessage: "Hi BRESSEL! I'd like to know more about the Malaysia facility.",
+    name: "SELANGOR",
+    country: "MALAYSIA",
+    waMessage: "Hi BRESSEL! I'd like to know more about the Selangor facility.",
   },
   {
-    name: "PHILIPPINES",
-    waMessage: "Hi BRESSEL! I'd like to know more about the Philippines facility.",
+    name: "LANGKAWI",
+    country: "MALAYSIA",
+    waMessage: "Hi BRESSEL! I'd like to know more about the Langkawi facility.",
   },
   {
-    name: "SINGAPORE",
-    waMessage: "Hi BRESSEL! I'd like to know more about the Singapore facility.",
+    name: "JAKARTA",
+    country: "INDONESIA",
+    waMessage: "Hi BRESSEL! I'd like to know more about the Jakarta facility.",
   },
 ];
 
@@ -43,7 +46,7 @@ const encode = (s: string) => encodeURIComponent(s);
         </h2>
 
         <p class="body-lg mb-10">
-          Malaysia, Philippines, Singapore. Wherever you play, we're nearby.
+          Selangor, Langkawi, Jakarta. Wherever you play, we're nearby.
         </p>
 
         <!-- Locations list -->
@@ -56,6 +59,7 @@ const encode = (s: string) => encodeURIComponent(s);
               class="flex items-center justify-between py-3 border-b border-border group no-underline"
             >
               <span class="font-header font-bold text-[0.75rem] uppercase tracking-wide group-hover:text-bressel-red transition-colors">{loc.name}</span>
+              <span class="text-[0.625rem] uppercase tracking-wider text-muted-foreground">{loc.country}</span>
               {/* <span class="text-bressel-red font-header font-bold text-[0.625rem] uppercase tracking-wide">
                 Inquire via WhatsApp →
               </span> */}

@@ -8,14 +8,20 @@ import { Icon } from 'astro-icon/components';
 import { whatsappUrl } from '../../lib/config';
 ---
 
-<section id="pricing" class="py-24 bg-bressel-white text-bressel-black">
-  <div class="container-custom">
+<section id="pricing" class="py-24 bg-bressel-white text-bressel-black relative overflow-hidden">
+  <!-- Background: minimal court photo -->
+  <img
+    src="/assets/brandvisual--/20260402_115035.webp"
+    alt=""
+    class="absolute inset-0 w-full h-full object-cover opacity-20"
+  />
+  <div class="container-custom relative z-10">
 
     <!-- Section Header -->
     <div class="text-center mb-12" data-aos="fade-up">
       <p class="caption text-muted-foreground mb-2">INVESTMENT</p>
       <h2 class="text-bressel-black">
-        TRAINING <span class="text-bressel-red">PROGRAMS.</span>
+        TRAINING <span class="text-bressel-red">PROGRAMS</span>
       </h2>
     </div>
 

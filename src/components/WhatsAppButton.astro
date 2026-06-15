@@ -2,15 +2,12 @@
 /**
  * WhatsAppButton - Preset WhatsApp inquiry button
  * Renders a branded BRESSEL-red button with WhatsApp icon.
- *
- * Usage:
- *   <WhatsAppButton message="Hi BRESSEL! I'd like to start..." />
- *   <WhatsAppButton message="..." variant="outline" size="sm" />
  */
 import type { Props as ButtonProps } from '../starwind/button/Button.astro';
 import { WHATSAPP_NUMBER } from '../lib/config';
-
 import { Icon } from 'astro-icon/components';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
   message: string;
@@ -18,28 +15,46 @@ interface Props {
   variant?: ButtonProps['variant'];
   size?: ButtonProps['size'];
   class?: string;
-  children?: any;
+  children?: any; // Keep any if you need complex nested components, otherwise remove
 }
 
-const { message, phone = WHATSAPP_NUMBER, variant = "primary", size = "lg", class: className, children } = Astro.props;
+const { 
+  message, 
+  phone = WHATSAPP_NUMBER, 
+  variant = "primary", 
+  size = "lg", 
+  class: className, 
+  children 
+} = Astro.props;
+
+// Ensure phone number is digits only for the wa.me link
+const cleanPhone = phone.replace(/\D/g, '');
 const encoded = encodeURIComponent(message);
-const waUrl = `https://wa.me/${phone}?text=${encoded}`;
+const waUrl = `https://wa.me/${cleanPhone}?text=${encoded}`;
+
+// Helper to merge classes cleanly
+function cn(...inputs: any[]) {
+  return twMerge(clsx(inputs));
+}
+
+const baseStyles = cn(
+  "inline-flex items-center justify-center gap-2 font-header font-bold uppercase tracking-wide no-underline transition-all duration-200 cursor-pointer",
+  variant === 'primary'
+    ? 'bg-bressel-red text-bressel-white hover:bg-bressel-red-hover'
+    : 'border-2 border-bressel-red text-bressel-red hover:bg-bressel-red hover:text-bressel-white',
+  size === 'lg' ? 'px-8 py-3 text-[0.6875rem]' : size === 'sm' ? 'px-4 py-2 text-[0.625rem]' : 'px-6 py-2.5 text-[0.6875rem]',
+  className
+);
 ---
 
 <a
   href={waUrl}
   target="_blank"
   rel="noopener noreferrer"
-  class={`
-    inline-flex items-center justify-center gap-2 font-header font-bold uppercase tracking-wide no-underline transition-all duration-200 cursor-pointer
-    ${variant === 'primary'
-      ? 'bg-bressel-red text-bressel-white hover:bg-bressel-red-hover'
-      : 'border-2 border-bressel-red text-bressel-red hover:bg-bressel-red hover:text-bressel-white'
-    }
-    ${size === 'lg' ? 'px-8 py-3 text-[0.6875rem]' : size === 'sm' ? 'px-4 py-2 text-[0.625rem]' : 'px-6 py-2.5 text-[0.6875rem]'}
-    ${className || ''}
-  `.trim()}
+  role="button"
+  class={baseStyles}
 >
   <Icon name="whatsapp" size={16} class="flex-shrink-0" />
   {children || <slot />}
 </a>
+

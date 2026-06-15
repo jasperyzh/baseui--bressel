@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import WhatsAppButton from "../WhatsAppButton.astro";
+import { BRAND_YEAR } from "../../lib/config";
 
 /**
  * Hero - Full-screen video/image background
@@ -48,7 +49,7 @@ import WhatsAppButton from "../WhatsAppButton.astro";
       <!-- EST / tagline -->
       <div class="flex items-center gap-4 mb-6">
         <div class="w-8 h-0.5 bg-bressel-red"></div>
-        <span class="font-display">EST. 2025 / PLAY BEYOND</span>
+        <span class="font-display">EST. {BRAND_YEAR} / PLAY BEYOND</span>
         <!-- <div class="w-8 h-0.5 bg-bressel-red"></div> -->
       </div>
 

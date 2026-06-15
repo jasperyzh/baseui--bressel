@@ -3,37 +3,37 @@
    TYPOGRAPHY UTILITIES
    ================================================== */
 @layer components {
-  /* ── Voice 1: Hero Headlines - Clean, powerful, sentence case ── */
+  /* ── Voice 1: Hero Headlines - Neue Regrade Black Italic, uppercase ── */
   .heading-xl {
     font-family: var(--font-heading);
-    font-weight: 800;
-    font-style: normal;
-    text-transform: none;
+    font-weight: var(--font-weight-black);
+    font-style: italic;
+    text-transform: uppercase;
     line-height: 0.95;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     color: var(--color-foreground);
     font-size: clamp(2.5rem, 7vw, 6rem);
   }
 
-  /*/* ── Voice 2: Section Headings - Bold Neue Regrade */
+  /* ── Voice 2: Section Headings - Neue Regrade Black Italic, sentence case ── */
   .heading-lg {
     font-family: var(--font-heading);
-    font-weight: 700;
-    font-style: normal;
+    font-weight: var(--font-weight-black);
+    font-style: italic;
     text-transform: none;
     line-height: 1;
+    letter-spacing: -0.01em;
     color: var(--color-foreground);
     font-size: clamp(1.75rem, 4vw, 4.5rem);
   }
 
-  /* ── Voice 3: Card Titles - Still uppercase for structure ── */
+  /* ── Voice 3: Card Titles - Neue Regrade Black Italic, sentence case ── */
   .heading-md {
     font-family: var(--font-heading);
-    font-weight: 700;
-    font-style: normal;
-    text-transform: uppercase;
+    font-weight: var(--font-weight-black);
+    font-style: italic;
+    text-transform: none;
     line-height: 1.1;
-    letter-spacing: -0.01em;
     color: var(--color-foreground);
     font-size: clamp(1.25rem, 3vw, 2.25rem);
   }
@@ -121,7 +121,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url("/assets/textures/noise--.png");
+    background-image: url("/assets/brandvisual--/noise--.png");
     background-repeat: repeat;
     opacity: 0.03;
     pointer-events: none;
@@ -214,18 +214,22 @@
   background: var(--color-bressel-red);
 }
 
+/* Flexible watermark — stroke color customizable via --watermark-color */
 .watermark-ghost {
   font-family: var(--font-heading);
-  font-weight: 900;
+  font-weight: var(--font-weight-black);
   font-style: italic;
-  font-size: 8rem;
+  text-transform: uppercase;
   color: transparent;
-  -webkit-text-stroke: 1px var(--color-bressel-red);
-  opacity: 0.06;
+  -webkit-text-stroke: 1px var(--watermark-color, var(--color-bressel-red));
+  user-select: none;
   pointer-events: none;
+  /* Default decorative positioning — override as needed */
   position: absolute;
   top: 2rem;
   left: 2rem;
+  font-size: 8rem;
+  opacity: 0.06;
 }
 
 @media (min-width: 768px) {

@@ -5,7 +5,7 @@
  * Mobile: Full-screen overlay menu
  */
 import { Icon } from 'astro-icon/components';
-import { whatsappUrl } from '../lib/config';
+import { whatsappUrl, SOCIAL } from '../lib/config';
 
 const { currentPath = '/' } = Astro.props;
 
@@ -102,13 +102,13 @@ const ctaHref = whatsappUrl("Hi BRESSEL! I'd like to book a session. Could you s
 
   <!-- Social Icons -->
   <div class="flex gap-6 mt-8">
-    <a href="#" aria-label="Instagram" class="text-muted-foreground hover:text-bressel-red transition-colors">
+    <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="text-muted-foreground hover:text-bressel-red transition-colors">
       <Icon name="instagram" size={22} />
     </a>
-    <a href="#" aria-label="YouTube" class="text-muted-foreground hover:text-bressel-red transition-colors">
+    <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="text-muted-foreground hover:text-bressel-red transition-colors">
       <Icon name="youtube" size={22} />
     </a>
-    <a href="#" aria-label="WhatsApp" class="text-muted-foreground hover:text-bressel-red transition-colors">
+    <a href={SOCIAL.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="text-muted-foreground hover:text-bressel-red transition-colors">
       <Icon name="whatsapp" size={22} />
     </a>
   </div>

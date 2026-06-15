@@ -1,12 +1,38 @@
 # Bressel AGENTS.md
 
 > **Inherits:** `~/Desktop/AGENTS.md`
+> **Last Updated:** 260615
 
 ## Design System
 
 This project uses the **baseui design system** with a **single-brand, dark-only** configuration.
 
 **Core Philosophy:** `CSS handles styling. Tailwind handles layout. Components handle interaction.`
+
+---
+
+## Current State (260615)
+
+| Metric | Value |
+|--------|-------|
+| KISE Score | 94% green (260614 audit) |
+| Pages | 9 (index, academy, community, shop, about, contact, blog, dynamic [slug], 404) |
+| Live URL | https://baseui--bressel.pages.dev |
+| WP Backend | http://104.248.157.67 (DO droplet, headless CMS) |
+| Deploy | Cloudflare Pages (Astro SSG) |
+
+---
+
+## Known Issues (P0-P1)
+
+| Issue | Severity | Status |
+|-------|----------|--------|
+| **Mixed Content:** 2 shop product images blocked on HTTPS | 🔴 P0 | `fixImageUrl()` proxy gap — some paths bypass rewrite |
+| **50+ barrel `index.ts` files** in `starwind/*/` | 🟡 P1 | Both AGENTS.md say delete — still present |
+| **Footer form is `alert('Subscribed!')`** | 🟡 P1 | Fluent Forms not integrated |
+| **Docs missing DocMesh frontmatter** | 🟡 P1 | `docs/sessions/`, `docs/references/` lack frontmatter |
+
+---
 
 ## Key Conventions
 
@@ -27,9 +53,10 @@ This project uses the **baseui design system** with a **single-brand, dark-only*
 - `@layer components` — Brand utilities (headings, cards, ticker)
 - Tailwind inline — Layout/grids ONLY
 
-### 4. Guardrails
-- Validators live in `baseui--/scripts/` (canonical location)
-- Run via `npm run verify` (full suite) or individual checks
+### 4. Image URL Fix (Temporary)
+- `src/lib/fix-image-url.ts` rewrites HTTP WP IP URLs to Cloudflare Pages proxy
+- **POST-LAUNCH:** Remove all calls and delete proxy stubs
+- **Current gap:** Some paths bypass the regex — audit `Shop.astro` vs `shop.astro` rendering
 
 ## Verification
 
@@ -43,7 +70,22 @@ npm run verify:system  # System compliance
 npm run verify:brand   # Brand compliance
 ```
 
-> Validators are in `baseui--/scripts/`. This project calls them via npm scripts.
+> Validators live in `baseui--/scripts/`. This project calls them via npm scripts.
+
+## Pages
+
+| Route | Template | Data Source | Notes |
+|-------|-----------|-----------|-------|
+| `/` | `index.astro` | WPGraphQL (merch only) | 10 sections, hero video background |
+| `/academy` | `academy.astro` | WPGraphQL (coaches CPT) | Coaches grid + 3 program cards (static) |
+| `/shop` | `shop.astro` | WPGraphQL (merch CPT) | Full product catalog |
+| `/community` | `community.astro` | Static | Community page |
+| `/about` | `about.astro` | Static | About page |
+| `/contact` | `contact.astro` | Static | Contact page |
+| `/blog` | `blog/index.astro` | WPGraphQL (posts) | Blog archive |
+| `/blog/[slug]` | `blog/[slug].astro` | WPGraphQL (post by slug) | Single post + event CMB2 fields |
+| `/[slug]` | `[slug].astro` | WPGraphQL (page by slug) | Dynamic WP pages (excludes reserved slugs) |
+| `/404` | `404.astro` | Static | Error page |
 
 ## Starwind Components
 
@@ -53,7 +95,7 @@ npm run verify:brand   # Brand compliance
 | card | ✅ Installed |
 | badge | ✅ Installed |
 | progress | ✅ Installed |
-| theme-toggle | ✅ Installed |
+| theme-toggle | ✅ Installed (unused — dark-only) |
 | carousel | ✅ Installed |
 | dialog | ✅ Installed |
 | hover-card | ✅ Installed |
@@ -62,6 +104,14 @@ npm run verify:brand   # Brand compliance
 | tabs | ✅ Installed |
 | textarea | ✅ Installed |
 | tooltip | ✅ Installed |
+
+## Data Layer
+
+| File | Purpose |
+|------|---------|
+| `src/lib/wordpress.ts` | GraphQL queries: coaches, merch, events, posts, pages |
+| `src/lib/config.ts` | WhatsApp number, social links, brand email |
+| `src/lib/fix-image-url.ts` | HTTP→HTTPS image URL rewriter (temporary, demo-only) |
 
 ## Guardrails (via `npm run verify`)
 
@@ -73,3 +123,7 @@ npm run verify:brand   # Brand compliance
 
 > Validators live in `baseui--/scripts/`. This project calls them via npm scripts.
 
+---
+
+**Inherits:** `~/Desktop/AGENTS.md`
+**Last Updated:** 260615 — Gap analysis pass, known issues documented
