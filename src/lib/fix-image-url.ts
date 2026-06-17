@@ -12,17 +12,24 @@
  *   - functions/_proxy/[...wp].mjs (if deployed)
  */
 
-const WP_IP = "http://104.248.157.67/";
+const WP_ORIGINS = [
+  "http://104.248.157.67/",
+  "https://104.248.157.67/",
+  "http://cms.bresselsports.com/",
+  "https://cms.bresselsports.com/",
+];
 const PROXY_BASE = "https://baseui--bressel.pages.dev/_proxy/";
 
 /**
- * Rewrite a single image URL if it points to the WP IP.
- * Leaves all other URLs (HTTPS, data URIs, etc.) untouched.
+ * Rewrite a single image URL if it points to the WP origin.
+ * Leaves all other URLs (HTTPS CDN, data URIs, etc.) untouched.
  */
 export function fixImageUrl(url: string | undefined | null): string {
   if (!url) return "";
-  if (url.startsWith(WP_IP)) {
-    return PROXY_BASE + url.replace(WP_IP, "");
+  for (const origin of WP_ORIGINS) {
+    if (url.startsWith(origin)) {
+      return PROXY_BASE + url.replace(origin, "");
+    }
   }
   return url;
 }
@@ -33,13 +40,12 @@ export function fixImageUrl(url: string | undefined | null): string {
  */
 export function fixImageUrlsInHtml(html: string): string {
   if (!html) return html;
-  return html
-    .replace(
-      /src="http:\/\/104\.248\.157\.67\//g,
-      `src="${PROXY_BASE}`
-    )
-    .replace(
-      /srcset="http:\/\/104\.248\.157\.67\//g,
-      `srcset="${PROXY_BASE}`
-    );
+  let result = html;
+  for (const origin of WP_ORIGINS) {
+    const escaped = origin.replace(/\./g, "\\.");
+    result = result
+      .replace(new RegExp(`src="${escaped}`, "g"), `src="${PROXY_BASE}`)
+      .replace(new RegExp(`srcset="${escaped}`, "g"), `srcset="${PROXY_BASE}`);
+  }
+  return result;
 }
