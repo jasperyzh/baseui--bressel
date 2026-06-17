@@ -10,6 +10,7 @@
  *   const locations = page.acfLocations;
  */
 import MainLayout from '@/layouts/Layout.astro';
+import PageHero from '@/components/PageHero.astro';
 import { WHATSAPP_NUMBER } from '@/lib/config';
 
 const waPhone = WHATSAPP_NUMBER;
@@ -47,15 +48,12 @@ const locations = [
 
 <MainLayout title="Contact BRESSEL" description="Get in touch via WhatsApp.">
   <main class="pt-20 md:pt-24">
-    <!-- Hero -->
-    <section class="relative min-h-[40vh] flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
-      <div class="relative z-10 text-center px-6">
-        <p class="caption mb-4">LET'S TALK</p>
-        <h1><span class="text-bressel-red">CONTACT</span></h1>
-        <p class="body-lg max-w-xl mx-auto">Quick inquiry via WhatsApp. We respond fast.</p>
-      </div>
-    </section>
+    <PageHero
+      label="LET'S TALK"
+      title="CONTACT"
+      description="Quick inquiry via WhatsApp. We respond fast."
+      size="sm"
+    />
 
     <!-- Quick Inquiry WhatsApp Buttons -->
     <section class="py-20 noise-overlay">
@@ -80,7 +78,7 @@ const locations = [
                   </svg>
                 </div>
                 <div>
-                  <h3 class="font-header font-bold text-[0.6875rem] uppercase tracking-wide mb-1 group-hover:text-bressel-red transition-colors text-foreground">
+                  <h3 class="font-header font-bold text-11 uppercase tracking-wide mb-1 group-hover:text-bressel-red transition-colors text-foreground">
                     {inq.label}
                   </h3>
                   <p class="body text-sm text-muted-foreground">{inq.desc}</p>
@@ -117,7 +115,7 @@ const locations = [
               <h3 class="font-header font-bold text-sm uppercase tracking-wide mb-1 group-hover:text-bressel-red transition-colors text-foreground">
                 {loc.name}
               </h3>
-              <p class="text-[0.625rem] uppercase tracking-wider text-muted-foreground mb-1">{loc.country}</p>
+              <p class="text-xxs uppercase tracking-wider text-muted-foreground mb-1">{loc.country}</p>
               <p class="body text-xs text-muted-foreground">Inquire via WhatsApp →</p>
             </a>
           ))}

@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import WhatsAppButton from "../WhatsAppButton.astro";
+import BresselCta from "../BresselCta.astro";
 import { BRAND_YEAR } from "../../lib/config";
 
 /**
@@ -74,12 +75,13 @@ import { BRAND_YEAR } from "../../lib/config";
         >
           Start Your Journey
         </WhatsAppButton>
-        <a
+        <BresselCta
           href="#essence"
-          class="inline-flex items-center justify-center gap-2 px-8 py-3 border-2 border-[#52525b] text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-all duration-200 hover:border-bressel-red hover:text-bressel-red"
+          variant="outline"
+          class="border-[#52525b] text-bressel-white hover:border-bressel-red hover:text-bressel-red"
         >
           See How It Works
-        </a>
+        </BresselCta>
       </div>
     </div>
   </div>

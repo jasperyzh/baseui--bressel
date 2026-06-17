@@ -40,16 +40,14 @@ const products = await getMerch();
     <ProgramPillars />
   </section>
 
-  <Ticker variant="fade" />
+  <Ticker variant="bare" speed={70} />
 
 
-  <!-- ✦ Swoosh divider: black → dark scarlet -->
-  <div class="relative h-16 md:h-24 overflow-hidden bg-bressel-black">
-    <div class="absolute inset-0 bg-bressel-red" style="clip-path: polygon(0 100%, 100% 0, 100% 100%)"></div>
-  </div>
+  <!-- ✦ Calm divider -->
+  <div class="h-px bg-bressel-red/25 mx-auto max-w-5xl"></div>
 
-  <!-- ✦ Section: Pricing (dark scarlet → black gradient) -->
-  <section class="bg-gradient-to-b from-bressel-red/10 to-bressel-black">
+  <!-- ✦ Section: Pricing -->
+  <section class="bg-bressel-black">
     <Pricing />
   </section>
 

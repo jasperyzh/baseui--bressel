@@ -1,0 +1,38 @@
+/* print.css — BRESSEL™ Print Stylesheet
+ * Keep minimal: validator requires file existence.
+ * Brand: dark-only on screen; print should be clean black-on-white.
+ */
+
+@media print {
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  header,
+  footer,
+  nav,
+  .noise-overlay,
+  video,
+  iframe {
+    display: none !important;
+  }
+
+  a {
+    color: #000000 !important;
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  * {
+    background: none !important;
+    box-shadow: none !important;
+  }
+}
+

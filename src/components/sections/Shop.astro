@@ -14,6 +14,7 @@ import CardDescription from '../starwind/card/CardDescription.astro';
 import CardContent from '../starwind/card/CardContent.astro';
 import CardFooter from '../starwind/card/CardFooter.astro';
 import { Icon } from 'astro-icon/components';
+import BresselCta from '../BresselCta.astro';
 
 interface Props {
   products: Merch[];
@@ -40,28 +41,25 @@ function stripHtml(html: string): string {
         <p class="caption mb-2">Engineered for communities and beyond.</p>
         <h2>SHOP</h2>
       </div>
-      <a
-          href="/shop"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-red-hover"
-        >
-          VISIT CATALOG
-        </a>
+      <BresselCta href="/shop" variant="primary">
+        VISIT CATALOG
+      </BresselCta>
     </div>
 
     <!-- Product Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 relative z-10">
 
-      {products.map((product, i) => (
+      {products.map((product, i) => {
+        const productImage = fixImageUrl(product.featuredImage?.node?.sourceUrl);
+        return (
         <Card class="overflow-hidden transition-colors duration-300 group" data-aos="fade-up" data-aos-delay={String(i * 100)}>
           <!-- Product Image -->
           <div class="relative aspect-square overflow-hidden bg-bressel-black">
-            {fixImageUrl(product.featuredImage?.node?.sourceUrl) ? (
+            {productImage ? (
               <img
-                src={fixImageUrl(product.featuredImage.node.sourceUrl)}
+                src={productImage}
                 alt={product.title}
-                class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-105"
+                class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-[1.02]"
               />
             ) : (
               <div class="w-full h-full flex items-center justify-center text-bressel-zinc-700 font-header text-2xl font-black">{product.title.charAt(0)}</div>
@@ -71,7 +69,7 @@ function stripHtml(html: string): string {
           <!-- Product Body -->
           <CardHeader>
             {product.merchSeries && (
-              <span class="inline-flex items-center gap-1.5 text-[0.625rem] font-bold uppercase tracking-wider text-bressel-red mb-3">
+              <span class="inline-flex items-center gap-1.5 text-xxs font-bold uppercase tracking-wider text-bressel-red mb-3">
                 <span class="w-1.5 h-1.5 bg-bressel-red inline-block"></span>
                 {product.merchSeries}
               </span>
@@ -93,7 +91,7 @@ function stripHtml(html: string): string {
               href={whatsappUrl("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 text-ash-haze font-header font-bold text-[0.625rem] uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"
+              class="inline-flex items-center gap-1.5 text-ash-haze font-header font-bold text-xxs uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"
             >
               INQUIRE
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -102,7 +100,7 @@ function stripHtml(html: string): string {
             </a>
           </CardFooter>
         </Card>
-      ))}
+      )})}
 
     </div>
 

@@ -12,6 +12,7 @@
  */
 
 import MainLayout from '@/layouts/Layout.astro';
+import PageHero from '@/components/PageHero.astro';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/wordpress';
 import { fixImageUrl, fixImageUrlsInHtml } from '@/lib/fix-image-url';
 import type { WPPost } from '@/lib/wordpress';
@@ -60,60 +61,12 @@ const eventDate = post.eventDate ? new Date(post.eventDate) : null;
 <MainLayout title={post.title} description={metaDesc}>
   <main class="pt-20 md:pt-24 min-h-screen">
 
-    <!-- ── Hero Section ── -->
-    <section class="relative flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
-
-      {fixedFeaturedImage && (
-        <div class="absolute inset-0 z-0 opacity-30">
-          <img
-            src={fixedFeaturedImage}
-            alt={post.featuredImage?.node?.altText || post.title}
-            class="w-full h-full object-cover"
-          />
-        </div>
-      )}
-
-      <div class="relative z-10 text-center px-6 py-20 max-w-3xl mx-auto">
-
-        <!-- Blog/Event label -->
-        <p class="caption mb-6">
-          {isEvent ? 'COMMUNITY EVENT' : 'BLOG'}
-        </p>
-
-        <h1 class="mb-6">{post.title}</h1>
-
-        <!-- Meta row: date + category -->
-        <div class="flex items-center justify-center gap-4 text-sm text-muted-foreground mb-6">
-          <time datetime={post.date}>{formatDate(post.date)}</time>
-          {isEvent && post.eventLocation && (
-            <>
-              <span aria-hidden="true">·</span>
-              <span>📍 {post.eventLocation}</span>
-            </>
-          )}
-        </div>
-
-        {post.excerpt && (
-          <p class="body-lg max-w-2xl mx-auto">{stripHtml(post.excerpt)}</p>
-        )}
-
-        <!-- Event Registration CTA (if event with registration link) -->
-        {isEvent && post.eventRegistrationUrl && (
-          <a
-            href={post.eventRegistrationUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mt-8 inline-flex items-center justify-center gap-2 px-8 py-3 bg-bressel-red text-bressel-white font-header font-bold text-[0.6875rem] uppercase tracking-wide no-underline transition-colors hover:bg-bressel-red-hover"
-          >
-            REGISTER NOW
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
-        )}
-      </div>
-    </section>
+    <PageHero
+      label={isEvent ? "COMMUNITY EVENT" : "BLOG"}
+      title={post.title}
+      description={post.excerpt ? stripHtml(post.excerpt) : undefined}
+      size="md"
+    />
 
     <!-- ── Event Date Badge (if event) ── -->
     {isEvent && eventDate && (

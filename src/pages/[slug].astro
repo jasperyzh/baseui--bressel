@@ -13,6 +13,7 @@
  */
 
 import MainLayout from '@/layouts/Layout.astro';
+import PageHero from '@/components/PageHero.astro';
 import {
   getAllPageSlugs,
   getPageBySlug,
@@ -65,29 +66,11 @@ const fixedContent = fixImageUrlsInHtml(page.content);
 <MainLayout title={page.title} description={metaDesc}>
   <main class="pt-20 md:pt-24 min-h-screen">
 
-    <!-- ── Hero Section ── -->
-    <section class="relative flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
-
-      {fixedFeaturedImage && (
-        <div class="absolute inset-0 z-0 opacity-30">
-          <img
-            src={fixedFeaturedImage}
-            alt={page.featuredImage.node.altText || page.title}
-            class="w-full h-full object-cover"
-          />
-        </div>
-      )}
-
-      <div class="relative z-10 text-center px-6 py-20">
-        <h1 class="mb-6">{page.title}</h1>
-        {page.content && (
-          <p class="body-lg max-w-2xl mx-auto text-sm text-muted-foreground">
-            {stripHtml(page.content).slice(0, 200)}…
-          </p>
-        )}
-      </div>
-    </section>
+    <PageHero
+      title={page.title}
+      description={page.content ? `${stripHtml(page.content).slice(0, 200)}…` : undefined}
+      size="md"
+    />
 
     <!-- ── Content Section ── -->
     <section class="py-16">

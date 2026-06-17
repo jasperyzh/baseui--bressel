@@ -37,7 +37,7 @@ const {
     { label: "NEW DROP:", value: "PRECISION SERIES V2", labelColor: "muted" },
   ],
   variant = "default",
-  speed = 40,
+  speed = 55,
 } = Astro.props;
 
 // Duplicate for seamless loop
@@ -126,12 +126,12 @@ const loopItems = [...items, ...items];
 
   .ticker-fade::before {
     left: 0;
-    background: linear-gradient(to right, var(--color-bressel-grey), transparent);
+    background: linear-gradient(to right, var(--color-background), transparent);
   }
 
   .ticker-fade::after {
     right: 0;
-    background: linear-gradient(to left, var(--color-bressel-grey), transparent);
+    background: linear-gradient(to left, var(--color-background), transparent);
   }
 
   .ticker-bare {
@@ -172,5 +172,12 @@ const loopItems = [...items, ...items];
   @keyframes ticker {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track {
+      animation: none;
+      transform: none;
+    }
   }
 </style>

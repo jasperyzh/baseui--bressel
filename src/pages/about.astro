@@ -31,7 +31,7 @@ const mission = {
   highlight: 'COUNTS',
   p1: 'BRESSEL was born from a single belief: world-class coaching shouldn\'t be locked behind elite circles.',
   p2: 'From your first swing to tournament day, every element is designed to build your game - and a community that lasts.',
-  image: '/assets/national_team/nationalteam_group--Bressel-7473--cropped.webp',
+  image: '/assets/national_team/nationalteam_group--Bressel-7473.webp',
 };
 
 const methodologies = [
@@ -41,23 +41,18 @@ const methodologies = [
 ];
 
 import MainLayout from '@/layouts/Layout.astro';
+import PageHero from '@/components/PageHero.astro';
 ---
 
 <MainLayout title="About BRESSEL" description="The world's leading high-performance padel academy.">
   <main class="pt-20 md:pt-24">
-    <!-- Hero -->
-    <section class="relative min-h-[50vh] flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0" style="background: linear-gradient(to bottom, var(--color-background), var(--color-background), var(--color-muted));"></div>
-      <div class="relative z-10 text-center px-6">
-        <div class="flex items-center justify-center gap-4 mb-6">
-          <div class="premium-separator h-0.5 w-8"></div>
-          <span class="caption">{hero.tagline}</span>
-          <div class="premium-separator h-0.5 w-8"></div>
-        </div>
-        <h1 class="mb-6">{hero.title}<br /><span class="text-bressel-red">{hero.highlight}</span></h1>
-        <p class="body-lg max-w-2xl mx-auto">{hero.description}</p>
-      </div>
-    </section>
+    <PageHero
+      tagline={hero.tagline}
+      title={hero.title}
+      highlight={hero.highlight}
+      description={hero.description}
+      size="md"
+    />
 
     <!-- Mission -->
     <section class="py-20 noise-overlay">

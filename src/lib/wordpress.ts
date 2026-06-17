@@ -135,102 +135,122 @@ async function fetchWP<T>(
 // ── Queries: Existing ──────────────────────────────────────
 
 export async function getCoaches(): Promise<Coach[]> {
-  const data = await fetchWP<{ coaches: { nodes: Coach[] } }>(`
-    query GetCoaches {
-      coaches(first: 50, where: { status: PUBLISH }) {
-        nodes {
-          id
-          title
-          slug
-          content
-          coachRole
-          coachExperience
-          coachSpecialty
-          featuredImage {
-            node {
-              sourceUrl
-              altText
-              mediaDetails {
-                width
-                height
+  try {
+    const data = await fetchWP<{ coaches: { nodes: Coach[] } }>(`
+      query GetCoaches {
+        coaches(first: 50, where: { status: PUBLISH }) {
+          nodes {
+            id
+            title
+            slug
+            content
+            coachRole
+            coachExperience
+            coachSpecialty
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails {
+                  width
+                  height
+                }
               }
             }
           }
         }
       }
-    }
-  `);
-  return data.coaches.nodes;
+    `);
+    return data.coaches.nodes;
+  } catch (e) {
+    console.warn('[wordpress] getCoaches failed; returning empty list.', e);
+    return [];
+  }
 }
 
 export async function getMerch(): Promise<Merch[]> {
-  const data = await fetchWP<{ merches: { nodes: Merch[] } }>(`
-    query GetMerch {
-      merches(first: 50, where: { status: PUBLISH }) {
-        nodes {
-          id
-          title
-          slug
-          content
-          merchPrice
-          merchSeries
-          featuredImage {
-            node {
-              sourceUrl
-              altText
-              mediaDetails {
-                width
-                height
+  try {
+    const data = await fetchWP<{ merches: { nodes: Merch[] } }>(`
+      query GetMerch {
+        merches(first: 50, where: { status: PUBLISH }) {
+          nodes {
+            id
+            title
+            slug
+            content
+            merchPrice
+            merchSeries
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails {
+                  width
+                  height
+                }
               }
             }
           }
         }
       }
-    }
-  `);
-  return data.merches.nodes;
+    `);
+    return data.merches.nodes;
+  } catch (e) {
+    console.warn('[wordpress] getMerch failed; returning empty list.', e);
+    return [];
+  }
 }
 
 export async function getEvents(): Promise<WPEvent[]> {
-  const data = await fetchWP<{ posts: { nodes: WPEvent[] } }>(`
-    query GetEvents {
-      posts(first: 50, where: { status: PUBLISH, orderby: { field: DATE, order: DESC } }) {
-        nodes {
-          id
-          title
-          slug
-          content
-          excerpt
-          eventDate
-          eventLocation
-          eventRegistrationUrl
-          featuredImage {
-            node {
-              sourceUrl
-              altText
+  try {
+    const data = await fetchWP<{ posts: { nodes: WPEvent[] } }>(`
+      query GetEvents {
+        posts(first: 50, where: { status: PUBLISH, orderby: { field: DATE, order: DESC } }) {
+          nodes {
+            id
+            title
+            slug
+            content
+            excerpt
+            eventDate
+            eventLocation
+            eventRegistrationUrl
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
             }
           }
         }
       }
-    }
-  `);
-  return data.posts.nodes;
+    `);
+    return data.posts.nodes;
+  } catch (e) {
+    console.warn('[wordpress] getEvents failed; returning empty list.', e);
+    return [];
+  }
 }
 
 // ── Queries: Dynamic Routes (Pages) ────────────────────────
 
 /** Fetch all published page slugs for getStaticPaths */
 export async function getAllPageSlugs(): Promise<{ slug: string }[]> {
-  const data = await fetchWP<{ pages: { nodes: SlugNode[] } }>(`
-    query AllPageSlugs {
-      pages(first: 100, where: { status: PUBLISH }) {
-        nodes {
-          slug
+  try {
+    const data = await fetchWP<{ pages: { nodes: SlugNode[] } }>(`
+      query AllPageSlugs {
+        pages(first: 100, where: { status: PUBLISH }) {
+          nodes {
+            slug
+          }
         }
       }
-    }
-  `);
-  return data.pages.nodes;
+    `);
+    return data.pages.nodes;
+  } catch (e) {
+    console.warn('[wordpress] getAllPageSlugs failed; returning empty list.', e);
+    return [];
+  }
 }
 
 /** Fetch a single published page by URI slug */
@@ -273,16 +293,21 @@ export async function getPageBySlug(slug: string): Promise<WPPage | null> {
 
 /** Fetch all published post slugs for getStaticPaths */
 export async function getAllPostSlugs(): Promise<{ slug: string }[]> {
-  const data = await fetchWP<{ posts: { nodes: SlugNode[] } }>(`
-    query AllPostSlugs {
-      posts(first: 100, where: { status: PUBLISH }) {
-        nodes {
-          slug
+  try {
+    const data = await fetchWP<{ posts: { nodes: SlugNode[] } }>(`
+      query AllPostSlugs {
+        posts(first: 100, where: { status: PUBLISH }) {
+          nodes {
+            slug
+          }
         }
       }
-    }
-  `);
-  return data.posts.nodes;
+    `);
+    return data.posts.nodes;
+  } catch (e) {
+    console.warn('[wordpress] getAllPostSlugs failed; returning empty list.', e);
+    return [];
+  }
 }
 
 /** Fetch a single published post by slug */
@@ -327,35 +352,40 @@ export async function getPostBySlug(slug: string): Promise<WPPost | null> {
 export async function getAllPosts(): Promise<
   { id: string; title: string; slug: string; excerpt: string; date: string; featuredImage: FeaturedImage | null }[]
 > {
-  const data = await fetchWP<{
-    posts: {
-      nodes: {
-        id: string;
-        title: string;
-        slug: string;
-        excerpt: string;
-        date: string;
-        featuredImage: FeaturedImage | null;
-      }[];
-    };
-  }>(`
-    query BlogArchive {
-      posts(first: 50, where: { status: PUBLISH, orderby: { field: DATE, order: DESC } }) {
-        nodes {
-          id
-          title
-          slug
-          excerpt
-          date
-          featuredImage {
-            node {
-              sourceUrl
-              altText
+  try {
+    const data = await fetchWP<{
+      posts: {
+        nodes: {
+          id: string;
+          title: string;
+          slug: string;
+          excerpt: string;
+          date: string;
+          featuredImage: FeaturedImage | null;
+        }[];
+      };
+    }>(`
+      query BlogArchive {
+        posts(first: 50, where: { status: PUBLISH, orderby: { field: DATE, order: DESC } }) {
+          nodes {
+            id
+            title
+            slug
+            excerpt
+            date
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
             }
           }
         }
       }
-    }
-  `);
-  return data.posts.nodes;
+    `);
+    return data.posts.nodes;
+  } catch (e) {
+    console.warn('[wordpress] getAllPosts failed; returning empty list.', e);
+    return [];
+  }
 }

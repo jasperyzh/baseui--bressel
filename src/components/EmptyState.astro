@@ -1,0 +1,26 @@
+---
+import BresselCta from "@/components/BresselCta.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const { title, description, ctaLabel, ctaHref } = Astro.props;
+---
+
+<div class="premium-card p-10 md:p-12 text-center">
+  <p class="caption mb-3 text-muted-foreground">NOTHING TO SHOW</p>
+  <h3 class="mb-4">{title}</h3>
+  {description && <p class="body text-sm text-muted-foreground max-w-xl mx-auto">{description}</p>}
+  {ctaLabel && ctaHref && (
+    <div class="mt-8 flex justify-center">
+      <BresselCta href={ctaHref} variant="outline">
+        {ctaLabel}
+      </BresselCta>
+    </div>
+  )}
+</div>
+

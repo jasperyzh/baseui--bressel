@@ -1,0 +1,44 @@
+---
+import Button from "@/components/starwind/button/Button.astro";
+
+interface Props {
+  href: string;
+  target?: string;
+  rel?: string;
+  download?: boolean;
+  variant?: "primary" | "outline" | "text";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const {
+  href,
+  target,
+  rel,
+  variant = "primary",
+  size = "lg",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const resolvedVariant =
+  variant === "primary" ? "primary" : variant === "outline" ? "outline" : "ghost";
+
+const resolvedClass =
+  variant === "text"
+    ? `no-underline hover:underline underline-offset-4 ${className ?? ""}`
+    : className ?? "";
+---
+
+<Button
+  href={href}
+  target={target}
+  rel={rel}
+  variant={resolvedVariant}
+  size={size}
+  class={resolvedClass}
+  {...rest}
+>
+  <slot />
+</Button>
+

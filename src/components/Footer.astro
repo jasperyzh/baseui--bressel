@@ -9,8 +9,10 @@
  * Bottom: Copyright
  */
 import { Icon } from 'astro-icon/components';
-import { whatsappUrl, BRAND_EMAIL } from '../lib/config';
+import { whatsappUrl, BRAND_EMAIL, WHATSAPP_NUMBER } from '../lib/config';
 import Input from './starwind/input/Input.astro';
+
+const waPhone = WHATSAPP_NUMBER;
 ---
 
 <footer class="bg-bressel-black border-t border-[#27272a] py-16 md:py-24">
@@ -42,7 +44,7 @@ import Input from './starwind/input/Input.astro';
 
       <!-- Col 2: Quick Links -->
       <div>
-        <h4 class="font-header font-bold text-[0.6875rem] uppercase tracking-wide text-bressel-white mb-4">QUICK LINKS</h4>
+        <h4 class="font-header font-bold text-11 uppercase tracking-wide text-bressel-white mb-4">QUICK LINKS</h4>
         <ul class="flex flex-col gap-2">
           <li><a href="/" class="nav-link">Home</a></li>
           <li><a href="/academy" class="nav-link">Academy</a></li>
@@ -53,7 +55,7 @@ import Input from './starwind/input/Input.astro';
 
       <!-- Col 3: Connect -->
       <div>
-        <h4 class="font-header font-bold text-[0.6875rem] uppercase tracking-wide text-bressel-white mb-4">CONNECT</h4>
+        <h4 class="font-header font-bold text-11 uppercase tracking-wide text-bressel-white mb-4">CONNECT</h4>
         <ul class="flex flex-col gap-2">
           <li>
             <a href={whatsappUrl("Hi BRESSEL! I'd like to get in touch.")} target="_blank" rel="noopener noreferrer" class="nav-link flex items-center gap-2">
@@ -68,20 +70,19 @@ import Input from './starwind/input/Input.astro';
 
       <!-- Col 4: Stay in the Game -->
       <div>
-        <h4 class="font-header font-bold text-[0.6875rem] uppercase tracking-wide text-bressel-white mb-4">STAY IN THE GAME</h4>
+        <h4 class="font-header font-bold text-11 uppercase tracking-wide text-bressel-white mb-4">STAY IN THE GAME</h4>
         <p class="body text-sm mb-4">Gear drops, tournament invites, stories from the court.</p>
 
         <!-- Email signup -->
-        <form class="flex mb-4" onsubmit="event.preventDefault(); alert('Subscribed!');">
+        <form class="flex mb-4" id="footer-newsletter" data-wa={waPhone}>
           <Input
             type="email"
             name="email"
             required
             placeholder="EMAIL"
-            class="flex-1 border-r-0"
-            style="text-transform: uppercase; font-weight: 700; font-size: 0.6875rem; letter-spacing: 0.1em;"
+            class="flex-1 border-r-0 text-xs font-bold uppercase tracking-wider"
           />
-          <button type="submit" class="flex-shrink-0 px-4 py-2 bg-bressel-red text-bressel-white text-[0.625rem] font-bold uppercase tracking-wider cursor-pointer hover:bg-bressel-red-hover transition-colors border-0">
+          <button type="submit" class="flex-shrink-0 px-4 py-2 bg-bressel-red text-bressel-white text-xxs font-bold uppercase tracking-wider cursor-pointer hover:bg-bressel-red-hover transition-colors border-0">
             SUBSCRIBE
           </button>
         </form>
@@ -91,10 +92,27 @@ import Input from './starwind/input/Input.astro';
 
     <!-- Bottom Bar -->
     <div class="border-t border-[#27272a] pt-6 flex flex-col md:flex-row items-center justify-between gap-2">
-      <p class="text-[0.625rem] font-bold uppercase tracking-widest text-muted-foreground">
+      <p class="text-xxs font-bold uppercase tracking-widest text-muted-foreground">
         © 2026 BRESSEL™. All rights reserved.
       </p>
     </div>
 
   </div>
 </footer>
+
+<script>
+  const form = document.getElementById('footer-newsletter');
+  if (form instanceof HTMLFormElement) {
+    const waPhone = form.dataset.wa;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const email = String(fd.get('email') || '').trim();
+      if (!email || !waPhone) return;
+
+      const msg = encodeURIComponent(`Hi BRESSEL! Please add me to the newsletter list.\n\nEmail: ${email}`);
+      window.open(`https://wa.me/${waPhone}?text=${msg}`, '_blank', 'noopener,noreferrer');
+      form.reset();
+    });
+  }
+</script>

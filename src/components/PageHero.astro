@@ -1,0 +1,52 @@
+---
+interface Props {
+  label?: string;
+  title: string;
+  highlight?: string;
+  description?: string;
+  /** Optional top row (e.g. EST. 2026 / PLAY BEYOND). */
+  tagline?: string;
+  /** Controls hero height. */
+  size?: "sm" | "md";
+}
+
+const {
+  label,
+  title,
+  highlight,
+  description,
+  tagline,
+  size = "md",
+} = Astro.props;
+
+const heightClass = size === "sm" ? "min-h-[40vh]" : "min-h-[50vh]";
+---
+
+<section class={`relative ${heightClass} flex items-center justify-center overflow-hidden`}>
+  <div class="absolute inset-0 bg-page-hero"></div>
+
+  <div class="relative z-10 text-center px-6 py-20 max-w-4xl mx-auto">
+    {tagline ? (
+      <div class="flex items-center justify-center gap-4 mb-6">
+        <div class="premium-separator h-0.5 w-8"></div>
+        <span class="caption">{tagline}</span>
+        <div class="premium-separator h-0.5 w-8"></div>
+      </div>
+    ) : (
+      label && <p class="caption mb-4">{label}</p>
+    )}
+
+    <h1 class="mb-6">
+      {title}
+      {highlight && (
+        <>
+          {" "}
+          <span class="text-bressel-red">{highlight}</span>
+        </>
+      )}
+    </h1>
+
+    {description && <p class="body-lg max-w-2xl mx-auto">{description}</p>}
+  </div>
+</section>
+

@@ -13,6 +13,8 @@
  */
 
 import "../styles/global.css";
+import printCssUrl from "../styles/print.css?url";
+import "aos/dist/aos.css";
 
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
@@ -36,24 +38,28 @@ const pageDescription = description || "World-class padel, within reach.";
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://baseui--bressel.pages.dev/assets/bressel-logo--og.jpg" />
+    <meta property="og:image" content="https://baseui--bressel.pages.dev/assets/logo/Bressel_Logo_Suite_RGB-14.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
-    <meta name="twitter:image" content="https://baseui--bressel.pages.dev/assets/bressel-logo--og.jpg" />
+    <meta name="twitter:image" content="https://baseui--bressel.pages.dev/assets/logo/Bressel_Logo_Suite_RGB-14.png" />
 
     <!-- Self-Hosted Fonts: Neue Regrade, Avenir Next, Barlow Condensed (SemiBold) -->
-
-    <!-- AOS (Animate on Scroll) - 2KB gzipped -->
-    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href={printCssUrl} media="print" />
 
     <!-- BRESSEL theme sync - persists single theme, no toggle needed -->
     <script is:inline>
       (function() {
         var theme = 'bressel';
         document.documentElement.setAttribute('data-theme', theme);
+
+        // Persist across Astro client-side navigations (when view transitions are enabled)
+        document.addEventListener('astro:before-swap', function(event) {
+          var current = document.documentElement.getAttribute('data-theme') || theme;
+          event.newDocument.documentElement.setAttribute('data-theme', current);
+        });
       })();
     </script>
   </head>
@@ -70,17 +76,18 @@ const pageDescription = description || "World-class padel, within reach.";
     </main>
     <Footer />
 
-    <!-- AOS scroll animations - load from CDN, init on load -->
-    <script is:inline src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script is:inline>
-      (function checkAos() {
-        if (typeof AOS !== 'undefined') {
-          AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 80 });
-          document.addEventListener('astro:page-load', function() { AOS.refresh(); });
-        } else {
-          setTimeout(checkAos, 50);
-        }
-      })();
+    <!-- AOS scroll animations (bundled, no CDN) -->
+    <script>
+      import AOS from "aos";
+
+      const init = () => {
+        AOS.init({ duration: 600, easing: "ease-out-cubic", once: true, offset: 80 });
+        AOS.refresh();
+      };
+
+      document.addEventListener("DOMContentLoaded", init);
+      document.addEventListener("astro:page-load", init);
+      document.addEventListener("astro:after-swap", init);
     </script>
   </body>
 </html>
