@@ -16,9 +16,9 @@ const events = await getEvents();
 // ── Default Content ──
 const hero = {
   label: 'CONNECT BEYOND',
-  title: 'THE',
-  highlight: 'COMMUNITY',
-  description: 'Connect, compete, grow together.',
+  title: 'Belong on court.',
+  highlight: 'Raise each other',
+  description: 'Events, clubs, and community nights — connect, compete, and grow together.',
 };
 ---
 
@@ -36,8 +36,8 @@ const hero = {
     <section id="events" class="py-20 noise-overlay">
       <div class="container-custom">
         <div class="mb-12">
-          <p class="caption mb-2">WHAT'S ON</p>
-          <h2>UPCOMING <span class="text-bressel-red">EVENTS</span></h2>
+          <p class="caption mb-2">What's on</p>
+          <h2>Upcoming <span class="text-bressel-red">events</span></h2>
         </div>
         {events.length === 0 ? (
           <EmptyState
@@ -55,10 +55,10 @@ const hero = {
                 {eventDate && (
                   <>
                     <div class="flex md:flex-col items-center md:items-start gap-3 md:gap-1 md:min-w-[100px]">
-                      <span class="font-header font-black text-3xl text-bressel-red">
+                      <span class="font-header font-bold text-3xl text-bressel-red">
                         {eventDate.toLocaleString('default', { month: 'short' }).toUpperCase()}
                       </span>
-                      <span class="font-header font-black text-3xl text-foreground">
+                      <span class="font-header font-bold text-3xl text-foreground">
                         {eventDate.getDate()}
                       </span>
                     </div>
@@ -69,7 +69,7 @@ const hero = {
                   {event.eventLocation && (
                     <span class="text-xxs font-bold uppercase tracking-wider text-bressel-red">{event.eventLocation}</span>
                   )}
-                  <h3 class="font-header font-black italic text-xl uppercase mb-2 text-foreground">{event.title}</h3>
+                  <h3 class="font-header font-bold text-xl mb-2 text-foreground">{event.title}</h3>
                   <Fragment set:html={event.excerpt} />
                   {event.eventLocation && (
                     <span class="text-11 font-bold uppercase tracking-wider text-border">📍 {event.eventLocation}</span>
@@ -97,8 +97,8 @@ const hero = {
     <!-- Community CTA -->
     <section class="py-20 border-t border-border">
       <div class="container-custom text-center">
-        <h2 class="mb-6">JOIN THE <span class="text-bressel-red">MOVEMENT</span></h2>
-        <p class="body-lg max-w-xl mx-auto mb-8">Be part of the fastest growing padel community in Asia. Tournament invites, gear drops, and stories from the court.</p>
+        <h2 class="mb-6">Join the <span class="text-bressel-red">movement</span></h2>
+        <p class="body-lg max-w-xl mx-auto mb-8">Bring a friend. Tournament invites, community nights, and stories from the court — straight to you.</p>
         <BresselCta
           href={whatsappUrl("Hi BRESSEL! I'd like to join a court or community program. How do I get started?")}
           target="_blank"

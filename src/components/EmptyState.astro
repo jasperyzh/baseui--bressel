@@ -11,8 +11,11 @@ interface Props {
 const { title, description, ctaLabel, ctaHref } = Astro.props;
 ---
 
-<div class="premium-card p-10 md:p-12 text-center">
-  <p class="caption mb-3 text-muted-foreground">NOTHING TO SHOW</p>
+<div class="premium-card relative overflow-hidden p-10 md:p-16 text-center">
+  <!-- SURGE motif: forward-leaning Scarlet accent, brand device (80° lean) -->
+  <div class="surge-divider mx-auto mb-8" aria-hidden="true"></div>
+
+  <p class="caption mb-3 text-muted-foreground">Coming soon</p>
   <h3 class="mb-4">{title}</h3>
   {description && <p class="body text-sm text-muted-foreground max-w-xl mx-auto">{description}</p>}
   {ctaLabel && ctaHref && (
@@ -22,5 +25,7 @@ const { title, description, ctaLabel, ctaHref } = Astro.props;
       </BresselCta>
     </div>
   )}
-</div>
 
+  <!-- Decorative ghost watermark (SURGE energy, low opacity) -->
+  <span class="watermark-ghost absolute -bottom-4 -right-2 select-none pointer-events-none" aria-hidden="true">B</span>
+</div>

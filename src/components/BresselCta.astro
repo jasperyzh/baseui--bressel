@@ -24,10 +24,17 @@ const {
 const resolvedVariant =
   variant === "primary" ? "primary" : variant === "outline" ? "outline" : "ghost";
 
+const variantClass =
+  variant === "primary"
+    ? "bg-bressel-red text-bressel-white hover:bg-bressel-red-hover hover:text-bressel-white"
+    : variant === "outline"
+      ? "border-2 border-bressel-red text-bressel-red hover:bg-bressel-red hover:text-bressel-white"
+      : "";
+
 const resolvedClass =
   variant === "text"
     ? `no-underline hover:underline underline-offset-4 ${className ?? ""}`
-    : className ?? "";
+    : [variantClass, className].filter(Boolean).join(" ");
 ---
 
 <Button
@@ -41,4 +48,3 @@ const resolvedClass =
 >
   <slot />
 </Button>
-

@@ -45,8 +45,8 @@ function formatDate(dateStr: string): string {
 
     <PageHero
       label="THE LATEST"
-      title="BRESSEL"
-      highlight="BLOG"
+      title="Bressel"
+      highlight="blog"
       description="Tournament recaps, coaching tips, and stories from the community."
       size="md"
     />
@@ -81,7 +81,7 @@ function formatDate(dateStr: string): string {
                     />
                   ) : (
                     <div class="w-full h-full flex items-center justify-center bg-muted">
-                      <span class="font-header font-black text-3xl text-bressel-red">
+                      <span class="font-header font-bold text-3xl text-bressel-red">
                         {p.title.charAt(0).toUpperCase()}
                       </span>
                     </div>
@@ -96,7 +96,7 @@ function formatDate(dateStr: string): string {
                   >
                     {formatDate(p.date)}
                   </time>
-                  <h2 class="font-header font-black italic text-xl uppercase mb-2 text-foreground">
+                  <h2 class="font-header font-bold text-xl mb-2 text-foreground">
                     <a href={`/blog/${p.slug}`} class="no-underline hover:underline" style="color: inherit;">
                       {p.title}
                     </a>

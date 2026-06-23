@@ -22,9 +22,9 @@ function stripHtml(html: string): string {
 }
 const hero = {
   label: 'ACADEMY',
-  title: 'THE',
-  highlight: 'ACADEMY',
-  description: 'Champion-led training that meets you where you are.',
+  title: 'Train at your level.',
+  highlight: 'Grow from there',
+  description: 'Champion-led coaching, clear progress, and programs that meet you where you are.',
 };
 ---
 
@@ -42,8 +42,8 @@ const hero = {
     <section class="py-20 noise-overlay">
       <div class="container-custom">
         <div class="mb-12">
-          <p class="caption mb-2">OUR TEAM</p>
-          <h2>MEET THE <span class="text-bressel-red">COACHES</span></h2>
+          <p class="caption mb-2">Our team</p>
+          <h2>Meet the <span class="text-bressel-red">coaches</span></h2>
         </div>
         {coaches.length === 0 ? (
           <div class="max-w-2xl">
@@ -64,11 +64,11 @@ const hero = {
                   {coachImage ? (
                   <img src={coachImage} alt={coach.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
                   ) : (
-                    <div class="w-full h-full flex items-center justify-center bg-bressel-muted text-muted-foreground font-header text-4xl font-black">{coach.title.charAt(0)}</div>
+                    <div class="w-full h-full flex items-center justify-center bg-bressel-muted text-muted-foreground font-header text-4xl font-bold">{coach.title.charAt(0)}</div>
                   )}
                 </div>
                 <div class="p-5">
-                  <h3 class="font-header font-black italic text-lg uppercase mb-1 text-foreground">{coach.title}</h3>
+                  <h3 class="font-header font-bold text-lg mb-1 text-foreground">{coach.title}</h3>
                   {coach.coachRole && <p class="text-xxs font-bold uppercase tracking-wider mb-1 text-bressel-red">{coach.coachRole}</p>}
                   {coach.coachSpecialty && <p class="text-xxs font-bold uppercase tracking-wider mb-3 text-border">{coach.coachSpecialty}</p>}
                   <p class="body text-sm">{stripHtml(coach.content)}</p>
@@ -84,17 +84,17 @@ const hero = {
     <section id="programs" class="py-20">
       <div class="container-custom">
         <div class="mb-12">
-          <p class="caption mb-2">TRAINING MODULES</p>
-          <h2>PROGRAMS</h2>
+          <p class="caption mb-2">Training modules</p>
+          <h2>Programs</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { title: 'PROFESSIONAL', description: 'For serious athletes ready to compete at the highest level. Intensive technical and tactical training.', features: ['1-on-1 coaching sessions', 'Video analysis & feedback', 'Tournament preparation'], source: 'professional' },
-            { title: 'COMPETITION', description: 'Designed for regional tournament competitors. Strategy, endurance, and mental toughness.', features: ['Team training modules', 'Match simulation drills', 'Circuit participation'], source: 'competition' },
-            { title: 'COACHES', description: 'Certification programs using the BRESSEL™ methodology. Train the next generation of coaches.', features: ['Level 1-3 certification', 'Teaching methodology', 'Practical assessment'], source: 'coaches' },
+            { title: 'Professional', description: 'For athletes ready to compete. Intensive technical and tactical training with a next-move mindset.', features: ['1-on-1 coaching sessions', 'Video analysis & feedback', 'Tournament preparation'], source: 'professional' },
+            { title: 'Competition', description: 'For regional tournament players. Strategy, endurance, and mental toughness — built as a team.', features: ['Team training modules', 'Match simulation drills', 'Circuit participation'], source: 'competition' },
+            { title: 'Coaches', description: 'Certification using the BRESSEL methodology. Train the next generation the right way.', features: ['Level 1-3 certification', 'Teaching methodology', 'Practical assessment'], source: 'coaches' },
           ].map((prog) => (
             <div class="premium-card p-8">
-              <div class="w-10 h-0.5 mb-6 bg-bressel-red"></div>
+              <div class="surge-divider mb-6"></div>
               <h3 class="mb-4">{prog.title}</h3>
               <p class="body text-sm mb-6">{prog.description}</p>
               <ul class="space-y-2 mb-6">
@@ -102,7 +102,7 @@ const hero = {
                   <li class="body text-sm flex items-center gap-2"><span class="text-bressel-red">▸</span> {f}</li>
                 ))}
               </ul>
-              <a href={`/contact?intent=inquiry&source=${prog.source}`} class="nav-link inline-flex text-bressel-red">INQUIRE NOW →</a>
+              <a href={`/contact?intent=inquiry&source=${prog.source}`} class="nav-link inline-flex text-bressel-red no-underline">Inquire now →</a>
             </div>
           ))}
         </div>
@@ -112,8 +112,8 @@ const hero = {
     <!-- CTA -->
     <section class="py-20 border-t" style="border-color: var(--color-border);">
       <div class="container-custom text-center">
-        <h2 class="mb-6">READY TO <span class="text-bressel-red">BEGIN?</span></h2>
-        <p class="body-lg max-w-xl mx-auto mb-8">Book your first session.</p>
+        <h2 class="mb-6">Ready to <span class="text-bressel-red">begin?</span></h2>
+        <p class="body-lg max-w-xl mx-auto mb-8">Grab a court. Book your first session and start at your level.</p>
         <BresselCta
           href={whatsappUrl("Hi BRESSEL! I'd like to start my padel journey. Could you share more about getting started?")}
           target="_blank"

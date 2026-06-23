@@ -1,252 +1,573 @@
-
 /* ==================================================
-   TYPOGRAPHY UTILITIES
+   BRESSEL™ — Brand utilities, components, Starwind overrides
    ================================================== */
-@layer components {
-  /* ── Voice 1: Hero Headlines - Neue Regrade Black Italic, uppercase ── */
-  .heading-xl {
-    font-family: var(--font-heading);
-    font-weight: var(--font-weight-black);
-    font-style: italic;
-    text-transform: uppercase;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    color: var(--color-foreground);
-    font-size: clamp(2.5rem, 7vw, 6rem);
-  }
 
-  /* ── Voice 2: Section Headings - Neue Regrade Black Italic, sentence case ── */
-  .heading-lg {
-    font-family: var(--font-heading);
-    font-weight: var(--font-weight-black);
-    font-style: italic;
-    text-transform: none;
-    line-height: 1;
-    letter-spacing: -0.01em;
-    color: var(--color-foreground);
-    font-size: clamp(1.75rem, 4vw, 4.5rem);
-  }
+/* ── Typography Utilities ── */
+/* Headlines: Neue Regrade Bold/Semibold, sentence case per brand guidelines.
+   Italic is reserved for the logo wordmark and pull-quotes only. */
 
-  /* ── Voice 3: Card Titles - Neue Regrade Black Italic, sentence case ── */
-  .heading-md {
-    font-family: var(--font-heading);
-    font-weight: var(--font-weight-black);
-    font-style: italic;
-    text-transform: none;
-    line-height: 1.1;
-    color: var(--color-foreground);
-    font-size: clamp(1.25rem, 3vw, 2.25rem);
-  }
-
-  /*/* ── Voice 4: Section Labels - Barlow Condensed */
-  .heading-sm {
-    font-family: var(--font-display); /* Barlow Condensed */
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-foreground);
-    font-size: 0.6875rem;
-  }
-
-  /*/* ── Voice 5: Tiny Labels - Barlow Condensed */
-  .caption {
-    font-family: var(--font-display); /* Barlow Condensed */
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 0.625rem;
-    color: var(--color-muted-foreground);
-  }
-
-  /* ── Voice 6: Pull Quotes - THIS is where italic belongs ── */
-  .quote-text {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-style: italic;
-    text-transform: none;
-    line-height: 1.1;
-    color: var(--color-foreground);
-    font-size: clamp(1.5rem, 3vw, 3rem);
-  }
-
-  .body-lg {
-    font-family: var(--font-body);
-    font-size: 1.125rem;
-    line-height: 1.75;
-    color: var(--color-foreground);
-  }
-
-  .body {
-    font-family: var(--font-body);
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    color: var(--color-foreground);
-  }
-
-  .container-custom {
-    max-width: 80rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .container-custom {
-      padding-left: 2rem;
-      padding-right: 2rem;
-    }
-  }
-
-  .nav-link {
-    font-family: var(--font-heading);
-    font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wide);
-    font-size: 0.6875rem;
-    color: var(--color-muted-foreground);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .nav-link:hover {
-    color: var(--color-foreground);
-  }
-
-  .noise-overlay {
-    position: relative;
-  }
-
-  .noise-overlay::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("/assets/brandvisual--/noise--.png");
-    background-repeat: repeat;
-    opacity: 0.03;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .noise-overlay > * {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Shared page hero background (used by PageHero.astro) */
-  .bg-page-hero {
-    background: linear-gradient(
-      to bottom,
-      var(--color-background),
-      var(--color-background),
-      var(--color-muted)
-    );
-  }
+.heading-xl {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  font-style: normal;
+  text-transform: none;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--color-foreground);
+  font-size: clamp(2.5rem, 7vw, 6rem);
 }
 
-/* ═══════════════════════════════════════════════
-   Starwind Component Overrides - BRESSEL Brand
-   ═══════════════════════════════════════════════ */
-
-@layer components {
-  [data-slot="card"] {
-    border-radius: 0 !important;
-    border-color: var(--color-border);
-    background: var(--color-card);
-    position: relative;
-    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 0.35s ease,
-                box-shadow 0.35s ease;
-  }
-  [data-slot="card"]::after {
-    /* red accent bar - revealed on hover, signature sport-brand detail */
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 2px;
-    width: 0;
-    background: var(--color-bressel-red);
-    transition: width 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    pointer-events: none;
-    z-index: 3;
-  }
-  [data-slot="card"]:hover {
-    border-color: var(--color-border);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.6),
-                0 8px 16px -8px rgba(255, 51, 31, 0.12);
-  }
-  [data-slot="card"]:hover::after {
-    width: 100%;
-  }
-
-  /* ── Cards: premium sport-brand - sharp corners, layered depth, red accent on hover ── */
-  [data-slot="button"] {
-    font-family: var(--font-heading);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    border-radius: var(--radius-md) !important;
-  }
-
-  /* ── Badges: match heading-sm feel ── */
-  [data-slot="badge"] {
-    font-family: var(--font-body);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-  }
-
-  /* ═══════════════════════════════════════════════
-     Universal premium card utility - for non-Starwind cards (blog, events, contact)
-     ═══════════════════════════════════════════════ */
-  .premium-card {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 0.35s ease,
-                box-shadow 0.35s ease;
-  }
-  .premium-card img {
-    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .premium-card:hover img {
-      transform: scale(1.02);
-    }
-  }
+.heading-lg {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  font-style: normal;
+  text-transform: none;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--color-foreground);
+  font-size: clamp(1.75rem, 4vw, 4.5rem);
 }
 
+.heading-md {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading-sub);
+  font-style: normal;
+  text-transform: none;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-foreground);
+  font-size: clamp(1.25rem, 3vw, 2.25rem);
+}
 
+/* Campaign / short punchy moments — all caps on purpose (short hits only) */
+.heading-campaign,
+.text-beyond {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading);
+  font-style: normal;
+  text-transform: uppercase;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
 
-/* ── Decorative Elements ── */
+.caption {
+  font-family: var(--font-display);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--color-ash-haze);
+}
+
+.heading-sm {
+  font-family: var(--font-display);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+}
+
+.font-header {
+  font-family: var(--font-heading);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--color-ash-haze);
+}
+
+.nav-link {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;   /* Barlow Condensed reads larger; 15px for legible nav */
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-muted-text);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.nav-link:hover {
+  color: var(--color-bressel-red);
+  text-decoration: none;
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-foreground);
+}
+
+.body-lg {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.45;
+  color: var(--color-foreground);
+}
+
+.quote-text {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: var(--font-weight-heading-sub);
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  line-height: 1.2;
+  color: var(--color-foreground);
+}
+
+/* ── Layout ── */
+
+.container-custom {
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-px);
+  padding-right: var(--section-px);
+}
+
+/* Section rhythm — generous breathing space per brand. Apply via class on <section>. */
+.section-py {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+.section-py-sm {
+  padding-top: var(--section-py-sm);
+  padding-bottom: var(--section-py-sm);
+}
+
+/* ── Light Surface System ── */
+/* Brand: Service White is a primary surface alongside Net Black.
+   Re-scopes semantic tokens so ALL Tailwind utilities (text-foreground, text-muted-foreground,
+   border-border, etc.) invert correctly on light surfaces — no per-class overrides needed. */
+.surface-light {
+  background: var(--color-surface-light);
+  --color-foreground: var(--color-bressel-black);
+  --color-muted-foreground: var(--color-surface-light-muted);
+  --color-border: var(--color-surface-light-border);
+  --color-card: var(--color-surface-light-card);
+  --color-muted: rgba(0, 0, 0, 0.04);
+}
+.surface-light h1,
+.surface-light h2,
+.surface-light h3,
+.surface-light h4,
+.surface-light h5,
+.surface-light h6,
+.surface-light .heading-xl,
+.surface-light .heading-lg,
+.surface-light .heading-md,
+.surface-light .quote-text {
+  color: var(--color-bressel-black);
+}
+.surface-light .premium-card {
+  background: var(--color-surface-light-card);
+  border-color: var(--color-surface-light-border);
+}
+.surface-light .premium-card:hover {
+  border-color: rgba(255, 51, 31, 0.4);
+}
+.surface-light hr {
+  border-top-color: var(--color-surface-light-border);
+}
+
+/* ── Brand Components ── */
+
+.premium-card {
+  background: var(--color-bressel-black-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color var(--duration-normal) var(--ease-standard);
+}
+
+.premium-card:hover {
+  border-color: rgba(255, 51, 31, 0.3);
+}
+
 .premium-separator {
-  width: 2.5rem;
-  height: 0.125rem;
-  display: block;
   background: var(--color-bressel-red);
 }
 
-/* Flexible watermark — stroke color customizable via --watermark-color */
+.brand-logo {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-black);
+  font-style: italic;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* ── Page Hero Background ── */
+
+.bg-page-hero {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 51, 31, 0.06) 0%, transparent 60%),
+    var(--color-bressel-black);
+}
+
+/* ── Image Scrim (12–20% black for text-over-image) ── */
+
+.img-scrim {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.2) 45%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+}
+
+.img-scrim--calm {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.15) 50%,
+    transparent 100%
+  );
+}
+
+/* ── SURGE Graphic System (brand: 80° forward lean) ── */
+/* 80° from vertical = 10° from horizontal, leaning right (forward). */
+
+.surge-panel {
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
+}
+
+/* The signature SURGE divider: a forward-leaning Scarlet bar.
+   80° lean = skewX(-10deg) (10° off horizontal). Scaled up for presence. */
+.surge-divider {
+  height: 4px;
+  width: 4rem;
+  background: var(--color-bressel-red);
+  transform: skewX(-10deg);
+  transform-origin: left center;
+}
+
+.surge-divider--wide {
+  width: 20rem;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.surge-mask {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+/* SURGE badge — the forward-leaning module from the BRESSEL symbol.
+   Keep original radii + 80° lean; scale/crop only, never stretch/flip/skew beyond lean. */
+.surge-badge {
+  transform: skewX(-10deg);
+  transform-origin: center;
+}
+.surge-badge > * {
+  transform: skewX(10deg); /* counter-skew children so content stays upright */
+}
+
+/* ── HALO Graphic System (restrained ball-motion trail) ── */
+
+.halo-accent {
+  position: relative;
+}
+
+.halo-accent::after {
+  content: "";
+  position: absolute;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 51, 31, 0.25);
+  top: -0.5rem;
+  right: -0.5rem;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.halo-trim {
+  position: relative;
+  overflow: hidden;
+}
+
+.halo-trim::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -1rem;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(255, 51, 31, 0.2);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ── Decorative Effects ── */
+
+.noise {
+  position: relative;
+}
+
+.noise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/brandvisual--/noise--.png");
+  background-repeat: repeat;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.noise-overlay {
+  position: relative;
+}
+
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/brandvisual--/noise--.png");
+  background-repeat: repeat;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .watermark-ghost {
   font-family: var(--font-heading);
   font-weight: var(--font-weight-black);
   font-style: italic;
-  text-transform: uppercase;
-  color: transparent;
-  -webkit-text-stroke: 0.75px var(--watermark-color, var(--color-bressel-red));
+  font-size: clamp(4rem, 12vw, 8rem);
+  color: var(--color-foreground);
+  opacity: 0.03;
+  line-height: 1;
   user-select: none;
   pointer-events: none;
-  /* Default decorative positioning — override as needed */
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  font-size: 8rem;
-  opacity: 0.03;
+}
+
+/* ── Starwind Slot Overrides ── */
+
+[data-slot="button"] {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+
+[data-slot="button"]:hover,
+[data-slot="button"]:focus-visible {
+  text-decoration: none;
+}
+
+[data-slot="button"].bg-primary,
+[data-slot="button"][class*="bg-primary"],
+[data-slot="button"][class*="bg-bressel-red"] {
+  color: var(--color-primary-foreground);
+}
+
+[data-slot="button"].bg-primary:hover,
+[data-slot="button"][class*="bg-primary"]:hover,
+[data-slot="button"][class*="bg-bressel-red"]:hover {
+  color: var(--color-primary-foreground);
+}
+
+[data-slot="card"] {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+[data-slot="badge"] {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wider);
+  font-size: var(--text-xxs);
+  border-radius: var(--radius);
+}
+
+/* Full-bleed image cards */
+.card-full-bleed {
+  border: none;
+  background: transparent;
+}
+
+.card-full-bleed [data-slot="card"] {
+  border: none;
+  background: transparent;
+}
+
+/* ── Site Footer ── */
+
+.site-footer {
+  background: var(--color-bressel-black);
+  border-top: 1px solid var(--color-border);
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+
+.site-footer__inner {
+  max-width: var(--container-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-px);
+  padding-right: var(--section-px);
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+/* Mobile: visually group each footer section with a subtle top border */
+@media (max-width: 767px) {
+  .site-footer__grid > nav,
+  .site-footer__grid > div:not(.site-footer__brand) {
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
 }
 
 @media (min-width: 768px) {
-  .watermark-ghost {
-    font-size: 11.25rem;
+  .site-footer__grid {
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.site-footer__logo-link {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.site-footer__logo {
+  height: 2rem;
+  width: auto;
+}
+
+.site-footer__headline {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+  font-style: normal;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--color-foreground);
+  max-width: 20rem;
+}
+
+.site-footer__label {
+  font-family: var(--font-display);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-widest);
+  color: var(--color-muted-text);
+  margin-bottom: 1rem;
+}
+
+.site-footer__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.site-footer__links a {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+  overflow-wrap: anywhere;   /* prevent email truncation in narrow columns */
+}
+
+.site-footer__links a:hover {
+  color: var(--color-bressel-red);
+  text-decoration: none;
+}
+
+.site-footer__socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.site-footer__icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+  text-decoration: none;
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.site-footer__icon-link:hover {
+  border-color: var(--color-bressel-red);
+  color: var(--color-bressel-red);
+  text-decoration: none;
+}
+
+.site-footer__bottom {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .site-footer__bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+}
+
+.site-footer__copy {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-ash-haze);
+  max-width: 20rem;
+}
+
+.site-footer__bottom p,
+.site-footer__bottom a {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-ash-haze);
+  text-decoration: none;
+}
+
+.site-footer__bottom a:hover {
+  color: var(--color-foreground);
+  text-decoration: none;
+}
+
+/* ── Reduced Motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-card,
+  [data-slot="button"],
+  .site-footer__links a {
+    transition: none;
   }
 }

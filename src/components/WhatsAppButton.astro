@@ -1,9 +1,10 @@
 ---
 /**
  * WhatsAppButton - Preset WhatsApp inquiry button
- * Renders a branded BRESSEL-red button with WhatsApp icon.
+ * Uses Starwind Button for consistent primary/outline contrast.
  */
-import type { Props as ButtonProps } from '../starwind/button/Button.astro';
+import Button from '@/components/starwind/button/Button.astro';
+import type { Props as ButtonProps } from '@/components/starwind/button/Button.astro';
 import { WHATSAPP_NUMBER } from '../lib/config';
 import { Icon } from 'astro-icon/components';
 import { clsx } from 'clsx';
@@ -15,46 +16,46 @@ interface Props {
   variant?: ButtonProps['variant'];
   size?: ButtonProps['size'];
   class?: string;
-  children?: any; // Keep any if you need complex nested components, otherwise remove
+  children?: any;
 }
 
-const { 
-  message, 
-  phone = WHATSAPP_NUMBER, 
-  variant = "primary", 
-  size = "lg", 
-  class: className, 
-  children 
+const {
+  message,
+  phone = WHATSAPP_NUMBER,
+  variant = 'primary',
+  size = 'lg',
+  class: className,
+  children,
 } = Astro.props;
 
-// Ensure phone number is digits only for the wa.me link
 const cleanPhone = phone.replace(/\D/g, '');
 const encoded = encodeURIComponent(message);
 const waUrl = `https://wa.me/${cleanPhone}?text=${encoded}`;
 
-// Helper to merge classes cleanly
 function cn(...inputs: any[]) {
   return twMerge(clsx(inputs));
 }
 
-const baseStyles = cn(
-  "inline-flex items-center justify-center gap-2 font-header font-bold uppercase tracking-wide no-underline transition-all duration-200 cursor-pointer",
-  variant === 'primary'
-    ? 'bg-bressel-red text-bressel-white hover:bg-bressel-red-hover'
+const isPrimary = variant === 'primary' || variant === 'default';
+const resolvedVariant = isPrimary ? 'primary' : 'outline';
+
+const brandClass = cn(
+  'font-header font-bold uppercase tracking-wide gap-2',
+  isPrimary
+    ? 'bg-bressel-red text-bressel-white hover:bg-bressel-red-hover hover:text-bressel-white'
     : 'border-2 border-bressel-red text-bressel-red hover:bg-bressel-red hover:text-bressel-white',
-  size === 'lg' ? 'px-8 py-3 text-11' : size === 'sm' ? 'px-4 py-2 text-xxs' : 'px-6 py-2.5 text-11',
-  className
+  className,
 );
 ---
 
-<a
+<Button
   href={waUrl}
   target="_blank"
   rel="noopener noreferrer"
-  role="button"
-  class={baseStyles}
+  variant={resolvedVariant}
+  size={size}
+  class={brandClass}
 >
   <Icon name="whatsapp" size={16} class="flex-shrink-0" />
   {children || <slot />}
-</a>
-
+</Button>

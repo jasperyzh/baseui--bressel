@@ -17,26 +17,29 @@ import { BRAND_YEAR } from "../../lib/config";
   id="hero"
   class="relative min-h-screen flex flex-col justify-center overflow-hidden"
 >
-  <!-- Background Video - let the image breathe at 65% opacity -->
+  <!-- Background Video — 1280x720, blurred via CSS (hides source softness, aids text legibility).
+       scale-105 so blur edges stay off-screen. WebM (VP9) first for better compression, MP4 fallback. -->
   <video
     autoplay
     loop
     muted
     playsinline
-    class="absolute inset-0 w-full h-full object-cover opacity-65"
+    preload="metadata"
+    class="absolute inset-0 w-full h-full object-cover opacity-60 scale-105 [filter:blur(3px)]"
     poster="/assets/hero-bg.webp"
   >
-    <source src="/assets/background-video.mp4" type="video/mp4" />
+    <source src="/assets/hero-bg.webm" type="video/webm" />
+    <source src="/assets/hero-bg.mp4" type="video/mp4" />
   </video>
 
   <!-- Cinematic gradient: darker top (header legibility) + darker bottom (text legibility) -->
   <div
-    class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/80"
+    class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-black/85"
   >
   </div>
   <!-- Subtle vignette for image framing -->
   <div
-    class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.55)_100%)]"
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]"
   >
   </div>
 
@@ -48,22 +51,21 @@ import { BRAND_YEAR } from "../../lib/config";
       data-aos-delay="200"
     >
       <!-- EST / tagline -->
-      <div class="flex items-center gap-4 mb-6">
-        <div class="w-8 h-0.5 bg-bressel-red"></div>
-        <span class="font-display">EST. {BRAND_YEAR} / PLAY BEYOND</span>
-        <!-- <div class="w-8 h-0.5 bg-bressel-red"></div> -->
+      <div class="flex items-center gap-4 mb-6 halo-trim">
+        <div class="surge-divider"></div>
+        <span class="caption">EST. {BRAND_YEAR} / PLAY BEYOND</span>
       </div>
 
-      <!-- Headline -->
+      <!-- Headline — Neue Regrade Bold, sentence case (brand voice: Direct, Human) -->
       <h1>
-        Every Player Has<br />
-        <span class="text-bressel-red">a Place Here</span>
+        Every player counts<br />
+        <span class="text-bressel-red italic">PLAY BEYOND</span>
       </h1>
 
-      <!-- Body copy -->
-      <p class="body-lg max-w-2xl mb-8">
-        <span class="font-bold">World-class padel coaching</span> built around community.
-        From your first swing to tournament day - we're in it together.
+      <!-- Body copy — one breath, one clear idea -->
+      <p class="body-lg max-w-xl mb-8">
+        Coach-led padel, built around people who love the game.
+        Train the right way, from your first swing onward.
       </p>
 
       <!-- Dual CTAs -->
@@ -78,7 +80,7 @@ import { BRAND_YEAR } from "../../lib/config";
         <BresselCta
           href="#essence"
           variant="outline"
-          class="border-[#52525b] text-bressel-white hover:border-bressel-red hover:text-bressel-red"
+          class="border-border text-bressel-white hover:border-bressel-red hover:text-bressel-red"
         >
           See How It Works
         </BresselCta>
@@ -95,14 +97,14 @@ import { BRAND_YEAR } from "../../lib/config";
     data-aos-delay="800"
   >
     <span
-      class="caption text-ash-haze group-hover:text-bressel-red transition-colors"
+      class="caption text-muted-text group-hover:text-bressel-red transition-colors"
       >SCROLL TO BEGIN</span
     >
     <span class="animate-bounce">
       <Icon
         name="chevron-down"
         size={16}
-        class="text-ash-haze group-hover:text-bressel-red transition-colors"
+        class="text-muted-text group-hover:text-bressel-red transition-colors"
       />
     </span>
   </a>

@@ -12,39 +12,39 @@
 // ── Default Content ──
 const hero = {
   tagline: 'EST. 2026 / PLAY BEYOND',
-  title: 'THE BRESSEL',
-  highlight: 'STANDARD',
-  description: 'World-class padel, within reach. Built around people who love the game.',
+  title: 'The Bressel',
+  highlight: 'standard',
+  description: 'World-class padel within reach. Built around people who love the game.',
 };
 
 const stats = [
-  { value: '3', label: 'COUNTRIES' },
-  { value: '50+', label: 'CERTIFIED COACHES' },
-  { value: '2K+', label: 'ACTIVE PLAYERS' },
-  { value: '100+', label: 'TOURNAMENTS' },
-  { value: '92%', label: 'RETENTION' },
+  { value: '3', label: 'Countries' },
+  { value: '50+', label: 'Certified coaches' },
+  { value: '2K+', label: 'Active players' },
+  { value: '100+', label: 'Tournaments' },
+  { value: '92%', label: 'Retention' },
 ];
 
 const mission = {
-  label: 'OUR MISSION',
-  title: 'EVERY PLAYER',
-  highlight: 'COUNTS',
-  p1: 'BRESSEL was born from a single belief: world-class coaching shouldn\'t be locked behind elite circles.',
-  p2: 'From your first swing to tournament day, every element is designed to build your game - and a community that lasts.',
+  label: 'Our mission',
+  title: 'Every player',
+  highlight: 'counts',
+  p1: 'BRESSEL was born from one belief: world-class coaching should not be locked behind elite circles.',
+  p2: 'From your first swing to tournament day, every session is designed to build your game — and a community that lasts.',
   image: '/assets/national_team/nationalteam_group--Bressel-7473.webp',
 };
 
 const methodologies = [
-  { title: 'TECHNICAL', description: 'Every movement mapped. Every shot analyzed. We break down your game into clear, repeatable steps.' },
-  { title: 'TACTICAL', description: 'Court intelligence. Pattern recognition. Decision-making under pressure. We build players who think as fast as they move.' },
-  { title: 'PHYSICAL', description: 'Explosive agility. Lateral stability. Endurance that lasts. Conditioning built specifically for padel.' },
+  { title: 'Technical', description: 'Every movement mapped. Every shot broken into clear, repeatable steps you can take to the court.' },
+  { title: 'Tactical', description: 'Court intelligence, pattern recognition, and decisions under pressure — a next-move mindset.' },
+  { title: 'Physical', description: 'Explosive agility, lateral stability, and endurance built specifically for padel.' },
 ];
 
 import MainLayout from '@/layouts/Layout.astro';
 import PageHero from '@/components/PageHero.astro';
 ---
 
-<MainLayout title="About BRESSEL" description="The world's leading high-performance padel academy.">
+<MainLayout title="About BRESSEL" description="World-class padel coaching built around people who love the game.">
   <main class="pt-20 md:pt-24">
     <PageHero
       tagline={hero.tagline}
@@ -77,7 +77,7 @@ import PageHero from '@/components/PageHero.astro';
         <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
           {stats.map((s) => (
             <div>
-              <p class="text-4xl md:text-5xl mb-2 font-header font-black text-bressel-red">{s.value}</p>
+              <p class="text-4xl md:text-5xl mb-2 font-header font-bold text-bressel-red">{s.value}</p>
               <p class="heading-sm text-muted-foreground">{s.label}</p>
             </div>
           ))}
@@ -88,8 +88,8 @@ import PageHero from '@/components/PageHero.astro';
     <!-- Methodology -->
     <section class="py-20">
       <div class="container-custom text-center">
-        <p class="caption mb-4">THE METHODOLOGY</p>
-        <h2 class="mb-16">THREE <span class="text-bressel-red">PILLARS</span></h2>
+        <p class="caption mb-4">The methodology</p>
+        <h2 class="mb-16">Three <span class="text-bressel-red">pillars</span></h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           {methodologies.map((m) => (
             <div class="premium-card p-8">

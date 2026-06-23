@@ -7,7 +7,8 @@
     "build": "npm run check:ai && astro build",
     "preview": "astro preview",
     "check:ai": "node $HOME/Desktop/baseui__/scripts/validator--baseui.mjs",
-    "verify:system": "bash $HOME/Desktop/baseui__/scripts/verify-system.sh .",
+    "verify:system": "node $HOME/Desktop/job__bressel/scripts/validator--bressel.mjs",
+    "verify:build": "node $HOME/Desktop/job__bressel/scripts/build.mjs",
     "verify:brand": "node $HOME/Desktop/job__bressel/scripts/verify-brand-compliance.js .",
     "verify": "npm run check:ai && npm run verify:system && npm run verify:brand"
   },

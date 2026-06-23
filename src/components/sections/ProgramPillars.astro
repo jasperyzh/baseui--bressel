@@ -1,17 +1,43 @@
 ---
 /**
  * Program Pillars - 3 image cards with overlay text
- * Brand voice: Option A
- * PLAY BEYOND - The Competitive Edge
- * GO BEYOND - Build the Team
- * GROW BEYOND - Train the Next Generation
+ * Tag, title, description only — image-forward with bottom scrim for legibility
  */
 import Card from '../starwind/card/Card.astro';
 import CardContent from '../starwind/card/CardContent.astro';
 import CardHeader from '../starwind/card/CardHeader.astro';
 import CardTitle from '../starwind/card/CardTitle.astro';
 import CardDescription from '../starwind/card/CardDescription.astro';
-import WhatsAppButton from '../WhatsAppButton.astro';
+
+const pillars = [
+  {
+    label: 'PLAY BEYOND',
+    title: 'The competitive edge',
+    description: 'One-on-one coaching, match strategy, tournament prep — train the right way.',
+    image: '/assets/national_team/nationalteam--Bressel-6995.webp',
+    alt: 'Professional training — technique and match prep',
+    delay: undefined,
+    accent: 'red',
+  },
+  {
+    label: 'GO BEYOND',
+    title: 'Build the team',
+    description: 'Circuit play, team ladders, regional tournaments — raise each other.',
+    image: '/assets/national_team/nationalteam--Bressel-7129.webp',
+    alt: 'Competition — team play and ladders',
+    delay: '150',
+    accent: 'red',
+  },
+  {
+    label: 'GROW BEYOND',
+    title: 'Train the next generation',
+    description: "BRESSEL certification programs. Shape the sport's future with a next-move mindset.",
+    image: '/assets/scholarship_kids/sponsorship_kids--Bressel-8591.webp',
+    alt: 'Coach certification — train the next generation',
+    delay: '300',
+    accent: 'ash',
+  },
+];
 ---
 
 <section id="programs" class="py-28 relative overflow-hidden">
@@ -19,109 +45,43 @@ import WhatsAppButton from '../WhatsAppButton.astro';
 
     <!-- Section Header -->
     <div class="mb-12">
-      <p class="caption mb-2">Built around people who love the game.</p>
-      <h2>PROGRAM PILLARS</h2>
+      <p class="caption mb-2">Built around people who love the game</p>
+      <h2>Program pillars</h2>
+      <div class="surge-divider mt-4"></div>
     </div>
-
-    <!-- Ghost watermark -->
-    <div class="watermark-ghost absolute top-8 left-8">BEYOND</div>
 
     <!-- Three Pillars -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+      {pillars.map((pillar) => (
+        <Card
+          class="card-full-bleed relative h-96 overflow-hidden group"
+          data-aos="fade-up"
+          data-aos-delay={pillar.delay}
+        >
+          <img
+            src={pillar.image}
+            alt={pillar.alt}
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          />
+          <!-- Bottom scrim only — keeps image visible above the copy -->
+          <div class="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/50 to-transparent pointer-events-none"></div>
 
-      <!-- PLAY BEYOND -->
-      <Card class="card-full-bleed relative h-96 overflow-hidden group" data-aos="fade-up">
-        <img
-          src="/assets/national_team/nationalteam--Bressel-6995.webp"
-          alt="Professional Training"
-          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          data-swap="professional"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <CardContent class="absolute inset-x-0 bottom-0">
-          <CardHeader>
-            <span class="inline-flex items-center gap-1.5 text-xxs font-bold uppercase tracking-wider text-bressel-red mb-3">
-              <span class="w-2 h-2 bg-bressel-red inline-block"></span>
-              PLAY BEYOND
-            </span>
-            <CardTitle>The Competitive Edge</CardTitle>
-            <CardDescription class="body text-sm">
-              One-on-one coaching, match strategy, tournament prep
-            </CardDescription>
-          </CardHeader>
-          <WhatsAppButton
-            message="Hi BRESSEL! I'm interested in the Professional training program. Could you tell me more?"
-            variant="outline"
-            size="sm"
-            class="mt-4"
-          >
-            Inquire
-          </WhatsAppButton>
-        </CardContent>
-      </Card>
-
-      <!-- GO BEYOND -->
-      <Card class="card-full-bleed relative h-96 overflow-hidden group" data-aos="fade-up" data-aos-delay="150">
-        <img
-          src="/assets/national_team/nationalteam--Bressel-7129.webp"
-          alt="Competition"
-          class="absolute inset-0 w-full h-full object-cover object-center bg-bressel-black-soft transition-transform duration-500 group-hover:scale-[1.02]"
-          data-swap="competition"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <CardContent class="absolute inset-x-0 bottom-0">
-          <CardHeader>
-            <span class="inline-flex items-center gap-1.5 text-xxs font-bold uppercase tracking-wider text-bressel-red mb-3">
-              <span class="w-2 h-2 bg-bressel-red inline-block"></span>
-              GO BEYOND
-            </span>
-            <CardTitle>Build the Team</CardTitle>
-            <CardDescription class="body text-sm">
-              Circuit play, team ladders, regional tournaments
-            </CardDescription>
-          </CardHeader>
-          <WhatsAppButton
-            message="Hi BRESSEL! I'm interested in the Competition program. How do I join?"
-            variant="outline"
-            size="sm"
-            class="mt-4"
-          >
-            Inquire
-          </WhatsAppButton>
-        </CardContent>
-      </Card>
-
-      <!-- GROW BEYOND -->
-      <Card class="card-full-bleed relative h-96 overflow-hidden group" data-aos="fade-up" data-aos-delay="300">
-        <img
-          src="/assets/scholarship_kids/sponsorship_kids--Bressel-8591.webp"
-          alt="Coaches Certification"
-          class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          data-swap="coaches"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <CardContent class="absolute inset-x-0 bottom-0">
-          <CardHeader>
-            <span class="inline-flex items-center gap-1.5 text-xxs font-bold uppercase tracking-wider text-ash-haze mb-3">
-              <span class="w-2 h-2 bg-ash-haze inline-block"></span>
-              GROW BEYOND
-            </span>
-            <CardTitle>Train the Next Generation</CardTitle>
-            <CardDescription class="body text-sm">
-              BRESSEL certification programs. Shape the sport's future
-            </CardDescription>
-          </CardHeader>
-          <WhatsAppButton
-            message="Hi BRESSEL! I'm interested in coach certification. Could you share more details?"
-            variant="outline"
-            size="sm"
-            class="mt-4"
-          >
-            Inquire
-          </WhatsAppButton>
-        </CardContent>
-      </Card>
-
+          <CardContent class="absolute inset-x-0 bottom-0 z-10 p-6">
+            <CardHeader class="p-0 gap-0">
+              <span class={`inline-flex items-center gap-1.5 text-xxs font-bold uppercase tracking-wider mb-3 ${pillar.accent === 'red' ? 'text-bressel-red' : 'text-ash-haze'}`}>
+                <span class={`w-2 h-2 inline-block shrink-0 ${pillar.accent === 'red' ? 'bg-bressel-red' : 'bg-ash-haze'}`}></span>
+                {pillar.label}
+              </span>
+              <CardTitle class="text-xl md:text-2xl text-bressel-white mb-0">
+                {pillar.title}
+              </CardTitle>
+              <CardDescription class="body mt-2 mb-0 text-sm text-bressel-grey leading-relaxed">
+                {pillar.description}
+              </CardDescription>
+            </CardHeader>
+          </CardContent>
+        </Card>
+      ))}
     </div>
 
   </div>

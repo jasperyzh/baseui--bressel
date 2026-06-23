@@ -1,51 +1,27 @@
 /**
- * Fix mixed content for images served over HTTP.
+ * Image URL helpers.
  *
- * During demo phase, WordPress images are at http://104.248.157.67/
- * but the Astro site is served over HTTPS (Cloudflare Pages).
+ * STATUS: Passthrough since the 260623 domain go-live.
  *
- * This rewrites HTTP image URLs to route through the Cloudflare Pages
- * image proxy so browsers won't block them.
+ * WordPress now serves images directly over HTTPS from
+ * https://cms.bresselsports.com/ — no mixed-content issue, no proxy needed.
+ * These functions return URLs unchanged so all call sites keep working.
  *
- * POST-LAUNCH: Remove all calls to this file and delete:
- *   - src/pages/_proxy/[...wp].ts
- *   - functions/_proxy/[...wp].mjs (if deployed)
+ * The Cloudflare Pages image proxy (functions/_proxy/) is no longer required
+ * and can be deleted in a follow-up cleanup along with this file's call sites.
  */
-
-const WP_ORIGINS = [
-  "http://104.248.157.67/",
-  "https://104.248.157.67/",
-  "http://cms.bresselsports.com/",
-  "https://cms.bresselsports.com/",
-];
-const PROXY_BASE = "https://baseui--bressel.pages.dev/_proxy/";
 
 /**
- * Rewrite a single image URL if it points to the WP origin.
- * Leaves all other URLs (HTTPS CDN, data URIs, etc.) untouched.
+ * Return an image URL unchanged. (Previously rewrote HTTP WP URLs through a
+ * Pages proxy to fix mixed content — no longer necessary.)
  */
 export function fixImageUrl(url: string | undefined | null): string {
-  if (!url) return "";
-  for (const origin of WP_ORIGINS) {
-    if (url.startsWith(origin)) {
-      return PROXY_BASE + url.replace(origin, "");
-    }
-  }
-  return url;
+  return url ?? "";
 }
 
 /**
- * Rewrite all HTTP WP IP URLs inside an HTML string.
- * Targets <img src="..."> and <img srcset="..."> attributes.
+ * Return HTML unchanged. (Previously rewrote HTTP WP image URLs inside <img>.)
  */
 export function fixImageUrlsInHtml(html: string): string {
-  if (!html) return html;
-  let result = html;
-  for (const origin of WP_ORIGINS) {
-    const escaped = origin.replace(/\./g, "\\.");
-    result = result
-      .replace(new RegExp(`src="${escaped}`, "g"), `src="${PROXY_BASE}`)
-      .replace(new RegExp(`srcset="${escaped}`, "g"), `srcset="${PROXY_BASE}`);
-  }
-  return result;
+  return html;
 }

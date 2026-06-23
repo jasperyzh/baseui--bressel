@@ -1,107 +1,41 @@
 ---
 /**
- * Shop - Product grid with "BRESSEL PRO" watermark
+ * Shop - Product grid with "BRESSEL PRO" watermark (homepage teaser)
  * Props: products array from WordPress GraphQL (merch CPT)
  */
 import type { Merch } from '../../lib/wordpress';
 import { whatsappUrl } from '../../lib/config';
-import { fixImageUrl } from '../../lib/fix-image-url';
-import Card from '../starwind/card/Card.astro';
-import Button from '../starwind/button/Button.astro';
-import CardHeader from '../starwind/card/CardHeader.astro';
-import CardTitle from '../starwind/card/CardTitle.astro';
-import CardDescription from '../starwind/card/CardDescription.astro';
-import CardContent from '../starwind/card/CardContent.astro';
-import CardFooter from '../starwind/card/CardFooter.astro';
 import { Icon } from 'astro-icon/components';
 import BresselCta from '../BresselCta.astro';
+import ProductCard from '../ProductCard.astro';
 
 interface Props {
   products: Merch[];
 }
 
 const { products } = Astro.props;
-
-/** Strip HTML from WP content */
-function stripHtml(html: string): string {
-  if (!html) return '';
-  return html.replace(/<[^>]*>/g, '').trim();
-}
 ---
 
-<section id="shop" class="py-20 noise-overlay relative overflow-hidden">
+<section id="shop" class="section-py noise-overlay relative overflow-hidden">
   <div class="container-custom">
-
-    <!-- Ghost watermark -->
-    <div class="watermark-ghost pointer-events-none absolute top-8 right-8">BRESSEL PRO</div>
 
     <!-- Section Header -->
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
       <div>
-        <p class="caption mb-2">Engineered for communities and beyond.</p>
-        <h2>SHOP</h2>
+        <p class="caption mb-2">BRESSEL PRO</p>
+        <h2>Shop the catalog</h2>
+        <div class="surge-divider mt-4"></div>
       </div>
       <BresselCta href="/shop" variant="primary">
-        VISIT CATALOG
+        Visit catalog
       </BresselCta>
     </div>
 
     <!-- Product Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 relative z-10">
-
-      {products.map((product, i) => {
-        const productImage = fixImageUrl(product.featuredImage?.node?.sourceUrl);
-        return (
-        <Card class="overflow-hidden transition-colors duration-300 group" data-aos="fade-up" data-aos-delay={String(i * 100)}>
-          <!-- Product Image -->
-          <div class="relative aspect-square overflow-hidden bg-bressel-black">
-            {productImage ? (
-              <img
-                src={productImage}
-                alt={product.title}
-                class="w-full h-full object-contain p-6 transition-transform duration-500 group-hover:scale-[1.02]"
-              />
-            ) : (
-              <div class="w-full h-full flex items-center justify-center text-bressel-zinc-700 font-header text-2xl font-black">{product.title.charAt(0)}</div>
-            )}
-          </div>
-
-          <!-- Product Body -->
-          <CardHeader>
-            {product.merchSeries && (
-              <span class="inline-flex items-center gap-1.5 text-xxs font-bold uppercase tracking-wider text-bressel-red mb-3">
-                <span class="w-1.5 h-1.5 bg-bressel-red inline-block"></span>
-                {product.merchSeries}
-              </span>
-            )}
-            <CardTitle class="font-header font-black italic text-lg uppercase text-bressel-white">
-              {product.title}
-            </CardTitle>
-            <CardDescription class="body text-sm line-clamp-2">
-              {stripHtml(product.content)}
-            </CardDescription>
-          </CardHeader>
-
-          <!-- Price + CTA -->
-          <CardFooter class="flex items-center justify-between bg-transparent border-t-0 p-6">
-            <span class="font-header font-bold text-sm text-bressel-white">
-              RM{product.merchPrice}
-            </span>
-            <a
-              href={whatsappUrl("Hi BRESSEL! I'm interested in " + product.title + ". Is it available?")}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 text-ash-haze font-header font-bold text-xxs uppercase tracking-wide hover:text-bressel-white transition-colors no-underline"
-            >
-              INQUIRE
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </CardFooter>
-        </Card>
-      )})}
-
+      {products.map((product, i) => (
+        <ProductCard product={product} delay={i * 80} />
+      ))}
     </div>
 
   </div>

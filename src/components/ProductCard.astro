@@ -1,0 +1,205 @@
+---
+/**
+ * ProductCard — BRESSEL PRO merch card
+ *
+ * On-brand "sexy" treatment:
+ *   - Sharp corners (0px radius) per brand.
+ *   - Scarlet top accent bar that grows L→R on hover (SURGE forward motion).
+ *   - Subtle Scarlet radial glow behind the product (depth, not flat void).
+ *   - Floating sharp-cornered series tag (Scarlet left border).
+ *   - Image scales subtly on hover.
+ *   - Price + CTA: outline button fills Scarlet on hover (matches site CTAs).
+ *
+ * Used by: sections/Shop.astro (homepage teaser) + pages/shop.astro (catalog).
+ */
+import type { Merch } from '../lib/wordpress';
+import { whatsappUrl } from '../lib/config';
+import { fixImageUrl } from '../lib/fix-image-url';
+
+interface Props {
+  product: Merch;
+  /** Stagger AOS fade-in delay (ms). */
+  delay?: number;
+}
+
+const { product, delay = 0 } = Astro.props;
+
+const productImage = fixImageUrl(product.featuredImage?.node?.sourceUrl);
+const inquiryMsg = `Hi BRESSEL! I'm interested in ${product.title}. Is it available?`;
+
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').trim();
+}
+const description = stripHtml(product.content);
+const price = product.merchPrice?.trim() || '';
+---
+
+<article
+  class="product-card group relative flex flex-col bg-[var(--color-card)] border border-[var(--color-border)] overflow-hidden transition-colors duration-300 hover:border-bressel-red/60"
+  data-aos="fade-up"
+  data-aos-delay={String(delay)}
+>
+  {/* ── Scarlet top accent — 0 → full width on hover (SURGE forward motion) ── */}
+  <span class="product-card__accent" aria-hidden="true"></span>
+
+  {/* ── Image stage — radial glow + product ── */}
+  <div class="product-card__stage relative aspect-square overflow-hidden">
+    {productImage ? (
+      <img
+        src={productImage}
+        alt={product.title}
+        loading="lazy"
+        class="relative z-10 w-full h-full object-contain p-6 md:p-8 transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+      />
+    ) : (
+      <div class="relative z-10 w-full h-full flex items-center justify-center text-muted-foreground font-header text-3xl font-bold">
+        {product.title.charAt(0)}
+      </div>
+    )}
+
+    {/* Floating series tag — sharp corners, Scarlet left border */}
+    {product.merchSeries && (
+      <span class="product-card__series">
+        {product.merchSeries}
+      </span>
+    )}
+  </div>
+
+  {/* ── Body ── */}
+  <div class="flex flex-col flex-1 p-5 md:p-6">
+    <h3 class="font-header font-bold text-base md:text-lg leading-tight text-foreground mb-1">
+      {product.title}
+    </h3>
+    {description && (
+      <p class="body text-sm text-muted-foreground line-clamp-2 mb-4">{description}</p>
+    )}
+
+    {/* SURGE divider — Scarlet, grows on hover */}
+    <div class="surge-divider product-card__divider mt-auto mb-4" aria-hidden="true"></div>
+
+    {/* Price + CTA */}
+    <div class="flex items-center justify-between gap-3">
+      {price && (
+        <span class="product-card__price">
+          <span class="text-muted-foreground text-xs align-top mr-0.5">RM</span>{price}
+        </span>
+      )}
+      <a
+        href={whatsappUrl(inquiryMsg)}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="product-card__cta"
+        aria-label={`Inquire about ${product.title} on WhatsApp`}
+      >
+        Inquire
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="product-card__arrow">
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  /* ── Top accent: grows left→right on hover (SURGE forward motion) ── */
+  .product-card__accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: var(--color-bressel-red);
+    transition: width 350ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1));
+    z-index: 20;
+  }
+  .product-card:hover .product-card__accent,
+  .product-card:focus-within .product-card__accent {
+    width: 100%;
+  }
+
+  /* ── Image stage: subtle Scarlet radial glow for depth ── */
+  .product-card__stage {
+    background:
+      radial-gradient(circle at 50% 45%, rgba(255, 51, 31, 0.10) 0%, transparent 62%),
+      var(--color-bressel-black);
+  }
+
+  /* ── Series tag: sharp corners, Scarlet left border, floats top-left ── */
+  .product-card__series {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 15;
+    padding: 0.4rem 0.7rem 0.4rem 0.6rem;
+    background: rgba(9, 8, 8, 0.78);
+    backdrop-filter: blur(4px);
+    border-left: 2px solid var(--color-bressel-red);
+    font-family: var(--font-display);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-bressel-white);
+  }
+
+  /* ── SURGE divider: grows from 4rem → 100% on hover ── */
+  .product-card__divider {
+    width: 4rem;
+    transition: width 350ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1));
+  }
+  .product-card:hover .product-card__divider,
+  .product-card:focus-within .product-card__divider {
+    width: 100%;
+  }
+
+  /* ── Price: Neue Regrade feel, bold, with muted RM prefix ── */
+  .product-card__price {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--color-foreground);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── CTA: outline → fills Scarlet on hover (matches site button pattern) ── */
+  .product-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--color-bressel-red);
+    color: var(--color-bressel-red);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .product-card__cta:hover,
+  .product-card__cta:focus-visible {
+    background: var(--color-bressel-red);
+    color: var(--color-bressel-white);
+  }
+  /* Arrow nudges right on hover */
+  .product-card__arrow {
+    transition: transform 200ms ease;
+  }
+  .product-card__cta:hover .product-card__arrow,
+  .product-card__cta:focus-visible .product-card__arrow {
+    transform: translateX(2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card__accent,
+    .product-card__divider,
+    .product-card__arrow,
+    .product-card__cta,
+    .group:hover img {
+      transition: none;
+    }
+  }
+</style>

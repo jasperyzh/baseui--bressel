@@ -21,7 +21,7 @@ export const SOCIAL = {
 };
 
 /** GraphQL endpoint */
-export const WPGRAPHQL_ENDPOINT = import.meta.env.WPGRAPHQL_ENDPOINT || 'http://104.248.157.67/graphql';
+export const WPGRAPHQL_ENDPOINT = import.meta.env.WPGRAPHQL_ENDPOINT || 'https://cms.bresselsports.com/graphql';
 
 /** Helper: build WhatsApp URL with pre-filled message */
 export function whatsappUrl(message: string): string {

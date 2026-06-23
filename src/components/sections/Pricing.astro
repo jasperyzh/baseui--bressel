@@ -9,45 +9,58 @@ import { whatsappUrl } from '../../lib/config';
 import BresselCta from '../BresselCta.astro';
 ---
 
-<section id="pricing" class="py-24 bg-bressel-white text-bressel-black relative overflow-hidden">
-  <!-- Background: minimal court photo -->
+<section
+  id="pricing"
+  class="surface-light section-py relative overflow-hidden"
+  style="--pricing-img-opacity: 0.38; --pricing-scrim: 0.12;"
+>
+  <!-- Background: court photo. Opacity + scrim are tunable via the CSS vars above
+       on the <section> style attribute — raise --pricing-scrim to darken further. -->
   <img
     src="/assets/brandvisual--/20260402_115035.webp"
     alt=""
-    class="absolute inset-0 w-full h-full object-cover opacity-20"
+    class="absolute inset-0 w-full h-full object-cover"
+    style={`opacity: var(--pricing-img-opacity)`}
   />
+  <!-- Net Black scrim over the image so the photo recedes behind content -->
+  <div
+    class="absolute inset-0 pointer-events-none"
+    style={`background: rgba(9, 8, 8, var(--pricing-scrim))`}
+  >
+  </div>
+
   <div class="container-custom relative z-10">
 
     <!-- Section Header -->
     <div class="text-center mb-12" data-aos="fade-up">
-      <p class="caption text-muted-foreground mb-2">INVESTMENT</p>
-      <h2 class="text-bressel-black">
-        TRAINING <span class="text-bressel-red">PROGRAMS</span>
+      <p class="caption mb-2">Investment</p>
+      <h2>
+        Training <span class="text-bressel-red">programs</span>
       </h2>
     </div>
 
-    <!-- Pricing Table -->
+    <!-- Pricing Table — solid Service White card so text always has max contrast -->
     <div class="max-w-2xl mx-auto">
-      <div class="border border-[#27272a]/20 divide-y divide-bressel-zinc-800/10">
-        <div class="flex items-center justify-between px-6 py-4">
+      <div class="bg-[var(--color-surface-light)] border border-[var(--color-surface-light-border)] shadow-sm">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
           <span class="font-header font-bold uppercase tracking-wide text-sm">Individual Sessions</span>
-          <span class="font-header font-black text-lg text-bressel-red">from RM 120/session</span>
+          <span class="font-header font-bold text-lg text-bressel-red">from RM 120/session</span>
         </div>
-        <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
           <span class="font-header font-bold uppercase tracking-wide text-sm">Group Training</span>
-          <span class="font-header font-black text-lg text-bressel-red">from RM 60/session</span>
+          <span class="font-header font-bold text-lg text-bressel-red">from RM 60/session</span>
         </div>
-        <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
           <span class="font-header font-bold uppercase tracking-wide text-sm">Monthly Packages</span>
-          <span class="font-header font-black text-lg text-bressel-red">from RM 450/month</span>
+          <span class="font-header font-bold text-lg text-bressel-red">from RM 450/month</span>
         </div>
-        <div class="flex items-center justify-between px-6 py-4">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
           <span class="font-header font-bold uppercase tracking-wide text-sm">Competition Program</span>
-          <span class="font-header font-black text-lg text-bressel-red">from RM 280/session</span>
+          <span class="font-header font-bold text-lg text-bressel-red">from RM 280/session</span>
         </div>
         <div class="flex items-center justify-between px-6 py-4">
           <span class="font-header font-bold uppercase tracking-wide text-sm">Coach Certification</span>
-          <span class="font-header font-black text-lg text-bressel-red">from RM 899/course</span>
+          <span class="font-header font-bold text-lg text-bressel-red">from RM 899/course</span>
         </div>
       </div>
 

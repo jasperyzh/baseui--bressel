@@ -5,7 +5,7 @@
 // ── Configuration ──────────────────────────────────────────
 const endpoint =
   import.meta.env.WPGRAPHQL_ENDPOINT ||
-  'http://104.248.157.67/graphql'; // Default to live WP
+  'https://cms.bresselsports.com/graphql'; // Live headless WP (260623 domain go-live)
 
 // Auth for protected WordPress instances (HTTP Basic Auth)
 const wpUser = import.meta.env.WP_AUTH_USER;

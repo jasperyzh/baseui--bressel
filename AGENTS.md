@@ -18,7 +18,7 @@ This project uses the **baseui design system** with a **single-brand, dark-only*
 | KISE Score | 94% green (260614 audit) |
 | Pages | 9 (index, academy, community, shop, about, contact, blog, dynamic [slug], 404) |
 | Live URL | https://baseui--bressel.pages.dev |
-| WP Backend | http://104.248.157.67 (DO droplet, headless CMS) |
+| WP Backend | https://cms.bresselsports.com (DO droplet, headless CMS) |
 | Deploy | Cloudflare Pages (Astro SSG) |
 
 ---
@@ -27,7 +27,7 @@ This project uses the **baseui design system** with a **single-brand, dark-only*
 
 | Issue | Severity | Status |
 |-------|----------|--------|
-| **Mixed Content:** 2 shop product images blocked on HTTPS | 🔴 P0 | `fixImageUrl()` proxy gap — some paths bypass rewrite |
+| **Mixed Content:** ~~2 shop product images blocked on HTTPS~~ | ✅ P0 | RESOLVED 260623 — WP now serves HTTPS images via cms.bresselsports.com; fix-image-url.ts is a passthrough |
 | **50+ barrel `index.ts` files** in `starwind/*/` | 🟡 P1 | Both AGENTS.md say delete — still present |
 | **Footer form is `alert('Subscribed!')`** | 🟡 P1 | Fluent Forms not integrated |
 | **Docs missing DocMesh frontmatter** | 🟡 P1 | `docs/sessions/`, `docs/references/` lack frontmatter |
@@ -111,7 +111,7 @@ npm run verify:brand   # Brand compliance
 |------|---------|
 | `src/lib/wordpress.ts` | GraphQL queries: coaches, merch, events, posts, pages |
 | `src/lib/config.ts` | WhatsApp number, social links, brand email |
-| `src/lib/fix-image-url.ts` | HTTP→HTTPS image URL rewriter (temporary, demo-only) |
+| `src/lib/fix-image-url.ts` | Passthrough (since 260623 domain go-live; images serve HTTPS directly) |
 
 ## Guardrails (via `npm run verify`)
 

@@ -1,9 +1,10 @@
 /* ==================================================
-   BRESSEL™ Brand Tokens + Typography
-   Astro.js + Tailwind CSS v4 + Starwind
+   BRESSEL™ — Token registration + semantic base styles
+   Component utilities live in theme--bressel.css
    ================================================== */
 
-/* ── Self-Hosted Fonts (woff2) ── */
+/* ── Self-Hosted Fonts (woff2, latin-subset) ── */
+/* Neue Regrade — variable font, covers Regular→Black (400–900) */
 @font-face {
   font-family: "Neue Regrade";
   font-style: normal;
@@ -12,6 +13,7 @@
   src: url("/assets/fonts/Neue_Regrade_Variable.woff2") format("woff2");
 }
 
+/* Avenir Next — body text. Regular + Bold (emphasis per brand guidelines) */
 @font-face {
   font-family: "Avenir Next";
   font-style: normal;
@@ -19,13 +21,35 @@
   font-display: swap;
   src: url("/assets/fonts/AvenirNextWorld-Regular.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Avenir Next";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/AvenirNextWorld-Bold.woff2") format("woff2");
+}
 
+/* Barlow Condensed — headers, labels, UI. Medium + SemiBold + Bold */
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/assets/fonts/BarlowCondensed-Medium.woff2") format("woff2");
+}
 @font-face {
   font-family: "Barlow Condensed";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url("/assets/fonts/BarlowCondensed-SemiBold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/assets/fonts/BarlowCondensed-Bold.woff2") format("woff2");
 }
 
 @import "tailwindcss";
@@ -35,7 +59,6 @@
 
 @theme {
   /* ── BRESSEL Brand Colors ── */
-
   --color-bressel-black: #090808;
   --color-bressel-grey: #d9d9d9;
   --color-bressel-red: #ff331f;
@@ -44,11 +67,23 @@
   --color-bressel-darkred: #e02d1b;
   --color-bressel-white: #fbfbff;
   --color-bressel-black-soft: #141313;
-  --color-ash-haze: #a1a1aa;
+  /* NOTE: brand "Ash Haze" is #D9D9D9 (light grey, mapped to --color-bressel-grey above).
+     This token is muted text zinc — renamed to avoid brand-spec confusion. */
+  --color-muted-text: #a1a1aa;
+  --color-ash-haze: #a1a1aa; /* deprecated alias — use --color-muted-text */
   --color-bressel-zinc-700: #3f3f46;
   --color-bressel-zinc-800: #27272a;
 
-  /* ── Starwind Semantic Token Overrides ── */
+  /* ── Light Surface System (brand: "Net Black AND Service White carry the surfaces") ── */
+  /* Use --color-surface-light for light sections. Text on it: Net Black / muted-text-dark.
+     Helper tints are brand-derived (Net Black + Service White only) via color-mix. */
+  --color-surface-light: var(--color-bressel-white);            /* Service White */
+  --color-surface-light-foreground: var(--color-bressel-black); /* Net Black on light */
+  --color-surface-light-muted: color-mix(in srgb, var(--color-bressel-black) 55%, var(--color-bressel-white));  /* AA on Service White */
+  --color-surface-light-border: color-mix(in srgb, var(--color-bressel-black) 12%, var(--color-bressel-white));
+  --color-surface-light-card: color-mix(in srgb, var(--color-bressel-black) 4%, var(--color-bressel-white));
+
+  /* ── Starwind Semantic Tokens ── */
   --color-primary: var(--color-bressel-red);
   --color-primary-foreground: var(--color-bressel-white);
   --color-background: var(--color-bressel-black);
@@ -57,11 +92,11 @@
   --color-card-foreground: var(--color-foreground);
   --color-popover: var(--color-bressel-black-soft);
   --color-popover-foreground: var(--color-foreground);
-  --color-secondary: #27272a;
+  --color-secondary: var(--color-bressel-zinc-800);
   --color-secondary-foreground: var(--color-bressel-grey);
   --color-muted: rgba(255, 255, 255, 0.05);
-  --color-muted-foreground: #a1a1aa;
-  --color-accent: #27272a;
+  --color-muted-foreground: var(--color-muted-text);
+  --color-accent: var(--color-bressel-zinc-800);
   --color-accent-foreground: var(--color-bressel-white);
   --color-destructive: var(--color-bressel-red);
   --color-destructive-foreground: var(--color-bressel-white);
@@ -73,10 +108,10 @@
   --color-warning-foreground: var(--color-amber-950);
   --color-error: var(--color-red-700);
   --color-error-foreground: var(--color-neutral-50);
-  --color-border: #27272a;
+  --color-border: var(--color-bressel-zinc-800);
   --color-input: rgba(255, 255, 255, 0.1);
   --color-ring: var(--color-bressel-red);
-  --color-outline: #52525b;
+  --color-outline: var(--color-bressel-zinc-700);
   --color-sidebar: var(--color-background);
   --color-sidebar-foreground: var(--color-foreground);
   --color-sidebar-accent: var(--color-muted);
@@ -86,7 +121,7 @@
   --color-sidebar-primary: var(--color-primary);
   --color-sidebar-primary-foreground: var(--color-primary-foreground);
 
-  /* ── Typography (Brand Guidelines: Section 4.3) ── */
+  /* ── Typography ── */
   --font-heading: "Neue Regrade", sans-serif;
   --font-display: "Barlow Condensed", sans-serif;
   --font-body: "Avenir Next", sans-serif;
@@ -94,7 +129,7 @@
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", Courier New, monospace;
 
-  /* ── Fluid Typography (clamp-based, responsive at all viewports) ── */
+  /* ── Fluid Typography ── */
   --text-fluid-xs: clamp(0.75rem, 1vw, 0.8rem);
   --text-fluid-sm: clamp(0.875rem, 1.5vw, 0.95rem);
   --text-fluid-base: clamp(1rem, 2vw, 1.125rem);
@@ -106,21 +141,37 @@
   --text-fluid-5xl: clamp(3rem, 8vw, 4rem);
   --text-fluid-6xl: clamp(3.75rem, 10vw, 5rem);
 
-  /* ── Layout Tokens ── */
+  /* ── Layout ── */
   --container-max: 1140px;
   --container-sm: 768px;
   --space: 1.5rem;
-  --section-py: clamp(4rem, 8vw, 8rem);
-  --section-px: 1rem;
+  --section-py: clamp(5rem, 10vw, 9rem);    /* generous breathing space per brand */
+  --section-py-sm: clamp(3.5rem, 6vw, 6rem);
+  --section-px: clamp(1.25rem, 4vw, 2rem);  /* wider side gutters for calm rhythm */
+  --content-gap: clamp(2.5rem, 5vw, 4rem);  /* vertical gap between content blocks */
   --header-height: 3.5rem;
   --sidebar-width: 16rem;
+  --content-max: 80rem;
 
-  /* ── Micro Sizes (for ticker, captions, section labels) ── */
+  /* ── Z-Index Scale ── */
+  --z-base: 10;
+  --z-sticky: 20;
+  --z-sidebar: 30;
+  --z-header: 40;
+
+  /* ── Motion ── */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* ── Micro Sizes ── */
   --text-xxs: 0.625rem;
   --text-3xs: 0.5rem;
   --text-11: 0.6875rem;
 
-  /* ── Radius Scale (Brand rule: sharp corners) ── */
+  /* ── Radius (sharp corners per brand) ── */
   --radius: 0px;
   --radius-xs: 0px;
   --radius-sm: 0px;
@@ -130,11 +181,15 @@
   --radius-2xl: 0px;
   --radius-3xl: 0px;
 
-  /* ── Font Weights (for heading style references) ── */
+  /* ── Font Weights (brand: Bold/Semibold for headlines, not Black) ── */
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-black: 900;
+  --font-weight-heading: 700;   /* Neue Regrade Bold — brand headline weight */
+  --font-weight-heading-sub: 600; /* Neue Regrade Semibold — secondary headlines */
 
-  /* ── Letter Spacing (brand-aligned) ── */
+  /* ── Letter Spacing ── */
   --letter-spacing-wide: 0.1em;
   --letter-spacing-wider: 0.15em;
   --letter-spacing-widest: 0.25em;
@@ -146,28 +201,23 @@
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
   @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--starwind-accordion-content-height);
-    }
+    from { height: 0; }
+    to { height: var(--starwind-accordion-content-height); }
   }
 
   @keyframes accordion-up {
-    from {
-      height: var(--starwind-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
+    from { height: var(--starwind-accordion-content-height); }
+    to { height: 0; }
   }
 }
 
-/* ── Base styles ── */
 @layer base {
+  * {
+    @apply border-border outline-outline/50;
+  }
+
   html {
-    background-color: var(--color-bressel-black);
+    background-color: var(--color-background);
     scroll-behavior: smooth;
   }
 
@@ -175,11 +225,9 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
     background: var(--color-background);
     color: var(--color-foreground);
-
-    font-size: 1.125rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
 
@@ -187,107 +235,80 @@
     @apply cursor-pointer;
   }
 
-  /* ── Headings (Neue Regrade — brand-aligned) ── */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* Headings — Neue Regrade, sentence case per brand guidelines (p.676).
+     Bold for headlines, no italic (italic is reserved for the logo wordmark).
+     Line-height 100–120%, tight tracking −1% to −2%. */
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     margin-bottom: 1rem;
   }
 
   h1 {
-    font-weight: var(--font-weight-black);
-    font-style: italic;
-    text-transform: uppercase;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+    font-weight: var(--font-weight-heading);
+    text-transform: none;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
     color: var(--color-foreground);
     font-size: clamp(2.5rem, 7vw, 6rem);
   }
 
   h2 {
-    font-weight: var(--font-weight-black);
-    font-style: italic;
+    font-weight: var(--font-weight-heading);
     text-transform: none;
-    line-height: 1;
-    letter-spacing: -0.01em;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
     color: var(--color-foreground);
     font-size: clamp(1.75rem, 4vw, 4.5rem);
   }
 
   h3 {
-    font-weight: var(--font-weight-black);
-    font-style: italic;
+    font-weight: var(--font-weight-heading-sub);
     text-transform: none;
-    line-height: 1.1;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     color: var(--color-foreground);
     font-size: clamp(1.25rem, 3vw, 2.25rem);
   }
 
-  h4 {
+  h4, h5, h6 {
     font-weight: var(--font-weight-bold);
     line-height: 1.2;
   }
 
-  h5 {
-    font-weight: var(--font-weight-bold);
-    line-height: 1.2;
-  }
-
-  h6 {
-    font-weight: var(--font-weight-bold);
-    line-height: 1.2;
-  }
-
-  /* ── Body Text (Avenir Next) ── */
   p {
     font-family: var(--font-body);
-    line-height: 1.625;
+    line-height: 1.5;
     margin-bottom: 1rem;
   }
 
-  /* ── Links ── */
-  a {
+  a:where(:not([data-slot="button"]):not([role="button"])) {
     color: var(--color-primary);
-    transition: color 0.2s ease;
+    transition: color var(--duration-fast) var(--ease-standard);
   }
 
-  a:hover {
+  a:where(:not([data-slot="button"]):not([role="button"])):hover {
     text-decoration: underline;
   }
 
-  /* ── Horizontal Rules ── */
   hr {
     border: none;
     border-top: 1px solid var(--color-border);
     margin: 1.5rem 0;
   }
 
-  /* ── Code ── */
   code {
     font-size: 0.875em;
     padding: 0.15em 0.4em;
-    border-radius: 0.375rem;
+    border-radius: var(--radius-sm);
     background: var(--color-muted);
     border: 1px solid var(--color-border);
-    font-family:
-      ui-monospace,
-      SFMono-Regular,
-      Menlo,
-      Monaco,
-      Consolas,
-      "Liberation Mono",
-      Courier New,
-      monospace;
+    font-family: var(--font-mono);
   }
 
   pre {
     margin: 1.5rem 0;
     padding: 1.25rem;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-lg);
     background: var(--color-foreground);
     color: var(--color-background);
     overflow-x: auto;
@@ -303,7 +324,6 @@
     color: inherit;
   }
 
-  /* ── Blockquotes ── */
   blockquote {
     border-left: 3px solid var(--color-accent);
     padding-left: 1.25rem;
@@ -312,7 +332,6 @@
     font-style: italic;
   }
 
-  /* ── Tables ── */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -338,33 +357,24 @@
     border-bottom: none;
   }
 
-  /* ── Lists (global — not scoped to article) ── */
-  ul,
-  ol {
+  ul, ol {
     padding-left: 1.5rem;
     margin-bottom: 1rem;
   }
 
-  ul {
-    list-style-type: disc;
-  }
-
-  ol {
-    list-style-type: decimal;
-  }
+  ul { list-style-type: disc; }
+  ol { list-style-type: decimal; }
 
   li {
     margin-bottom: 0.25rem;
   }
 
-  /* ── Images ── */
   img {
     max-width: 100%;
     height: auto;
     border-radius: var(--radius-md);
   }
 
-  /* ── Figures ── */
   figure {
     margin: 1.5rem 0;
   }
@@ -375,24 +385,20 @@
     text-align: center;
     margin-top: 0.5rem;
   }
-
-  * {
-    @apply border-border outline-outline/50;
-  }
 }
 
-/* ── Scrollbar (dark theme) ── */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bressel-black);
+  background: var(--color-background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: var(--color-border);
   border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+  background: var(--color-muted-foreground);
 }
