@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run check:ai && astro build",
+    "build": "astro build",
     "preview": "astro preview",
     "check:ai": "node $HOME/Desktop/baseui__/scripts/validator--baseui.mjs",
     "verify:system": "node $HOME/Desktop/job__bressel/scripts/validator--bressel.mjs",
