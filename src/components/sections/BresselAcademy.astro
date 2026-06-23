@@ -1,87 +1,309 @@
 ---
 /**
- * Find Us - Split layout (locations list + image grid)
- * Locations: Malaysia / Philippines / Singapore (WhatsApp links)
+ * Find Us — Split layout: location switcher + full-bleed court images.
+ *
+ * Click a location to swap its image set. Active location is highlighted with
+ * a Scarlet SURGE accent; the image grid crossfades between sets.
+ *
+ * Dark surface (Net Black). Sentence-case location names, Barlow Condensed
+ * overline. Images at full saturation with a bottom scrim.
  */
 import { whatsappUrl } from '../../lib/config';
-const locations = [
+
+type Loc = {
+  name: string;
+  country: string;
+  waMessage: string;
+  images: { src: string; alt: string; span: string }[];
+};
+
+const locations: Loc[] = [
   {
-    name: "SELANGOR",
-    country: "MALAYSIA",
+    name: "Selangor",
+    country: "Malaysia",
     waMessage: "Hi BRESSEL! I'd like to know more about the Selangor facility.",
+    images: [
+      { src: "/assets/brandvisual--/20260227_195629.webp", alt: "BRESSEL court in Selangor", span: "col-span-1 row-span-2" },
+      { src: "/assets/brandvisual--/20260402_115248.webp", alt: "BRESSEL court detail, Selangor", span: "col-span-1" },
+      { src: "/assets/brandvisual--/20260402_120037.webp", alt: "BRESSEL court action, Selangor", span: "col-span-1" },
+    ],
   },
   {
-    name: "LANGKAWI",
-    country: "MALAYSIA",
+    name: "Langkawi",
+    country: "Malaysia",
     waMessage: "Hi BRESSEL! I'd like to know more about the Langkawi facility.",
+    images: [
+      { src: "/assets/brandvisual--/20260402_115214.webp", alt: "BRESSEL court in Langkawi", span: "col-span-1 row-span-2" },
+      { src: "/assets/brandvisual--/20260402_115302.webp", alt: "BRESSEL court detail, Langkawi", span: "col-span-1" },
+      { src: "/assets/brandvisual--/20260402_115921.webp", alt: "BRESSEL court action, Langkawi", span: "col-span-1" },
+    ],
   },
   {
-    name: "JAKARTA",
-    country: "INDONESIA",
+    name: "Jakarta",
+    country: "Indonesia",
     waMessage: "Hi BRESSEL! I'd like to know more about the Jakarta facility.",
+    images: [
+      { src: "/assets/brandvisual--/20260402_115052.webp", alt: "BRESSEL court in Jakarta", span: "col-span-1 row-span-2" },
+      { src: "/assets/brandvisual--/20260402_115141.webp", alt: "BRESSEL court detail, Jakarta", span: "col-span-1" },
+      { src: "/assets/brandvisual--/20260402_120136.webp", alt: "BRESSEL court action, Jakarta", span: "col-span-1" },
+    ],
   },
 ];
 
-const images = [
-  { id: "court-1", src: "/assets/brandvisual--/20260227_195629.webp", alt: "BRESSEL Court Malaysia", span: "col-span-1 row-span-2" },
-  { id: "court-2", src: "/assets/brandvisual--/20260402_115248.webp", alt: "BRESSEL Court", span: "col-span-1" },
-  { id: "court-3", src: "/assets/brandvisual--/20260402_120037.webp", alt: "BRESSEL Court", span: "col-span-1" },
-];
-
-const encode = (s: string) => encodeURIComponent(s);
+// SSR: render every location's image set; JS toggles visibility + crossfades.
+// First location is active by default.
 ---
 
-<section id="locations" class="surface-light section-py relative overflow-hidden">
+<section id="locations" class="bg-bressel-black section-py relative overflow-hidden">
   <div class="container-custom">
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-center">
+    <!-- Header -->
+    <div class="mb-14" data-aos="fade-up">
+      <p class="caption mb-3">Locations</p>
+      <h2>
+        Find <span class="text-bressel-red">us</span>
+      </h2>
+      <div class="surge-divider mt-5"></div>
+      <p class="body-lg mt-6 max-w-md text-bressel-white/70">
+        Selangor, Langkawi, Jakarta — grab a court wherever you play.
+      </p>
+    </div>
 
-      <!-- Left: Info + Locations -->
-      <div data-aos="fade-right">
-        <div class="surge-divider mb-6"></div>
+    <!-- Layout: Locations list left, Images right -->
+    <div class="grid grid-cols-1 lg:grid-cols-7 gap-10 lg:gap-16 items-start">
 
-        <h2>
-          Find <span class="text-bressel-red">us</span>
-        </h2>
+      <!-- Left: Location switcher -->
+      <div class="lg:col-span-3" data-aos="fade-right">
+        <ul class="location-list space-y-0 list-none p-0 m-0" role="tablist" aria-label="BRESSEL locations">
+          {locations.map((loc, i) => (
+            <li class="location-item" data-location-index={i} role="tab" tabindex="0" aria-selected={i === 0 ? "true" : "false"}>
+              {/* SURGE accent bar — grows on active */}
+              <span class="location-item__accent" aria-hidden="true"></span>
+              <button
+                type="button"
+                class="location-item__btn group no-underline"
+                data-location-trigger={i}
+              >
+                <span class="location-item__name">{loc.name}</span>
+                <span class="location-item__country">{loc.country}</span>
+              </button>
+              {/* WhatsApp inquiry (separate, doesn't switch) */}
+              <a
+                href={whatsappUrl(loc.waMessage)}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="location-item__inquire"
+                aria-label={`Inquire about ${loc.name} on WhatsApp`}
+              >
+                Inquire
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        <p class="body-lg mb-10">
-          Selangor, Langkawi, Jakarta — grab a court wherever you play.
-        </p>
-
-        <!-- Locations list -->
-        <div class="space-y-4">
-          {locations.map((loc) => (
-            <a
-              href={whatsappUrl(loc.waMessage)}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex items-center justify-between py-3 border-b border-border group no-underline"
+      <!-- Right: Image grid (one set per location, crossfaded) -->
+      <div class="lg:col-span-4" data-aos="fade-left" data-aos-delay="150">
+        <div class="location-images relative">
+          {locations.map((loc, i) => (
+            <div
+              class={`location-images__set ${i === 0 ? "is-active" : ""}`}
+              data-location-set={i}
+              aria-hidden={i === 0 ? "false" : "true"}
             >
-              <span class="font-header font-bold text-xs uppercase tracking-wide group-hover:text-bressel-red transition-colors">{loc.name}</span>
-              <span class="text-xxs uppercase tracking-wider text-muted-foreground">{loc.country}</span>
-              {/* <span class="text-bressel-red font-header font-bold text-xxs uppercase tracking-wide">
-                Inquire via WhatsApp →
-              </span> */}
-            </a>
+              <div class="grid grid-cols-2 gap-3">
+                {loc.images.map((img, j) => (
+                  <div class={`${img.span} relative overflow-hidden`}>
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      class="w-full h-full object-cover block"
+                      loading={i === 0 && j === 0 ? "eager" : "lazy"}
+                    />
+                    <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent pointer-events-none"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </div>
 
-      <!-- Right: Image Grid -->
-      <div class="grid grid-cols-2 col-span-2 gap-x-2 " data-aos="fade-left" data-aos-delay="150">
-        {images.map((img) => (
-          <div class={`${img.span} premium-card`}>
-            <img
-              src={img.src}
-              alt={img.alt}
-              class="w-full h-full object-cover"
-              data-swap={img.id}
-            />
-          </div>
-        ))}
-      </div>
-
     </div>
-
   </div>
 </section>
+
+<style>
+  /* ── Location list items ── */
+  .location-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* SURGE accent: left bar, grows top→bottom when active */
+  .location-item__accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: var(--color-bressel-red);
+    transition: width 300ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1));
+  }
+  .location-item.is-active .location-item__accent {
+    width: 3px;
+  }
+
+  .location-item__btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.4rem 1.25rem 1.4rem 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+  }
+
+  .location-item__name {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    color: rgba(251, 251, 255, 0.9);
+    transition: color 200ms ease, transform 300ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1));
+  }
+  .location-item.is-active .location-item__name {
+    color: var(--color-bressel-white);
+    transform: translateX(0.4rem);
+  }
+  .location-item:hover .location-item__name,
+  .location-item:focus-within .location-item__name {
+    color: var(--color-bressel-red);
+  }
+  .location-item.is-active:hover .location-item__name,
+  .location-item.is-active:focus-within .location-item__name {
+    color: var(--color-bressel-red);
+  }
+
+  .location-item__country {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(251, 251, 255, 0.4);
+  }
+
+  /* Inquire link — outline → fills Scarlet on hover (matches product CTA) */
+  .location-item__inquire {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.7rem;
+    margin-right: 1.25rem;
+    border: 1px solid rgba(255, 51, 31, 0.5);
+    color: var(--color-bressel-red);
+    font-family: var(--font-display);
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateX(0.5rem);
+    transition: opacity 250ms ease, transform 250ms ease, background-color 200ms ease, color 200ms ease;
+  }
+  .location-item:hover .location-item__inquire,
+  .location-item.is-active .location-item__inquire,
+  .location-item:focus-within .location-item__inquire {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .location-item__inquire:hover {
+    background: var(--color-bressel-red);
+    color: var(--color-bressel-white);
+  }
+
+  /* ── Image sets: stacked, crossfade on switch ── */
+  .location-images { position: relative; }
+  .location-images__set {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.02);
+    transition:
+      opacity 500ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1)),
+      transform 600ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1)),
+      visibility 0s 600ms;
+  }
+  .location-images__set.is-active {
+    position: relative;          /* active set defines the container height */
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition:
+      opacity 500ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1)),
+      transform 600ms var(--ease-emphasized, cubic-bezier(0.2, 0, 0, 1)),
+      visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .location-item__accent,
+    .location-item__name,
+    .location-item__inquire,
+    .location-images__set {
+      transition: none;
+    }
+    .location-images__set { transform: none; }
+  }
+</style>
+
+<script>
+  // Location switcher — click or keyboard activates a location, crossfades images.
+  const items = document.querySelectorAll<HTMLElement>('.location-item');
+  const sets = document.querySelectorAll<HTMLElement>('.location-images__set');
+
+  function activate(index: number) {
+    items.forEach((item, i) => {
+      const active = i === index;
+      item.classList.toggle('is-active', active);
+      item.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    sets.forEach((set, i) => {
+      const active = i === index;
+      set.classList.toggle('is-active', active);
+      set.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+  }
+
+  items.forEach((item, i) => {
+    const trigger = item.querySelector<HTMLButtonElement>('[data-location-trigger]');
+    trigger?.addEventListener('click', (e) => {
+      e.preventDefault();
+      activate(i);
+    });
+    // Keyboard support (Enter / Space on the tab)
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activate(i);
+      }
+      // Arrow keys to move between locations
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        activate((i + 1) % items.length);
+        (items[(i + 1) % items.length] as HTMLElement).focus();
+      }
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        activate((i - 1 + items.length) % items.length);
+        (items[(i - 1 + items.length) as HTMLElement].focus());
+      }
+    });
+  });
+</script>

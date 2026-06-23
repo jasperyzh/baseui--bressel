@@ -1,0 +1,80 @@
+---
+/**
+ * CaseToggle — dev/design-comparison tool.
+ *
+ * Lets the client flip all headings between brand-default sentence case
+ * and ALL CAPS to compare designs. Persists in localStorage.
+ *
+ * NOTE: This site is static (SSG), so URL params can't affect server-side
+ * rendering. The button is always in the DOM but hidden by default; client
+ * JS shows it when ?toggle=1 or ?design=1 is present, or when localStorage
+ * has it enabled. Keeps the UI clean for real visitors.
+ *
+ * Does NOT touch any heading markup — only adds/removes one class on <html>.
+ */
+---
+
+<button
+  id="bressel-case-toggle"
+  type="button"
+  aria-pressed="false"
+  title="Toggle heading case (sentence / ALL CAPS)"
+  class="fixed bottom-4 right-4 z-[100] hidden md:inline-flex items-center gap-2 px-4 py-2 bg-bressel-black/90 border border-bressel-red text-bressel-white font-header font-bold text-xs uppercase tracking-wider hover:bg-bressel-red transition-colors backdrop-blur-md"
+  style="display:none;"
+>
+  Aa
+  <span class="case-toggle__label">Caps</span>
+</button>
+
+<style is:global>
+  /* When enabled, all headings go uppercase. Scoped to the toggle class on
+     <html> so it never affects the default experience. */
+  html.bressel-caps h1,
+  html.bressel-caps h2,
+  html.bressel-caps h3,
+  html.bressel-caps h4,
+  html.bressel-caps h5,
+  html.bressel-caps h6,
+  html.bressel-caps .heading-xl,
+  html.bressel-caps .heading-lg,
+  html.bressel-caps .heading-md,
+  html.bressel-caps .quote-text {
+    text-transform: uppercase;
+  }
+</style>
+
+<script>
+  (function () {
+    const btn = document.getElementById('bressel-case-toggle');
+    if (!btn) return;
+
+    const KEY = 'bressel-caps';
+    const params = new URLSearchParams(window.location.search);
+    const hasToggleParam = params.has('toggle') || params.has('design');
+
+    // Restore persisted caps state regardless (so a returning visitor keeps it).
+    let stored = '0';
+    try { stored = localStorage.getItem(KEY) ?? '0'; } catch {}
+
+    const apply = (on: boolean) => {
+      document.documentElement.classList.toggle('bressel-caps', on);
+      btn.setAttribute('aria-pressed', String(on));
+      const label = btn.querySelector('.case-toggle__label');
+      if (label) label.textContent = on ? 'Caps ON' : 'Caps';
+      try { localStorage.setItem(KEY, on ? '1' : '0'); } catch {}
+    };
+
+    // Show the button only when ?toggle=1 / ?design=1 is present, OR the
+    // visitor previously enabled caps (so they can turn it off again).
+    if (hasToggleParam || stored === '1') {
+      btn.style.display = '';
+    }
+
+    // Apply persisted caps state.
+    apply(stored === '1');
+
+    btn.addEventListener('click', () => {
+      apply(!document.documentElement.classList.contains('bressel-caps'));
+    });
+  })();
+</script>

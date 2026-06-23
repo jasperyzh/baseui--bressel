@@ -274,14 +274,21 @@
 .halo-accent::after {
   content: "";
   position: absolute;
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
   border-radius: 50%;
   border: 1px solid rgba(255, 51, 31, 0.25);
-  top: -0.5rem;
-  right: -0.5rem;
+  /* Center the ring behind the stat block */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   pointer-events: none;
   opacity: 0.6;
+  z-index: 0;
+}
+.halo-accent > * {
+  position: relative;
+  z-index: 1;
 }
 
 .halo-trim {

@@ -44,6 +44,13 @@ export interface Merch {
   featuredImage: FeaturedImage | null;
 }
 
+/** A single homepage ticker announcement item (from CMB2 options page). */
+export interface TickerItem {
+  label: string;
+  value: string;
+  isPrimary: boolean;
+}
+
 export interface WPEvent {
   id: string;
   title: string;
@@ -386,6 +393,36 @@ export async function getAllPosts(): Promise<
     return data.posts.nodes;
   } catch (e) {
     console.warn('[wordpress] getAllPosts failed; returning empty list.', e);
+    return [];
+  }
+}
+
+// ── Queries: Ticker (site-wide announcements) ─────────────
+
+/**
+ * Fetch homepage ticker items from the CMB2 options page.
+ * Returns [] if WP is unreachable or no items are configured — callers
+ * should fall back to hardcoded defaults so the ticker is never blank.
+ */
+export async function getTickerItems(): Promise<TickerItem[]> {
+  try {
+    const data = await fetchWP<{ tickerItems: { label: string; value: string; isPrimary: string }[] | null }>(`
+      query GetTickerItems {
+        tickerItems {
+          label
+          value
+          isPrimary
+        }
+      }
+    `);
+    if (!data?.tickerItems) return [];
+    return data.tickerItems.map((t) => ({
+      label: t.label ?? '',
+      value: t.value ?? '',
+      isPrimary: t.isPrimary === 'on',
+    }));
+  } catch (e) {
+    console.warn('[wordpress] getTickerItems failed; returning empty list.', e);
     return [];
   }
 }

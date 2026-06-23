@@ -1,75 +1,78 @@
 ---
 /**
- * Pricing - Rough overview with PDF download
- * Brand voice: Transparent, human, "from" pricing
- * Client direction: Show rough pricing on landing page, offer PDF for details
+ * Pricing — Training Programs
+ *
+ * Clean dark-surface pricing table. No photo, no opacity hack.
+ * Net Black background. Red prices pop. White text breathes.
+ * SURGE accent between header and data. Confident, premium, readable.
  */
 import { Icon } from 'astro-icon/components';
 import { whatsappUrl } from '../../lib/config';
 import BresselCta from '../BresselCta.astro';
+
+const programs = [
+  { label: 'Individual Sessions',  price: 'from RM 120/session' },
+  { label: 'Group Training',       price: 'from RM 60/session' },
+  { label: 'Monthly Packages',     price: 'from RM 450/month' },
+  { label: 'Competition Program',  price: 'from RM 280/session' },
+  { label: 'Coach Certification',  price: 'from RM 899/course' },
+];
 ---
 
 <section
   id="pricing"
-  class="surface-light section-py relative overflow-hidden"
-  style="--pricing-img-opacity: 0.38; --pricing-scrim: 0.12;"
+  class="bg-bressel-black section-py relative overflow-hidden"
+  style="--pricing-img-opacity: 0.82; --pricing-scrim: 0.45;"
 >
-  <!-- Background: court photo. Opacity + scrim are tunable via the CSS vars above
-       on the <section> style attribute — raise --pricing-scrim to darken further. -->
+  <!-- Background court photo + Net Black scrim for text contrast.
+       Tunable via the CSS vars above: raise --pricing-scrim to darken further. -->
   <img
-    src="/assets/brandvisual--/20260402_115035.webp"
+    src="/assets/brandvisual--/20260402_115214.webp"
     alt=""
+    aria-hidden="true"
     class="absolute inset-0 w-full h-full object-cover"
     style={`opacity: var(--pricing-img-opacity)`}
   />
-  <!-- Net Black scrim over the image so the photo recedes behind content -->
   <div
     class="absolute inset-0 pointer-events-none"
-    style={`background: rgba(9, 8, 8, var(--pricing-scrim))`}
+    style={`background: linear-gradient(to bottom, rgba(9,8,8,var(--pricing-scrim)) 0%, rgba(9,8,8,calc(var(--pricing-scrim) * 0.8)) 50%, rgba(9,8,8,var(--pricing-scrim)) 100%)`}
   >
   </div>
 
   <div class="container-custom relative z-10">
 
-    <!-- Section Header -->
-    <div class="text-center mb-12" data-aos="fade-up">
-      <p class="caption mb-2">Investment</p>
+    <!-- Header -->
+    <div class="text-center mb-14" data-aos="fade-up">
+      <p class="caption mb-3">Investment</p>
       <h2>
         Training <span class="text-bressel-red">programs</span>
       </h2>
+      <div class="surge-divider mx-auto mt-5"></div>
     </div>
 
-    <!-- Pricing Table — solid Service White card so text always has max contrast -->
-    <div class="max-w-2xl mx-auto">
-      <div class="bg-[var(--color-surface-light)] border border-[var(--color-surface-light-border)] shadow-sm">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
-          <span class="font-header font-bold uppercase tracking-wide text-sm">Individual Sessions</span>
-          <span class="font-header font-bold text-lg text-bressel-red">from RM 120/session</span>
+    <!-- Table -->
+    <div class="max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="100">
+
+      {programs.map((item, i) => (
+        <div class={`
+          flex items-center justify-between py-5
+          ${i < programs.length - 1 ? 'border-b border-bressel-white/10' : ''}
+        `}>
+          <span class="font-body text-bressel-white/80 text-sm md:text-base">
+            {item.label}
+          </span>
+          <span class="font-header font-bold text-base md:text-lg text-bressel-red whitespace-nowrap ml-6">
+            {item.price}
+          </span>
         </div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
-          <span class="font-header font-bold uppercase tracking-wide text-sm">Group Training</span>
-          <span class="font-header font-bold text-lg text-bressel-red">from RM 60/session</span>
-        </div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
-          <span class="font-header font-bold uppercase tracking-wide text-sm">Monthly Packages</span>
-          <span class="font-header font-bold text-lg text-bressel-red">from RM 450/month</span>
-        </div>
-        <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--color-surface-light-border)]">
-          <span class="font-header font-bold uppercase tracking-wide text-sm">Competition Program</span>
-          <span class="font-header font-bold text-lg text-bressel-red">from RM 280/session</span>
-        </div>
-        <div class="flex items-center justify-between px-6 py-4">
-          <span class="font-header font-bold uppercase tracking-wide text-sm">Coach Certification</span>
-          <span class="font-header font-bold text-lg text-bressel-red">from RM 899/course</span>
-        </div>
-      </div>
+      ))}
 
       <!-- Disclaimer -->
-      <p class="body text-sm text-muted-foreground mt-4 mb-8 text-center">
+      <p class="body text-sm text-bressel-white/40 mt-6 mb-10 text-center">
         Pricing varies based on level, schedule, and program length.
       </p>
 
-      <!-- PDF Download & WhatsApp CTA -->
+      <!-- CTAs -->
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <BresselCta href="/assets/pricing-bressel.pdf" variant="primary" download={true}>
           <Icon name="download" size={14} />
@@ -80,13 +83,13 @@ import BresselCta from '../BresselCta.astro';
           target="_blank"
           rel="noopener noreferrer"
           variant="outline"
-          class="border-bressel-black text-bressel-black hover:bg-bressel-black hover:text-bressel-white"
+          class="border-bressel-white/30 text-bressel-white hover:border-bressel-red hover:text-bressel-red"
         >
           <Icon name="whatsapp" size={14} />
           Ask on WhatsApp
         </BresselCta>
       </div>
-    </div>
 
+    </div>
   </div>
 </section>

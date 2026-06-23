@@ -4,7 +4,7 @@
  * Brand voice: "World-class padel. Built around people."
  */
 import { Icon } from 'astro-icon/components';
-import { whatsappUrl, BRAND_EMAIL } from '../lib/config';
+import { whatsappUrl, BRAND_EMAIL, SOCIAL } from '../lib/config';
 ---
 
 <footer class="site-footer noise">
@@ -22,12 +22,12 @@ import { whatsappUrl, BRAND_EMAIL } from '../lib/config';
           Coaching, games, community nights, and the kind of sessions that leave dust on your shoes.
         </p>
         <div class="site-footer__socials">
-          <a href="#" aria-label="Instagram" class="site-footer__icon-link">
+          <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="site-footer__icon-link">
             <Icon name="instagram" size={18} />
           </a>
-          <a href="#" aria-label="YouTube" class="site-footer__icon-link">
+          <!-- <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" class="site-footer__icon-link">
             <Icon name="youtube" size={18} />
-          </a>
+          </a> -->
           <a href={whatsappUrl("Hi BRESSEL! I'd like to get in touch.")} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="site-footer__icon-link">
             <Icon name="whatsapp" size={18} />
           </a>

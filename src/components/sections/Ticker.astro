@@ -1,105 +1,78 @@
 ---
 /**
- * Ticker — Scrolling news bar with seamless infinite loop.
+ * Ticker — Scrolling announcement bar with seamless infinite loop.
  *
- * How it works:
- *   - Duplicate the item list so the track is exactly 2× the content.
- *   - Animate translateX from 0 → -50% (exactly one set of items).
- *   - At 50%, the duplicated items align perfectly with the originals → seamless wrap.
+ * Data source: WordPress CMB2 options page → getTickerItems().
+ * Callers should pass CMS items; the hardcoded array below is a fallback so
+ * the ticker is never blank when WP is unreachable or no items are set.
  *
- * Variants:
+ * How the seamless loop works:
+ *   - Render one set of items, then duplicate it enough times that one set
+ *     overflows the viewport (≥2 copies; more if items are short/few).
+ *   - Animate translateX 0 → -50%. At -50% the duplicated sets align with
+ *     the originals → seamless wrap.
+ *
+ * Variants (wrapper only — track markup is shared):
  *   variant="default" — edge-to-edge bar with top/bottom borders
  *   variant="fade"    — transparent bg + faded edges, for mid-page use
  *   variant="bare"    — no borders, no bg; fade mask only
  *
  * Props:
- *   items: TickerItem[]
+ *   items?: TickerItem[]
  *   variant?: "default" | "fade" | "bare"
- *   speed?: number  — seconds for one full loop (default 40)
+ *   loopSeconds?: number — seconds for one full loop (default 55)
  */
-interface TickerItem {
+export interface TickerItem {
   label: string;
   value: string;
-  labelColor?: "muted" | "primary";
+  isPrimary?: boolean;
 }
 
 interface Props {
   items?: TickerItem[];
   variant?: "default" | "fade" | "bare";
-  speed?: number;
+  loopSeconds?: number;
 }
 
 const {
   items = [
-    { label: "UPCOMING:", value: "MALAYSIA OPEN QUALIFIERS", labelColor: "muted" },
-    { label: "EVENT:", value: "BRESSEL JUNIOR PADEL CIRCUIT", labelColor: "primary" },
-    { label: "LIVE:", value: "ACADEMY RANKING UPDATES", labelColor: "muted" },
-    { label: "NEW DROP:", value: "PRECISION SERIES V2", labelColor: "muted" },
+    { label: "EVENT", value: "Junior Padel Circuit — registration open", isPrimary: true },
+    { label: "NEW", value: "Precision Series V2 drops this week" },
+    { label: "LIVE", value: "Academy rankings updated" },
+    { label: "COMMUNITY", value: "Open court nights every Friday" },
   ],
   variant = "default",
-  speed = 55,
+  loopSeconds = 55,
 } = Astro.props;
 
-// Duplicate for seamless loop
-const loopItems = [...items, ...items];
+// Only render items that have a value. Ensure ≥2 copies for a seamless loop;
+// bump copies when there are few/short items so one set overflows the viewport.
+const clean = items.filter((i) => i.value?.trim());
+const copies = clean.length <= 3 ? 4 : 2;
+const loopItems = Array.from({ length: copies }, () => clean).flat();
+
+const wrapClass = {
+  default: "ticker-default",
+  fade: "ticker-fade",
+  bare: "ticker-bare",
+}[variant];
 ---
 
-<!-- Variant: default — bordered bar -->
-{variant === "default" && (
-  <div class="ticker-wrap ticker-default">
-    <div class="ticker-track" style={`animation-duration: ${speed}s`}>
-      {loopItems.map((item, i) => (
-        <>
-          <span class="ticker-item">
-            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-bressel-grey)"};`}>
-              {item.label}
-            </span>
-            <span class="ticker-value">{item.value}</span>
+<div class={`ticker-wrap ${wrapClass}`} role="marquee" aria-label="Announcements">
+  <div class="ticker-track" style={`animation-duration: ${loopSeconds}s`}>
+    {loopItems.map((item, i) => (
+      <span class="ticker-item" aria-hidden={i >= clean.length ? "true" : undefined}>
+        {item.label && (
+          <span class={`ticker-label ${item.isPrimary ? "ticker-label--primary" : ""}`}>
+            {item.label}
           </span>
-          {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true">•</span>}
-        </>
-      ))}
-    </div>
+        )}
+        <span class="ticker-value">{item.value}</span>
+        {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true"></span>}
+      </span>
+    ))}
   </div>
-)}
-
-<!-- Variant: fade — transparent with edge fades -->
-{variant === "fade" && (
-  <div class="ticker-wrap ticker-fade">
-    <div class="ticker-track" style={`animation-duration: ${speed}s`}>
-      {loopItems.map((item, i) => (
-        <>
-          <span class="ticker-item">
-            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-bressel-grey)"};`}>
-              {item.label}
-            </span>
-            <span class="ticker-value">{item.value}</span>
-          </span>
-          {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true">•</span>}
-        </>
-      ))}
-    </div>
-  </div>
-)}
-
-<!-- Variant: bare — minimal, no decoration -->
-{variant === "bare" && (
-  <div class="ticker-wrap ticker-bare">
-    <div class="ticker-track" style={`animation-duration: ${speed}s`}>
-      {loopItems.map((item, i) => (
-        <>
-          <span class="ticker-item">
-            <span class="ticker-label" style={`color: ${item.labelColor === "primary" ? "var(--color-bressel-red)" : "var(--color-bressel-grey)"};`}>
-              {item.label}
-            </span>
-            <span class="ticker-value">{item.value}</span>
-          </span>
-          {i < loopItems.length - 1 && <span class="ticker-sep" aria-hidden="true">•</span>}
-        </>
-      ))}
-    </div>
-  </div>
-)}
+</div>
 
 <style>
   .ticker-wrap {
@@ -107,6 +80,7 @@ const loopItems = [...items, ...items];
     position: relative;
   }
 
+  /* ── Variants (wrapper only) ── */
   .ticker-default {
     background: var(--color-bressel-grey);
     border-top: 1px solid var(--color-border);
@@ -114,7 +88,9 @@ const loopItems = [...items, ...items];
   }
 
   .ticker-fade::before,
-  .ticker-fade::after {
+  .ticker-fade::after,
+  .ticker-bare::before,
+  .ticker-bare::after {
     content: "";
     position: absolute;
     top: 0;
@@ -123,34 +99,40 @@ const loopItems = [...items, ...items];
     z-index: 1;
     pointer-events: none;
   }
-
-  .ticker-fade::before {
+  .ticker-fade::before,
+  .ticker-bare::before {
     left: 0;
     background: linear-gradient(to right, var(--color-background), transparent);
   }
-
-  .ticker-fade::after {
+  .ticker-fade::after,
+  .ticker-bare::after {
     right: 0;
     background: linear-gradient(to left, var(--color-background), transparent);
   }
+  .ticker-default::before,
+  .ticker-default::after { display: none; }
 
-  .ticker-bare {
-    /* No bg, no borders */
-  }
-
+  /* ── Track ── */
   .ticker-track {
     display: flex;
     align-items: center;
     white-space: nowrap;
     animation: ticker linear infinite;
     gap: 0;
+    width: max-content;
+  }
+
+  /* Pause on hover so users can read an item */
+  .ticker-wrap:hover .ticker-track,
+  .ticker-wrap:focus-within .ticker-track {
+    animation-play-state: paused;
   }
 
   .ticker-item {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0 2rem;
+    padding: 0 1.25rem;
     font-size: 0.6875rem;
     font-family: var(--font-heading);
     font-weight: 700;
@@ -159,14 +141,24 @@ const loopItems = [...items, ...items];
     flex-shrink: 0;
   }
 
+  .ticker-label {
+    color: var(--color-bressel-grey);
+  }
+  .ticker-label--primary {
+    color: var(--color-bressel-red);
+  }
+
   .ticker-value {
     color: var(--color-bressel-white);
   }
 
+  /* SURGE separator — small Scarlet square, sharp (replaces the • bullet) */
   .ticker-sep {
-    color: var(--color-secondary);
-    padding: 0 0.5rem;
+    width: 5px;
+    height: 5px;
+    background: var(--color-bressel-red);
     flex-shrink: 0;
+    margin: 0 0.5rem;
   }
 
   @keyframes ticker {

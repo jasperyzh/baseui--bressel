@@ -14,9 +14,12 @@ import Voices from '@/components/sections/Quotes.astro';
 import BresselAcademy from '@/components/sections/BresselAcademy.astro';
 import Shop from '@/components/sections/Shop.astro';
 import NewsletterCTA from '@/components/sections/NewsletterCTA.astro';
-import { getMerch } from '@/lib/wordpress';
+import { getMerch, getTickerItems } from '@/lib/wordpress';
 
-const products = await getMerch();
+const [products, tickerItems] = await Promise.all([
+  getMerch(),
+  getTickerItems(),
+]);
 ---
 
 <MainLayout
@@ -40,16 +43,14 @@ const products = await getMerch();
     <ProgramPillars />
   </section>
 
-  <Ticker variant="bare" speed={70} />
+  <Ticker items={tickerItems} variant="bare" loopSeconds={70} />
 
 
   <!-- ✦ Calm divider -->
   <div class="surge-divider surge-divider--wide my-0"></div>
 
   <!-- ✦ Section: Pricing -->
-  <section class="bg-bressel-black">
-    <Pricing />
-  </section>
+  <Pricing />
 
   <!-- ✦ Thin red accent divider -->
   <div class="surge-divider surge-divider--wide my-0"></div>
@@ -59,10 +60,8 @@ const products = await getMerch();
     <Voices />
   </section>
 
-  <!-- ✦ Section: BresselAcademy (dark) -->
-  <section class="bg-bressel-black">
-    <BresselAcademy />
-  </section>
+  <!-- ✦ Section: BresselAcademy -->
+  <BresselAcademy />
 
   <!-- ✦ Thin red accent divider -->
   <div class="surge-divider surge-divider--wide my-0"></div>

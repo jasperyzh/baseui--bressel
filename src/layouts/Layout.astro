@@ -18,6 +18,7 @@ import "aos/dist/aos.css";
 
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import CaseToggle from "@/components/CaseToggle.astro";
 
 const { title, description } = Astro.props;
 const currentPath = Astro.url.pathname;
@@ -75,6 +76,7 @@ const pageDescription = description || "World-class padel, within reach.";
       <slot />
     </main>
     <Footer />
+    <CaseToggle />
 
     <!-- AOS scroll animations (bundled, no CDN) -->
     <script>
